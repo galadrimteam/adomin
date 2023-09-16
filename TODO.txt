@@ -1,0 +1,5 @@
+files to ship :
+
+- app/Adomin
+- providers/AppProvider.ts
+- update routes.ts

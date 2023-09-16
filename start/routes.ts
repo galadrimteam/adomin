@@ -19,6 +19,7 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import 'App/Adomin/adominRouter'
 
 Route.get('/', async () => {
   return { hello: 'world' }
