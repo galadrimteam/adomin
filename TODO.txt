@@ -1,5 +1,12 @@
 files to ship :
 
-- app/Adomin
+- app/Adomin/*
 - providers/AppProvider.ts
 - update routes.ts
+
+deps:
+
+- @adonisjs/lucid
+- @adonisjs/auth
+- @adonisjs/view
+- @galadrim/adonis-scaffolder

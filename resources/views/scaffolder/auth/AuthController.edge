@@ -1,0 +1,34 @@
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { changePassword } from './changePassword'
+import { login } from './login'
+import { logout } from './logout'
+import { register } from './register'
+import { resetPassword } from './resetPassword'
+import { sendResetPasswordCode } from './sendResetPasswordCode'
+
+export default class AuthController {
+  public async register(params: HttpContextContract) {
+    return register(params)
+  }
+
+  public async login(params: HttpContextContract) {
+    return login(params)
+  }
+
+  public async logout(params: HttpContextContract) {
+    return logout(params)
+  }
+
+  public async changePassword(params: HttpContextContract) {
+    return changePassword(params)
+  }
+
+  public async sendResetPasswordCode(params: HttpContextContract) {
+    return sendResetPasswordCode(params)
+  }
+
+  public async resetPassword(params: HttpContextContract) {
+    return resetPassword(params)
+  }
+}
+

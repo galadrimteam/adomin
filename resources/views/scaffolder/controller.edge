@@ -1,0 +1,29 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { {{crudNames.destroy}} } from 'App/Controllers/Http/{{crudNames.folder}}/{{crudNames.destroy}}'
+import { {{crudNames.list}} } from 'App/Controllers/Http/{{crudNames.folder}}/{{crudNames.list}}'
+import { {{crudNames.read}} } from 'App/Controllers/Http/{{crudNames.folder}}/{{crudNames.read}}'
+import { {{crudNames.create}} } from 'App/Controllers/Http/{{crudNames.folder}}/{{crudNames.create}}'
+import { {{crudNames.update}} } from 'App/Controllers/Http/{{crudNames.folder}}/{{crudNames.update}}'
+
+export default class OrganizationsController {
+  public async index(ctx: HttpContextContract) {
+    return {{crudNames.list}}(ctx)
+  }
+
+  public async store(ctx: HttpContextContract) {
+    return {{crudNames.create}}(ctx)
+  }
+
+  public async show(ctx: HttpContextContract) {
+    return {{crudNames.read}}(ctx)
+  }
+
+  public async update(ctx: HttpContextContract) {
+    return {{crudNames.update}}(ctx)
+  }
+
+  public async destroy(ctx: HttpContextContract) {
+    return {{crudNames.destroy}}(ctx)
+  }
+}
+

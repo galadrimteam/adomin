@@ -1,0 +1,16 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import {{model}} from 'App/Models/{{model}}'
+import { {{schemaName}} } from './{{schemaName}}'
+
+export const {{fileName}} = async ({ request }: HttpContextContract) => {
+  const {
+    {{dtoFields}}
+  } = await request.validate({ schema: {{schemaName}} })
+
+  const {{modelCamelCaseName}} = await {{model}}.create({
+    {{dtoFields}}
+  })
+
+  return { message: '{{model}} created', {{modelCamelCaseName}} }
+}
+

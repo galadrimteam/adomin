@@ -1,0 +1,14 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import {{model}} from 'App/Models/{{model}}'
+import { validateResourceId } from 'App/utils/scaffolderValidation/validateResourceId'
+
+export const {{fileName}} = async ({ params }: HttpContextContract) => {
+  const { id } = await validateResourceId(params)
+
+  // TODO Bouncer policy to restrict access
+
+  const {{modelCamelCaseName}} = await {{model}}.findOrFail(id)
+
+  return {{modelCamelCaseName}}
+}
+

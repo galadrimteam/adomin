@@ -1,0 +1,9 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import {{model}} from 'App/Models/{{model}}'
+
+export const {{fileName}} = async ({}: HttpContextContract) => {
+  const {{modelPluralizedCamelCaseName}} = await {{model}}.all()
+
+  return {{modelPluralizedCamelCaseName}}
+}
+

@@ -1,0 +1,40 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { rules, schema } from '@ioc:Adonis/Core/Validator'
+import User from 'App/Models/User'
+
+// at list 8 characters AND one special char AND one letter
+export const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+
+export const registerSchema = schema.create({
+  email: schema.string([
+    rules.trim(),
+    rules.email(),
+    rules.unique({ table: 'users', column: 'email' }),
+  ]),
+  password: schema.string([rules.trim(), rules.confirmed(), rules.regex(passwordRegex)]),
+  firstName: schema.string(),
+  lastName: schema.string(),
+})
+
+export const register = async ({ request, response, auth }: HttpContextContract) => {
+  if (auth.user !== undefined) {
+    return response.badRequest({
+      error: `already connected with email: '${auth.user.email}'`,
+      email: auth.user.email,
+    })
+  }
+
+  const { email, firstName, lastName, password } = await request.validate({
+    schema: registerSchema,
+  })
+
+  const user = await User.create({
+    email,
+    firstName,
+    lastName,
+    password,
+  })
+
+  return { message: `user ${user.email} created` }
+}
+
