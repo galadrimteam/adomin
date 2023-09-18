@@ -18,7 +18,8 @@ Route.group(() => {
     Route.put('crud/:model/:id', updateModel)
     Route.delete('crud/:model/:id', deleteModel)
     Route.post('crud/:model', () => createModel)
-  }).middleware('admin')
+  }).middleware('auth')
+  // ! please restrict this route group for only admins of your app
 
   Route.post('login', adominLogin)
 }).prefix('adomin/api')
