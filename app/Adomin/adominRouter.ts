@@ -17,7 +17,7 @@ Route.group(() => {
     Route.get('crud/:model/:id', showModel)
     Route.put('crud/:model/:id', updateModel)
     Route.delete('crud/:model/:id', deleteModel)
-    Route.post('crud/:model', () => createModel)
+    Route.post('crud/:model', createModel)
   }).middleware('auth')
   // ! please restrict this route group for only admins of your app
 
