@@ -2,10 +2,24 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import type { BaseModel } from '@ioc:Adonis/Lucid/Orm'
 import { ADOMIN_CONFIG } from 'App/Adomin/CONFIG'
+import { AdominFieldConfig } from 'App/Adomin/adominConfigurator'
 import { filterUndefinedOrNullValues } from 'App/utils/scaffolderValidation/array'
 import { MetaAttributeValidation } from 'App/utils/scaffolderValidation/modelAttributesValidation'
 
-export const getConfigFromLucidModel = <T extends typeof BaseModel>(Model: T) => {
+interface ModelFieldsConfig {
+  primaryKey: string
+  fields: FieldConfig[]
+}
+
+interface FieldConfig {
+  name: string
+  type: string
+  adomin: AdominFieldConfig
+}
+
+export const getConfigFromLucidModel = <T extends typeof BaseModel>(
+  Model: T
+): ModelFieldsConfig => {
   let primaryKey: string | null = null
 
   const results = Array.from(Model.$columnsDefinitions.entries()).map(([columnName, column]) => {
@@ -19,7 +33,7 @@ export const getConfigFromLucidModel = <T extends typeof BaseModel>(Model: T) =>
       if (column.meta?.validation === undefined) {
         return {
           name: columnName,
-          type: 'number',
+          type: 'number' as const,
           adomin: column.meta?.adomin ?? { editable: false, creatable: false },
         }
       }
