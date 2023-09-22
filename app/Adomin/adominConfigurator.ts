@@ -8,11 +8,14 @@ export interface AdominFieldConfig {
   editable?: boolean
   creatable?: boolean
   size?: number // size of field, default is 120
+  isPassword?: boolean
 }
 
 export const createFieldConfig = (
   validation: StringAttributeValidation | NumberAttributeValidation,
   adominFieldConfig: AdominFieldConfig = {}
 ) => {
-  return { meta: { validation, adomin: adominFieldConfig } }
+  const otherProps = adominFieldConfig.isPassword ? { serialize: () => '***' } : {}
+
+  return { meta: { validation, adomin: adominFieldConfig }, ...otherProps }
 }
