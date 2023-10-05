@@ -9,7 +9,15 @@
 
 - run `node ace configure @galadrim/adomin`
 
-- modify `providers/AppProvider.ts` to use Lucid camelCase strategy [use this file for reference](providers/AppProvider.ts)
+- edit `providers/AppProvider.ts` to use Lucid camelCase strategy [use this file for reference](providers/AppProvider.ts)
+
+- edit `start/routes.ts` : add this import statement
+
+```
+import 'App/Adomin/adominRouter'
+```
+
+- check the content of `App/Adomin/adominRouter` this is all the backend routes of Adomin, it's here that you can change things to restrict route access
 
 - add some config inside `app/Adomin/CONFIG.ts`
 
