@@ -7,7 +7,29 @@
 
 ## Config
 
-- run `node ace configure @galadrim/adomin`
+- install and configure @galadrim/adonis-scaffolder (more info [here](https://github.com/galadrimteam/adonis-scaffolder#readme))
+
+```
+# npm
+npm i -D @adonis-scaffolder
+```
+
+```
+# yarn
+yarn add --dev @adonis-scaffolder
+```
+
+- configure @galadrim/adonis-scaffolder
+
+```
+node ace configure @galadrim/adonis-scaffolder
+```
+
+- configure adomin
+
+```
+node ace configure @galadrim/adomin
+```
 
 - edit `providers/AppProvider.ts` to use Lucid camelCase strategy [use this file for reference](providers/AppProvider.ts)
 
