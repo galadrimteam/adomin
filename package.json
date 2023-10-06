@@ -1,5 +1,5 @@
 {
-  "name": "adomin",
+  "name": "@galadrim/adomin",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,8 @@
     "start": "node server.js",
     "test": "node ace test",
     "lint": "eslint . --ext=.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "deploy": "bash ./prepareDeployment.sh && npm publish"
   },
   "eslintConfig": {
     "extends": [
@@ -66,5 +67,23 @@
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.21",
     "sqlite3": "^5.1.6"
-  }
+  },
+  "adonisjs": {
+    "instructions": "./instructions.js"
+  },
+  "files": [
+    "build/templates",
+    "instructions.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galadrimteam/adomin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/galadrimteam/adomin/issues"
+  },
+  "homepage": "https://github.com/galadrimteam/adomin#readme"
 }
