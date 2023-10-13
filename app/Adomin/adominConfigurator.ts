@@ -1,5 +1,6 @@
 import { ColumnOptions } from '@ioc:Adonis/Lucid/Orm'
 import {
+  DateAttributeValidation,
   NumberAttributeValidation,
   StringAttributeValidation,
 } from 'App/utils/scaffolderValidation/modelAttributesValidation'
@@ -24,8 +25,13 @@ const getOtherColumnOptions = (adominFieldConfig: AdominFieldConfig): Partial<Co
   return result
 }
 
+type AdominFieldValidation =
+  | StringAttributeValidation
+  | NumberAttributeValidation
+  | DateAttributeValidation
+
 export const createFieldConfig = (
-  validation: StringAttributeValidation | NumberAttributeValidation,
+  validation: AdominFieldValidation,
   adominFieldConfig: AdominFieldConfig = {}
 ) => {
   const otherProps = getOtherColumnOptions(adominFieldConfig)

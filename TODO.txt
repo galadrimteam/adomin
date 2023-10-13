@@ -1,12 +1,8 @@
-files to ship :
+Support field types :
 
-- app/Adomin/*
-- providers/AppProvider.ts
-- update routes.ts
-
-deps:
-
-- @adonisjs/lucid
-- @adonisjs/auth
-- @adonisjs/view
-- @galadrim/adonis-scaffolder
+- Date
+- DateTime
+- Enum
+- float support
+- image (attachment)
+- image (url)

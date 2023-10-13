@@ -8,7 +8,7 @@
     "test": "node ace test",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "deploy": "bash ./prepareDeployment.sh && npm publish"
+    "deploy": "bash ./prepareDeployment.sh && npm publish --access public"
   },
   "eslintConfig": {
     "extends": [
@@ -53,9 +53,7 @@
     "prettier": "^3.0.3",
     "typescript": "~4.6",
     "youch": "^3.3.1",
-    "youch-terminal": "^2.2.2"
-  },
-  "dependencies": {
+    "youch-terminal": "^2.2.2",
     "@adonisjs/auth": "^8.2.3",
     "@adonisjs/core": "^5.8.0",
     "@adonisjs/lucid": "^18.4.0",
@@ -67,6 +65,7 @@
     "source-map-support": "^0.5.21",
     "sqlite3": "^5.1.6"
   },
+  "dependencies": {},
   "adonisjs": {
     "instructions": "./instructions.js"
   },
