@@ -1,7 +1,7 @@
 import { BaseCommand, args } from '@adonisjs/core/build/standalone'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import View from '@ioc:Adonis/Core/View'
-import { BaseModel, RelationshipsContract } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel } from '@ioc:Adonis/Lucid/Orm'
 import { filterUndefinedOrNullValues } from 'App/utils/scaffolderValidation/array'
 import { getFieldValidationRules } from 'App/utils/scaffolderValidation/getFieldValidationRules'
 import {
@@ -44,8 +44,6 @@ export default class Api extends BaseCommand {
 
     const relativePath = `${ROOT_PATH}/app/Models/${this.modelName}`
     const LoadedModel = (await import(relativePath)).default
-
-    await this.getBelongsToRelations(LoadedModel)
 
     await this.createController()
 
@@ -90,18 +88,6 @@ export default class Api extends BaseCommand {
     )
 
     return filterUndefinedOrNullValues(results)
-  }
-
-  private async getBelongsToRelations(LoadedModel: typeof BaseModel) {
-    const belongsToRelations: RelationshipsContract[] = []
-
-    LoadedModel.$relationsDefinitions.forEach((rel) => {
-      if (rel.type === 'belongsTo') {
-        belongsToRelations.push(rel)
-      }
-    })
-
-    return belongsToRelations
   }
 
   private get modelCamelCaseName() {

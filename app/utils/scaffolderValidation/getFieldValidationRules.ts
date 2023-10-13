@@ -1,5 +1,6 @@
 import {
   CommonAttributeValidation,
+  DateAttributeValidation,
   MetaAttributeValidation,
   NumberAttributeValidation,
   StringAttributeValidation,
@@ -20,6 +21,7 @@ const getRulesSuffixValidation = (validation: MetaAttributeValidation) => {
 }
 
 const prepareRuleParam = (obj: any) => {
+  if (obj === undefined) return '{}'
   if (typeof obj === 'string') return `'${obj}'`
 
   const stringified = JSON.stringify(obj)
@@ -82,6 +84,26 @@ const numberValidationRules = (validation: NumberAttributeValidation) => {
   return rules
 }
 
+const dateValidationRules = (validation: DateAttributeValidation) => {
+  const rules: string[] = []
+
+  const withStringParam = [
+    'after',
+    'afterField',
+    'afterOrEqualToField',
+    'before',
+    'beforeField',
+    'beforeOrEqualToField',
+  ] as const
+
+  for (const ruleName of withStringParam) {
+    const stringParam = prepareRuleParam(validation[ruleName])
+    if (validation[ruleName]) rules.push(`rules.${ruleName}(${stringParam})`)
+  }
+
+  return rules
+}
+
 const getValidationRules = (validation: MetaAttributeValidation) => {
   const rules: string[] = commonValidationRules(validation)
 
@@ -93,6 +115,10 @@ const getValidationRules = (validation: MetaAttributeValidation) => {
     rules.push(...numberValidationRules(validation))
   }
 
+  if (validation.type === 'date') {
+    rules.push(...dateValidationRules(validation))
+  }
+
   return rules.join(', ')
 }
 
@@ -102,6 +128,12 @@ export const getFieldValidationRules = (field: FieldToValidate): string => {
   const { name, validation } = field
   const suffix = getRulesSuffixValidation(validation)
   const rules = getValidationRules(validation)
+  const functionToCall = `${name}: schema.${validation.type}${suffix}`
 
-  return `${name}: schema.${validation.type}${suffix}([${rules}])`
+  if (validation.type === 'date') {
+    const options = prepareRuleParam(validation.options)
+    return `${functionToCall}(${options}, [${rules}])`
+  }
+
+  return `${functionToCall}([${rules}])`
 }

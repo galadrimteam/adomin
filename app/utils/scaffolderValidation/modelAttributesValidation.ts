@@ -78,12 +78,16 @@ export interface DateAttributeValidation extends CommonAttributeValidation {
   afterOrEqualToField?: AfterOrEqualToFieldRule
   beforeField?: BeforeFieldRule
   beforeOrEqualToField?: BeforeOrEqualToFieldRule
+  options?: {
+    format?: string
+  }
 }
 
 export type MetaAttributeValidation =
   | StringAttributeValidation
   | NumberAttributeValidation
   | ArrayAttributeValidation
+  | DateAttributeValidation
 
 export const createMetaValidation = (validation: MetaAttributeValidation) => {
   return { meta: { validation } }

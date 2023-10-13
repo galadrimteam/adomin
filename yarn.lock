@@ -373,9 +373,9 @@
   integrity sha512-Uo3pGspElQW91PCvKSIAXoEgAUlRnH29sX2/p89kg7sP1m2PzCufHINd0FhTXQf6DYGiUlVncdSPa2F9wxed2A==
 
 "@galadrim/adonis-scaffolder@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@galadrim/adonis-scaffolder/-/adonis-scaffolder-1.1.2.tgz#1aad7b327737832ee0ada42115e2465cd04b3286"
-  integrity sha512-hLl+usLTC9sdLWf4NXUrcOuued/z0NG6thLqIZI7wpxCGmu31p5jtEYwVB8wAQ9+qcLJj7YMOdlTtl8mtrdaBg==
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@galadrim/adonis-scaffolder/-/adonis-scaffolder-1.1.3.tgz#8090fcffdf93e8cb20e086bfcbccd064cd677332"
+  integrity sha512-r1tqo2dhEwrdmtqCtxSn5p9AVt1rqvMHzuXHClqEmjB3QAPG3OmVvPisS+HxNEVltnGQGpeni9wNpSF1ygl5nQ==
 
 "@gar/promisify@^1.0.1":
   version "1.1.3"
