@@ -2,16 +2,12 @@ import { BaseCommand, args } from '@adonisjs/core/build/standalone'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import View from '@ioc:Adonis/Core/View'
 import { BaseModel } from '@ioc:Adonis/Lucid/Orm'
-import { filterUndefinedOrNullValues } from 'App/utils/scaffolderValidation/array'
-import { getFieldValidationRules } from 'App/utils/scaffolderValidation/getFieldValidationRules'
-import {
-  FieldToValidate,
-  MetaAttributeValidation,
-} from 'App/utils/scaffolderValidation/modelAttributesValidation'
+import { filterUndefinedOrNullValues } from 'App/Scaffolder/array'
+import { FieldToScaffold, getFieldValidationRules } from 'App/Scaffolder/scaffolder'
 
 import fs from 'fs/promises'
 
-const ROOT_PATH = '../..'
+const ROOT_PATH = '..'
 const VIEWS_PATH = `scaffolder`
 // .rw-r--r--
 const FILE_RIGHTS = 0o644
@@ -20,13 +16,13 @@ const CRUD_NAMES = ['create', 'read', 'update', 'destroy', 'list'] as const
 
 type CrudNames = (typeof CRUD_NAMES)[number]
 
-export default class Api extends BaseCommand {
-  public static commandName = 'make:api'
+export default class Scaffolder extends BaseCommand {
+  public static commandName = 'scaffold'
 
   public static description = 'Scaffold a new API controller for a Model'
 
   @args.string({
-    description: 'Model name',
+    description: 'Model name, or "auth" for scaffolding auth API',
     name: 'modelName',
   })
   public modelName: string
@@ -75,15 +71,14 @@ export default class Api extends BaseCommand {
   private getFieldsToValidate(LoadedModel: typeof BaseModel) {
     const results = Array.from(LoadedModel.$columnsDefinitions.entries()).map(
       ([columnName, column]) => {
-        if (column.meta?.validation === undefined) {
+        if (column.meta?.scaffolder === undefined) {
           return null
         }
 
         return {
           name: columnName,
-          // column,
-          validation: column.meta.validation as MetaAttributeValidation,
-        }
+          ...column.meta.scaffolder,
+        } as FieldToScaffold
       }
     )
 
@@ -136,7 +131,7 @@ export default class Api extends BaseCommand {
     this.logger.action('create').succeeded(filePath)
   }
 
-  private async createCrudRoute(crudName: CrudNames, fieldsToValidate: FieldToValidate[] = []) {
+  private async createCrudRoute(crudName: CrudNames, fieldsToValidate: FieldToScaffold[] = []) {
     const fileName = this.crudNames[crudName]
     const filePath = `${this.folderPath}/${fileName}.ts`
     const dtoFields = fieldsToValidate.map((field) => field.name).join(',\n    ')
@@ -155,7 +150,7 @@ export default class Api extends BaseCommand {
     this.logger.action('create').succeeded(filePath)
   }
 
-  private async createSchema(fieldsToValidate: FieldToValidate[]) {
+  private async createSchema(fieldsToValidate: FieldToScaffold[]) {
     const fileName = this.schemaName
     const filePath = `${this.folderPath}/${fileName}.ts`
 

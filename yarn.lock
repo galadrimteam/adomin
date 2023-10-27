@@ -372,10 +372,10 @@
   resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-8.0.2.tgz#bab698c5d3da9c52744e966e0e3eedb6c8b05c37"
   integrity sha512-Uo3pGspElQW91PCvKSIAXoEgAUlRnH29sX2/p89kg7sP1m2PzCufHINd0FhTXQf6DYGiUlVncdSPa2F9wxed2A==
 
-"@galadrim/adonis-scaffolder@^1.1.2":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@galadrim/adonis-scaffolder/-/adonis-scaffolder-1.1.3.tgz#8090fcffdf93e8cb20e086bfcbccd064cd677332"
-  integrity sha512-r1tqo2dhEwrdmtqCtxSn5p9AVt1rqvMHzuXHClqEmjB3QAPG3OmVvPisS+HxNEVltnGQGpeni9wNpSF1ygl5nQ==
+"@galadrim/adonis-scaffolder@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@galadrim/adonis-scaffolder/-/adonis-scaffolder-2.0.4.tgz#af7172b7698b4d8c026283853176b9146652270a"
+  integrity sha512-EGwh58MVIhRJaQqYRYDAhnBKuSdndaDDAvo13X96oPWtrJGTpWSBqZWEYxYEUNqasJQNUK/pSl3AG1Ot4JKC/A==
 
 "@gar/promisify@^1.0.1":
   version "1.1.3"

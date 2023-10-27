@@ -1,12 +1,12 @@
 {
   "commands": {
-    "make:api": {
+    "scaffold": {
       "settings": {
         "loadApp": true,
         "stayAlive": false
       },
-      "commandPath": "./commands/scaffolder/Api",
-      "commandName": "make:api",
+      "commandPath": "./commands/Scaffolder",
+      "commandName": "scaffold",
       "description": "Scaffold a new API controller for a Model",
       "args": [
         {
@@ -14,7 +14,7 @@
           "propertyName": "modelName",
           "name": "modelName",
           "required": true,
-          "description": "Model name"
+          "description": "Model name, or \"auth\" for scaffolding auth API"
         }
       ],
       "aliases": [],
