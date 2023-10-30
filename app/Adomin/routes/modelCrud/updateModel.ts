@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import { PASSWORD_SERIALIZED_FORM } from 'App/Adomin/adominConfigurator'
+import { validateOrThrow } from 'App/Adomin/adominValidationHelpers'
 import { getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromLucidModel } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
@@ -20,7 +21,8 @@ const removeUntouchedPassword = (data: any, Model: LucidModel) => {
   return data
 }
 
-export const updateModel = async ({ params, response, request }: HttpContextContract) => {
+export const updateModel = async (ctx: HttpContextContract) => {
+  const { params, response, request } = ctx
   const { id } = await validateResourceId(params)
   const modelFound = await getValidatedModelConfig(params)
 
@@ -29,6 +31,11 @@ export const updateModel = async ({ params, response, request }: HttpContextCont
   }
 
   const Model = modelFound.model()
+
+  if (modelFound.validation) {
+    const res = await validateOrThrow(ctx, modelFound.validation, 'update')
+    if (res !== true) return
+  }
 
   const schema = getValidationSchemaFromLucidModel(Model)
   const parsedData = await request.validate({ schema })

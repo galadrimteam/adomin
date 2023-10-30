@@ -1,4 +1,5 @@
 import { BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import { AdominValidation } from 'App/Adomin/adominValidationHelpers'
 
 export interface AdominConfig {
   title: string
@@ -9,6 +10,7 @@ export interface AdominConfig {
     canCreate?: boolean
     canUpdate?: boolean
     canDelete?: boolean
+    validation?: AdominValidation
   }[]
 }
 
