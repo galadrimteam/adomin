@@ -2,9 +2,8 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import type { BaseModel } from '@ioc:Adonis/Lucid/Orm'
 import { ADOMIN_CONFIG } from 'App/Adomin/CONFIG'
-import { AdominFieldConfig } from 'App/Adomin/adominConfigurator'
+import { AdominFieldConfig, ScaffolderMeta } from 'App/Adomin/adominConfigurator'
 import { filterUndefinedOrNullValues } from 'App/Scaffolder/array'
-import { ScaffolderFieldSuffix, ScaffolderFieldType } from 'App/Scaffolder/scaffolder'
 
 interface ModelFieldsConfig {
   primaryKey: string
@@ -30,7 +29,7 @@ export const getConfigFromLucidModel = <T extends typeof BaseModel>(
 
       primaryKey = columnName
 
-      if (column.meta?.validation === undefined) {
+      if (column.meta?.scaffolder === undefined) {
         return {
           name: columnName,
           type: 'number' as const,
@@ -39,12 +38,9 @@ export const getConfigFromLucidModel = <T extends typeof BaseModel>(
       }
     }
     if (!column.meta?.adomin) return null
-    if (column.meta?.validation === undefined) return null
+    if (column.meta?.scaffolder === undefined) return null
 
-    const validationParams = column.meta.scaffolder as {
-      type: ScaffolderFieldType
-      suffix?: ScaffolderFieldSuffix
-    }
+    const validationParams = column.meta.scaffolder as ScaffolderMeta
 
     return {
       name: columnName,

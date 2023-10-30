@@ -7,7 +7,7 @@ export default class Test extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column()
+  @column(adomin('string'))
   public name: string
 
   @column.date(adomin('date'))

@@ -1,14 +1,14 @@
-import { Rule, Rules, rules, schema } from '@ioc:Adonis/Core/Validator'
+import { schema } from '@ioc:Adonis/Core/Validator'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
-import { MetaAttributeValidation } from 'App/utils/scaffolderValidation/modelAttributesValidation'
+import { ScaffolderMeta } from 'App/Adomin/adominConfigurator'
 
 export const getValidationSchemaFromLucidModel = (Model: LucidModel) => {
   const results = Array.from(Model.$columnsDefinitions.entries()).map(([columnName, column]) => {
     if (column.isPrimary === true) return null
     if (!column.meta?.adomin) return null
-    if (column.meta?.validation === undefined) return null
+    if (column.meta?.scaffolder === undefined) return null
 
-    const validationParams = column.meta.validation as MetaAttributeValidation
+    const validationParams = column.meta.scaffolder as ScaffolderMeta
 
     return { columnName, schema: getValidationSchemaFromMeta(validationParams) }
   })
@@ -23,69 +23,14 @@ export const getValidationSchemaFromLucidModel = (Model: LucidModel) => {
   return schema.create(schemaObj)
 }
 
-const getValidationSchemaFromMeta = (config: MetaAttributeValidation) => {
+const getValidationSchemaFromMeta = (config: ScaffolderMeta) => {
   const fieldSchema = getBaseSchema(config)
 
-  const rulesArray: Rule[] = []
-
-  for (const key of VALIDATION_KEYS) {
-    if (config[key] === undefined) continue
-    const rule = getRule(key, config)
-    if (!rule) continue
-    rulesArray.push(rule)
-  }
-
-  return fieldSchema(rulesArray)
+  return fieldSchema([])
 }
 
-const getBaseSchema = <T extends MetaAttributeValidation>(config: T) => {
-  if (config.optional) return schema[config.type].optional
-  if (config.nullable) return schema[config.type].nullable
+const getBaseSchema = (config: ScaffolderMeta) => {
+  if (config.suffix) return schema[config.type][config.suffix]
 
   return schema[config.type]
 }
-
-const getRule = (key: keyof Rules, config: MetaAttributeValidation): Rule | null => {
-  const fn = rules[key] as (...args: unknown[]) => Rule
-
-  if (!fn) return null
-
-  if (typeof config[key] === 'boolean') return fn()
-
-  return fn(config[key])
-}
-
-const VALIDATION_KEYS = [
-  'alpha',
-  'alphaNum',
-  'minLength',
-  'maxLength',
-  'confirmed',
-  'email',
-  'ip',
-  'regex',
-  'uuid',
-  'mobile',
-  'notIn',
-  'url',
-  'escape',
-  'trim',
-  'minLength',
-  'maxLength',
-  'distinct',
-  'unique',
-  'exists',
-  'requiredIfExists',
-  'requiredIfExistsAll',
-  'requiredIfExistsAny',
-  'requiredWhen',
-  'equalTo',
-  'unsigned',
-  'range',
-  'after',
-  'before',
-  'afterField',
-  'afterOrEqualToField',
-  'beforeField',
-  'beforeOrEqualToField',
-] as const

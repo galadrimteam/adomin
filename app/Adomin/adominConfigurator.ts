@@ -1,5 +1,15 @@
 import { ColumnOptions } from '@ioc:Adonis/Lucid/Orm'
-import { ScaffolderFieldTypeWithSuffix, scaffold } from 'App/Scaffolder/scaffolder'
+import {
+  ScaffolderFieldSuffix,
+  ScaffolderFieldType,
+  ScaffolderFieldTypeWithSuffix,
+  scaffold,
+} from 'App/Scaffolder/scaffolder'
+
+export type ScaffolderMeta = {
+  type: ScaffolderFieldType
+  suffix?: ScaffolderFieldSuffix
+}
 
 export interface AdominFieldConfig {
   label?: string
