@@ -5,7 +5,7 @@ import { getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromLucidModel } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
-import { validateResourceId } from 'App/utils/scaffolderValidation/validateResourceId'
+import { validateResourceId } from 'App/Scaffolder/validateResourceId'
 
 const removeUntouchedPassword = (data: any, Model: LucidModel) => {
   const { fields } = getConfigFromLucidModel(Model)

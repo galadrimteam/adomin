@@ -1,9 +1,5 @@
 import { ColumnOptions } from '@ioc:Adonis/Lucid/Orm'
-import {
-  DateAttributeValidation,
-  NumberAttributeValidation,
-  StringAttributeValidation,
-} from 'App/utils/scaffolderValidation/modelAttributesValidation'
+import { ScaffolderFieldTypeWithSuffix, scaffold } from 'App/Scaffolder/scaffolder'
 
 export interface AdominFieldConfig {
   label?: string
@@ -25,16 +21,12 @@ const getOtherColumnOptions = (adominFieldConfig: AdominFieldConfig): Partial<Co
   return result
 }
 
-type AdominFieldValidation =
-  | StringAttributeValidation
-  | NumberAttributeValidation
-  | DateAttributeValidation
-
-export const createFieldConfig = (
-  validation: AdominFieldValidation,
+export const adomin = (
+  type: ScaffolderFieldTypeWithSuffix,
   adominFieldConfig: AdominFieldConfig = {}
 ) => {
+  const { scaffolder } = scaffold(type).meta
   const otherProps = getOtherColumnOptions(adominFieldConfig)
 
-  return { meta: { validation, adomin: adominFieldConfig }, ...otherProps }
+  return { meta: { scaffolder, adomin: adominFieldConfig }, ...otherProps }
 }

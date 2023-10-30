@@ -3,8 +3,8 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import type { BaseModel } from '@ioc:Adonis/Lucid/Orm'
 import { ADOMIN_CONFIG } from 'App/Adomin/CONFIG'
 import { AdominFieldConfig } from 'App/Adomin/adominConfigurator'
-import { filterUndefinedOrNullValues } from 'App/utils/scaffolderValidation/array'
-import { MetaAttributeValidation } from 'App/utils/scaffolderValidation/modelAttributesValidation'
+import { filterUndefinedOrNullValues } from 'App/Scaffolder/array'
+import { ScaffolderFieldSuffix, ScaffolderFieldType } from 'App/Scaffolder/scaffolder'
 
 interface ModelFieldsConfig {
   primaryKey: string
@@ -41,11 +41,15 @@ export const getConfigFromLucidModel = <T extends typeof BaseModel>(
     if (!column.meta?.adomin) return null
     if (column.meta?.validation === undefined) return null
 
-    const validationParams = column.meta.validation as MetaAttributeValidation
+    const validationParams = column.meta.scaffolder as {
+      type: ScaffolderFieldType
+      suffix?: ScaffolderFieldSuffix
+    }
 
     return {
       name: columnName,
       type: validationParams.type,
+      suffix: validationParams.suffix,
       adomin: column.meta?.adomin,
     }
   })

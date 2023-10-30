@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
-import { validateResourceId } from 'App/utils/scaffolderValidation/validateResourceId'
+import { validateResourceId } from 'App/Scaffolder/validateResourceId'
 
 export const deleteModel = async ({ params, response }: HttpContextContract) => {
   const { id } = await validateResourceId(params)

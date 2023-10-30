@@ -1,15 +1,16 @@
-import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
+import { adomin } from 'App/Adomin/adominConfigurator'
+import { DateTime } from 'luxon'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column()
+  @column(adomin('string'))
   public email: string
 
-  @column({ serializeAs: null })
+  @column(adomin('string', { isPassword: true, label: 'Mot de passe' }))
   public password: string
 
   @column()

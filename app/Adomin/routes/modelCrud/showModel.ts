@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
-import { validateResourceId } from 'App/utils/scaffolderValidation/validateResourceId'
+import { validateResourceId } from 'App/Scaffolder/validateResourceId'
 
 export const showModel = async ({ params }: HttpContextContract) => {
   const { id } = await validateResourceId(params)

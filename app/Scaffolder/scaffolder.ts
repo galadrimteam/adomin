@@ -12,10 +12,10 @@ const SCAFFOLDER_FIELD_TYPES = [
 
 export type ScaffolderFieldType = (typeof SCAFFOLDER_FIELD_TYPES)[number]
 
-type ScaffolderFieldSuffix = '.nullable' | '.optional'
+export type ScaffolderFieldSuffix = 'nullable' | 'optional'
 
 export type ScaffolderFieldTypeWithSuffix =
-  | `${ScaffolderFieldType}${ScaffolderFieldSuffix}`
+  | `${ScaffolderFieldType}.${ScaffolderFieldSuffix}`
   | ScaffolderFieldType
 
 export const scaffold = (typeWithPotentialSuffix: ScaffolderFieldTypeWithSuffix) => {

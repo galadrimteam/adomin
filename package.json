@@ -44,7 +44,7 @@
     "@adonisjs/lucid": "^18.4.0",
     "@adonisjs/repl": "^3.1.0",
     "@adonisjs/view": "^6.2.0",
-    "@galadrim/adonis-scaffolder": "^2.0.4",
+    "@galadrim/adonis-scaffolder": "^2.0.5",
     "@japa/preset-adonis": "^1.2.0",
     "@japa/runner": "^2.5.1",
     "@types/proxy-addr": "^2.0.0",
