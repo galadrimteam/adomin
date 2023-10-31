@@ -10,7 +10,9 @@ import { validateResourceId } from 'App/Scaffolder/validateResourceId'
 
 const removeUntouchedPassword = (data: any, Model: LucidModel) => {
   const { fields } = getConfigFromLucidModel(Model)
-  const passwordKeys = fields.filter(({ adomin }) => adomin?.isPassword).map(({ name }) => name)
+  const passwordKeys = fields
+    .filter(({ adomin }) => adomin?.type === 'string' && adomin.isPassword)
+    .map(({ name }) => name)
 
   passwordKeys.forEach((passwordKey) => {
     if (data[passwordKey] === PASSWORD_SERIALIZED_FORM) {

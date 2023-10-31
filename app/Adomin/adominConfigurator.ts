@@ -1,5 +1,16 @@
 import { ColumnOptions } from '@ioc:Adonis/Lucid/Orm'
 import {
+  AdominArrayFieldConfig,
+  AdominBooleanFieldConfig,
+  AdominDateFieldConfig,
+  AdominEnumFieldConfig,
+  AdominEnumSetFieldConfig,
+  AdominFileFieldConfig,
+  AdominNumberFieldConfig,
+  AdominObjectFieldConfig,
+  AdominStringFieldConfig,
+} from 'App/Adomin/adominConfig.types'
+import {
   ScaffolderFieldSuffix,
   ScaffolderFieldType,
   ScaffolderFieldTypeWithSuffix,
@@ -11,32 +22,56 @@ export type ScaffolderMeta = {
   suffix?: ScaffolderFieldSuffix
 }
 
-export interface AdominFieldConfig {
-  label?: string
-  editable?: boolean
-  creatable?: boolean
-  size?: number // size of field, default is 120
-  isPassword?: boolean
-}
+export type AdominFieldConfig =
+  | AdominStringFieldConfig
+  | AdominNumberFieldConfig
+  | AdominBooleanFieldConfig
+  | AdominDateFieldConfig
+  | AdominEnumFieldConfig
+  | AdominEnumSetFieldConfig
+  | AdominArrayFieldConfig
+  | AdominFileFieldConfig
+  | AdominObjectFieldConfig
 
 export const PASSWORD_SERIALIZED_FORM = '***'
 
 const getOtherColumnOptions = (adominFieldConfig: AdominFieldConfig): Partial<ColumnOptions> => {
   const result: Partial<ColumnOptions> = {}
 
-  if (adominFieldConfig.isPassword) {
+  if (adominFieldConfig.type === 'string' && adominFieldConfig.isPassword) {
     result.serialize = () => PASSWORD_SERIALIZED_FORM
   }
 
   return result
 }
 
-export const adomin = (
-  type: ScaffolderFieldTypeWithSuffix,
-  adominFieldConfig: AdominFieldConfig = {}
-) => {
-  const { scaffolder } = scaffold(type).meta
-  const otherProps = getOtherColumnOptions(adominFieldConfig)
+const getAdominFieldConfig = (
+  adominFieldConfig: AdominFieldConfig | ScaffolderFieldTypeWithSuffix
+): AdominFieldConfig => {
+  if (typeof adominFieldConfig === 'string') {
+    const scaffoldOptions = scaffold(adominFieldConfig).meta.scaffolder
+    const optional = scaffoldOptions.suffix === 'optional' || undefined
+    const nullable = scaffoldOptions.suffix === 'nullable' || undefined
 
-  return { meta: { scaffolder, adomin: adominFieldConfig }, ...otherProps }
+    return { type: scaffoldOptions.type, optional, nullable }
+  }
+
+  return adominFieldConfig
+}
+
+export const adomin = (config: AdominFieldConfig | ScaffolderFieldTypeWithSuffix) => {
+  const adominFieldConfig = getAdominFieldConfig(config)
+  const withScaffold = adominFieldConfig?.noScaffold !== false
+  let suffix: ScaffolderFieldSuffix | undefined
+
+  if (adominFieldConfig.optional) suffix = 'optional'
+  if (adominFieldConfig.nullable) suffix = 'nullable'
+
+  const type = suffix ? (`${adominFieldConfig.type}.${suffix}` as const) : adominFieldConfig.type
+
+  const scaffolder = withScaffold ? scaffold(type).meta.scaffolder : undefined
+  const adomin = adominFieldConfig ?? { type: 'string' }
+  const otherProps = getOtherColumnOptions(adomin)
+
+  return { meta: { scaffolder, adomin }, ...otherProps }
 }
