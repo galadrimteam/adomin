@@ -24,6 +24,12 @@ export const getValidationSchemaFromLucidModel = (Model: LucidModel) => {
 }
 
 const getValidationSchemaFromMeta = (config: ScaffolderMeta) => {
+  if (config.type === 'object' || config.type === 'array') {
+    const specialSchema = config.suffix ? schema[config.type][config.suffix] : schema[config.type]
+
+    return specialSchema().anyMembers()
+  }
+
   const fieldSchema = getBaseSchema(config)
 
   return fieldSchema([])
