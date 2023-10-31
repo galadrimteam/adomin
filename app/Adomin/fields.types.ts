@@ -56,3 +56,14 @@ export interface AdominFileFieldConfig extends AdominBaseFieldConfig {
 export interface AdominObjectFieldConfig extends AdominBaseFieldConfig {
   type: 'object'
 }
+
+export type AdominFieldConfig =
+  | AdominStringFieldConfig
+  | AdominNumberFieldConfig
+  | AdominBooleanFieldConfig
+  | AdominDateFieldConfig
+  | AdominEnumFieldConfig
+  | AdominEnumSetFieldConfig
+  | AdominArrayFieldConfig
+  | AdominFileFieldConfig
+  | AdominObjectFieldConfig

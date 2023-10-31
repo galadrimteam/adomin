@@ -1,15 +1,5 @@
 import { ColumnOptions } from '@ioc:Adonis/Lucid/Orm'
-import {
-  AdominArrayFieldConfig,
-  AdominBooleanFieldConfig,
-  AdominDateFieldConfig,
-  AdominEnumFieldConfig,
-  AdominEnumSetFieldConfig,
-  AdominFileFieldConfig,
-  AdominNumberFieldConfig,
-  AdominObjectFieldConfig,
-  AdominStringFieldConfig,
-} from 'App/Adomin/adominConfig.types'
+import { AdominFieldConfig } from 'App/Adomin/fields.types'
 import {
   ScaffolderFieldSuffix,
   ScaffolderFieldType,
@@ -21,17 +11,6 @@ export type ScaffolderMeta = {
   type: ScaffolderFieldType
   suffix?: ScaffolderFieldSuffix
 }
-
-export type AdominFieldConfig =
-  | AdominStringFieldConfig
-  | AdominNumberFieldConfig
-  | AdominBooleanFieldConfig
-  | AdominDateFieldConfig
-  | AdominEnumFieldConfig
-  | AdominEnumSetFieldConfig
-  | AdominArrayFieldConfig
-  | AdominFileFieldConfig
-  | AdominObjectFieldConfig
 
 export const PASSWORD_SERIALIZED_FORM = '***'
 
@@ -70,7 +49,7 @@ export const adomin = (config: AdominFieldConfig | ScaffolderFieldTypeWithSuffix
   const type = suffix ? (`${adominFieldConfig.type}.${suffix}` as const) : adominFieldConfig.type
 
   const scaffolder = withScaffold ? scaffold(type).meta.scaffolder : undefined
-  const adomin = adominFieldConfig ?? { type: 'string' }
+  const adomin = adominFieldConfig
   const otherProps = getOtherColumnOptions(adomin)
 
   return { meta: { scaffolder, adomin }, ...otherProps }

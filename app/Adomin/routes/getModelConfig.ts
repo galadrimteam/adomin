@@ -2,7 +2,7 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import type { BaseModel } from '@ioc:Adonis/Lucid/Orm'
 import { ADOMIN_CONFIG } from 'App/Adomin/CONFIG'
-import { AdominFieldConfig, ScaffolderMeta } from 'App/Adomin/adominConfigurator'
+import { AdominFieldConfig } from 'App/Adomin/fields.types'
 import { filterUndefinedOrNullValues } from 'App/Scaffolder/array'
 
 interface ModelFieldsConfig {
@@ -12,7 +12,6 @@ interface ModelFieldsConfig {
 
 interface FieldConfig {
   name: string
-  type: string
   adomin: AdominFieldConfig
 }
 
@@ -22,6 +21,7 @@ export const getConfigFromLucidModel = <T extends typeof BaseModel>(
   let primaryKey: string | null = null
 
   const results = Array.from(Model.$columnsDefinitions.entries()).map(([columnName, column]) => {
+    const adominConfig = column.meta?.adomin as AdominFieldConfig | undefined
     if (column.isPrimary === true) {
       if (primaryKey !== null) {
         throw new Error(`Model ${Model.name} has more than one primary key`)
@@ -29,24 +29,22 @@ export const getConfigFromLucidModel = <T extends typeof BaseModel>(
 
       primaryKey = columnName
 
-      if (column.meta?.scaffolder === undefined) {
-        return {
-          name: columnName,
-          type: 'number' as const,
-          adomin: column.meta?.adomin ?? { editable: false, creatable: false },
-        }
+      const primaryKeyAdominConfig: AdominFieldConfig = adominConfig ?? {
+        type: 'number',
+        editable: false,
+        creatable: false,
+      }
+
+      return {
+        name: columnName,
+        adomin: primaryKeyAdominConfig,
       }
     }
-    if (!column.meta?.adomin) return null
-    if (column.meta?.scaffolder === undefined) return null
-
-    const validationParams = column.meta.scaffolder as ScaffolderMeta
+    if (!adominConfig) return null
 
     return {
       name: columnName,
-      type: validationParams.type,
-      suffix: validationParams.suffix,
-      adomin: column.meta?.adomin,
+      adomin: adominConfig,
     }
   })
 

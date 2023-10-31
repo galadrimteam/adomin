@@ -1,16 +1,17 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import { ScaffolderMeta } from 'App/Adomin/adominConfigurator'
+import { AdominFieldConfig } from 'App/Adomin/fields.types'
 
 export const getValidationSchemaFromLucidModel = (Model: LucidModel) => {
   const results = Array.from(Model.$columnsDefinitions.entries()).map(([columnName, column]) => {
     if (column.isPrimary === true) return null
     if (!column.meta?.adomin) return null
-    if (column.meta?.scaffolder === undefined) return null
 
-    const validationParams = column.meta.scaffolder as ScaffolderMeta
-
-    return { columnName, schema: getValidationSchemaFromMeta(validationParams) }
+    return {
+      columnName,
+      schema: getValidationSchemaFromConfig(column.meta.adomin as AdominFieldConfig),
+    }
   })
 
   const schemaObj = {}
@@ -23,9 +24,17 @@ export const getValidationSchemaFromLucidModel = (Model: LucidModel) => {
   return schema.create(schemaObj)
 }
 
-const getValidationSchemaFromMeta = (config: ScaffolderMeta) => {
+const getSuffix = (config: AdominFieldConfig) => {
+  if (config.optional) return 'optional'
+  if (config.nullable) return 'nullable'
+
+  return null
+}
+
+const getValidationSchemaFromConfig = (config: AdominFieldConfig) => {
   if (config.type === 'object' || config.type === 'array') {
-    const specialSchema = config.suffix ? schema[config.type][config.suffix] : schema[config.type]
+    const suffix = getSuffix(config)
+    const specialSchema = suffix ? schema[config.type][suffix] : schema[config.type]
 
     return specialSchema().anyMembers()
   }
