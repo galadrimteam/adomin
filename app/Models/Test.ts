@@ -8,13 +8,16 @@ export default class Test extends BaseModel {
   public id: number
 
   @column(adomin('string'))
-  public name: string
+  public stringTest: string
 
   @column.date(adomin('date'))
-  public date: DateTime
+  public dateTest: DateTime
+
+  @column(adomin('number'))
+  public numberTest: number
 
   @column.dateTime(scaffold('date'))
-  public datetime: DateTime
+  public datetimeTest: DateTime
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
