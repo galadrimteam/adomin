@@ -11,6 +11,7 @@ export default class extends BaseSchema {
       table.date('date_test')
       table.double('number_test')
       table.datetime('datetime_test')
+      table.boolean('boolean_test').defaultTo(false)
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

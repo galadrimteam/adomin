@@ -14,6 +14,7 @@ export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
   min?: number
   max?: number
   step?: number
+  defaultValue?: number
 }
 
 export interface AdominStringFieldConfig extends AdominBaseFieldConfig {
@@ -21,16 +22,35 @@ export interface AdominStringFieldConfig extends AdominBaseFieldConfig {
 
   isPassword?: boolean
   isEmail?: boolean
+  defaultValue?: string
 }
 
 export interface AdominBooleanFieldConfig extends AdominBaseFieldConfig {
   type: 'boolean'
 
   variant?: 'switch' | 'checkbox'
+  defaultValue?: boolean
 }
 
 export interface AdominDateFieldConfig extends AdominBaseFieldConfig {
   type: 'date'
+  defaultValue?: DateValueNow | DateValueIsoString
+}
+
+interface DateValueNow {
+  mode: 'now'
+  plusYears?: number
+  plusMonths?: number
+  plusWeeks?: number
+  plusDays?: number
+  plusHours?: number
+  plusMinutes?: number
+  plusSeconds?: number
+}
+
+interface DateValueIsoString {
+  mode: 'isoString'
+  value: string
 }
 
 export interface AdominEnumFieldConfig extends AdominBaseFieldConfig {
