@@ -24,6 +24,17 @@ Route.group(() => {
   Route.post('login', adominLogin)
 }).prefix('adomin/api')
 
-// Route.get('adomin/*', ({ response }) => {
-// response.redirect('/adomin')
+// if you want to host your backoffice on the same domain as your backend:
+// - put your adomin-frontend built files in the public folder
+// - uncomment the following route
+// - check if default config/static.ts is ok for you (https://docs.adonisjs.com/guides/static-assets#configuration)
+
+// Route.get('*', ({ response }) => {
+//   // n.b. import Application from '@ioc:Adonis/Core/Application'
+//   const htmlPath = Application.publicPath('index.html')
+//   const fileStream = fs.createReadStream(htmlPath)
+
+//   response.type('html')
+
+//   return response.stream(fileStream)
 // })
