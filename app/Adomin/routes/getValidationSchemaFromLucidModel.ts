@@ -1,4 +1,4 @@
-import { schema } from '@ioc:Adonis/Core/Validator'
+import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import { ScaffolderMeta } from 'App/Adomin/adominConfigurator'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
@@ -32,6 +32,10 @@ const getSuffix = (config: AdominFieldConfig) => {
 }
 
 const getValidationSchemaFromConfig = (config: AdominFieldConfig) => {
+  if (config.type === 'string' && config.isEmail) {
+    return schema.string([rules.email()])
+  }
+
   if (config.type === 'object' || config.type === 'array') {
     const suffix = getSuffix(config)
     const specialSchema = suffix ? schema[config.type][suffix] : schema[config.type]

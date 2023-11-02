@@ -6,6 +6,7 @@ import { getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromLucidModel } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
+import { getGenericMessages } from 'App/Adomin/validationMessages'
 import { validateResourceId } from 'App/Scaffolder/validateResourceId'
 
 const removeUntouchedPassword = (data: any, Model: LucidModel) => {
@@ -40,7 +41,7 @@ export const updateModel = async (ctx: HttpContextContract) => {
   }
 
   const schema = getValidationSchemaFromLucidModel(Model)
-  const parsedData = await request.validate({ schema })
+  const parsedData = await request.validate({ schema, messages: getGenericMessages(Model) })
   const data = removeUntouchedPassword(parsedData, Model)
 
   const modelInstance = await getModelData(Model, id)

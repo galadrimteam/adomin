@@ -7,7 +7,7 @@ export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column(adomin('string'))
+  @column(adomin({ type: 'string', isEmail: true, label: 'Super email' }))
   public email: string
 
   @column(adomin({ type: 'string', isPassword: true, label: 'Mot de passe' }))

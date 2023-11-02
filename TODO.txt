@@ -1,8 +1,5 @@
 Support field types :
 
-- Date
-- DateTime
 - Enum
-- float support
 - image (attachment)
 - image (url)

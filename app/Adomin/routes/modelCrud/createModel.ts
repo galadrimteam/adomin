@@ -3,6 +3,7 @@ import { validateOrThrow } from 'App/Adomin/adominValidationHelpers'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromLucidModel } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
+import { getGenericMessages } from 'App/Adomin/validationMessages'
 
 export const createModel = async (ctx: HttpContextContract) => {
   const { params, response, request } = ctx
@@ -20,7 +21,7 @@ export const createModel = async (ctx: HttpContextContract) => {
   }
 
   const schema = getValidationSchemaFromLucidModel(Model)
-  const data = await request.validate({ schema })
+  const data = await request.validate({ schema, messages: getGenericMessages(Model) })
 
   const createdInstance = await Model.create(data)
 

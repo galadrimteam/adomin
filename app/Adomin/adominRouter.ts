@@ -27,7 +27,7 @@ Route.group(() => {
 // if you want to host your backoffice on the same domain as your backend:
 // - put your adomin-frontend built files in the public folder
 // - uncomment the following route
-// - check if default config/static.ts is ok for you (https://docs.adonisjs.com/guides/static-assets#configuration)
+// - create and setup config/static.ts (https://docs.adonisjs.com/guides/static-assets#configuration)
 
 // Route.get('*', ({ response }) => {
 //   // n.b. import Application from '@ioc:Adonis/Core/Application'
