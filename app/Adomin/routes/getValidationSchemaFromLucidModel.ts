@@ -32,6 +32,9 @@ const getSuffix = (config: AdominFieldConfig) => {
 }
 
 const getValidationSchemaFromConfig = (config: AdominFieldConfig) => {
+  if (config.type === 'enum') {
+    return schema.enum(config.options.map((option) => option.value))
+  }
   if (config.type === 'string' && config.isEmail) {
     return schema.string([rules.email()])
   }

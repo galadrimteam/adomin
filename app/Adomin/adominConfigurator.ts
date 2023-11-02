@@ -31,8 +31,13 @@ const getAdominFieldConfig = (
     const scaffoldOptions = scaffold(adominFieldConfig).meta.scaffolder
     const optional = scaffoldOptions.suffix === 'optional' || undefined
     const nullable = scaffoldOptions.suffix === 'nullable' || undefined
+    const type = scaffoldOptions.type
 
-    return { type: scaffoldOptions.type, optional, nullable }
+    if (type === 'enum') {
+      return { type, optional, nullable, options: [], subType: 'string' }
+    }
+
+    return { type, optional, nullable }
   }
 
   return adominFieldConfig

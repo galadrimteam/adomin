@@ -7,13 +7,32 @@ export default class Test extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column(adomin('string'))
+  @column(
+    adomin({
+      type: 'enum',
+      label: 'Test de string',
+      options: [
+        { label: 'Salut', value: 'hello' },
+        { label: 'Au revoir', value: 'bye' },
+      ],
+      subType: 'string',
+    })
+  )
   public stringTest: string
 
   @column.date(adomin({ type: 'date', defaultValue: { mode: 'now', plusDays: 2 } }))
   public dateTest: DateTime
 
-  @column(adomin({ type: 'number', min: 10, max: 20, step: 0.1 }))
+  @column(
+    adomin({
+      type: 'enum',
+      subType: 'number',
+      options: [
+        { label: 'Premier', value: 1 },
+        { label: 'Deuxieme', value: 2 },
+      ],
+    })
+  )
   public numberTest: number
 
   @column.dateTime(scaffold('date'))
