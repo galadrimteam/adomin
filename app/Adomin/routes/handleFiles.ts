@@ -1,4 +1,4 @@
-import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
+import { Attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 import { LucidRow } from '@ioc:Adonis/Lucid/Orm'
 import type { ColumnConfig } from 'App/Adomin/routes/getModelConfig'
 
@@ -20,7 +20,12 @@ export const loadFilesForInstances = async (fields: ColumnConfig[], modelInstanc
   const filesColumn = fields.filter(({ adomin }) => adomin.type === 'file')
 
   const promises = modelInstances.flatMap(async (modelInstance) => {
-    const innerPromises = filesColumn.map(async ({ name }) => modelInstance[name]?.computeUrl())
+    const innerPromises = filesColumn.map(async ({ name }) => {
+      const attachment = modelInstance[name] as AttachmentContract | undefined
+      if (!attachment || typeof attachment.url === 'string') return
+      const url = await attachment.getUrl()
+      attachment.url = url
+    })
 
     await Promise.all(innerPromises)
   })
