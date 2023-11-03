@@ -1,6 +1,8 @@
 import { string } from '@ioc:Adonis/Core/Helpers'
 import { ADOMIN_CONFIG } from 'App/Adomin/CONFIG'
 
+const defaultText = 'Made with ❤️ by Galadrim'
+
 export const getAdominConfig = () => {
   const models = ADOMIN_CONFIG.models.map((conf) => {
     const Model = conf.model()
@@ -14,5 +16,7 @@ export const getAdominConfig = () => {
     }
   })
 
-  return { title: ADOMIN_CONFIG.title, models }
+  const footerText = ADOMIN_CONFIG.footerText ?? defaultText
+
+  return { title: ADOMIN_CONFIG.title, footerText, models }
 }

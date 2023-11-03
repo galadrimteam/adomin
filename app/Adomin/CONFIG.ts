@@ -3,6 +3,7 @@ import { AdominValidation } from 'App/Adomin/adominValidationHelpers'
 
 export interface AdominConfig {
   title: string
+  footerText?: string
   models: {
     model: () => typeof BaseModel
     label?: string
