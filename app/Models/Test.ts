@@ -38,8 +38,20 @@ export default class Test extends BaseModel {
   })
   public booleanTest: boolean
 
-  @attachment(adomin({ type: 'file', label: 'Avatar' }))
+  @attachment(
+    adomin({
+      type: 'file',
+      label: 'Avatar',
+      isImage: true,
+      quality: 1,
+      maxWidth: 100,
+      maxHeight: 100,
+    })
+  )
   public imageTest: AttachmentContract
+
+  @attachment(adomin({ type: 'file', label: 'Contrat' }))
+  public fileTest: AttachmentContract
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

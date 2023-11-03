@@ -49,7 +49,7 @@ const getAdominFieldConfig = (
 
 export const adomin = (config: AdominFieldConfig | ScaffolderFieldTypeWithSuffix) => {
   const adominFieldConfig = getAdominFieldConfig(config)
-  const withScaffold = adominFieldConfig?.noScaffold !== false
+  const withScaffold = adominFieldConfig?.withScaffold === true
   let suffix: ScaffolderFieldSuffix | undefined
 
   if (adominFieldConfig.optional) suffix = 'optional'
