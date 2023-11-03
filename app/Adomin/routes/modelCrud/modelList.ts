@@ -1,9 +1,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import { getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
+import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 
-const getUserWithFields = async (Model: LucidModel, fieldsStrs: string[], primaryKey: string) => {
+const getDataList = async (Model: LucidModel, fieldsStrs: string[], primaryKey: string) => {
   const data = await Model.query()
     .select(...fieldsStrs)
     .orderBy(primaryKey, 'asc')
@@ -19,8 +20,9 @@ export const modelList = async ({ params }: HttpContextContract) => {
   if (fields.length === 0) return []
 
   const fieldsStrs = fields.map(({ name }) => name)
+  const data = await getDataList(Model, fieldsStrs, primaryKey)
 
-  const data = await getUserWithFields(Model, fieldsStrs, primaryKey)
+  await loadFilesForInstances(fields, data)
 
   return data
 }

@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.9.5",
+    "@adonisjs/attachment-lite": "^1.0.8",
     "@adonisjs/auth": "^8.2.3",
     "@adonisjs/core": "^5.8.0",
     "@adonisjs/lucid": "^18.4.0",

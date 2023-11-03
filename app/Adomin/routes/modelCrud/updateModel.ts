@@ -1,16 +1,15 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import { PASSWORD_SERIALIZED_FORM } from 'App/Adomin/adominConfigurator'
 import { validateOrThrow } from 'App/Adomin/adominValidationHelpers'
-import { getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
+import { ColumnConfig, getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromLucidModel } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
+import { handleFiles, loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { getGenericMessages } from 'App/Adomin/validationMessages'
 import { validateResourceId } from 'App/Scaffolder/validateResourceId'
 
-const removeUntouchedPassword = (data: any, Model: LucidModel) => {
-  const { fields } = getConfigFromLucidModel(Model)
+const removeUntouchedPassword = (data: any, fields: ColumnConfig[]) => {
   const passwordKeys = fields
     .filter(({ adomin }) => adomin?.type === 'string' && adomin.isPassword)
     .map(({ name }) => name)
@@ -40,15 +39,19 @@ export const updateModel = async (ctx: HttpContextContract) => {
     if (res !== true) return
   }
 
-  const schema = getValidationSchemaFromLucidModel(Model)
+  const schema = getValidationSchemaFromLucidModel(Model, 'update')
   const parsedData = await request.validate({ schema, messages: getGenericMessages(Model) })
-  const data = removeUntouchedPassword(parsedData, Model)
+  const { fields } = getConfigFromLucidModel(Model)
+  const data = removeUntouchedPassword(parsedData, fields)
+  const finalData = await handleFiles(fields, data)
 
   const modelInstance = await getModelData(Model, id)
 
-  modelInstance.merge(data)
+  modelInstance.merge(finalData)
 
   await modelInstance.save()
+
+  await loadFilesForInstances(fields, [modelInstance])
 
   return { message: 'Success', model: modelInstance }
 }

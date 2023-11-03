@@ -34,6 +34,7 @@ export interface AdominBooleanFieldConfig extends AdominBaseFieldConfig {
 
 export interface AdominDateFieldConfig extends AdominBaseFieldConfig {
   type: 'date'
+  subType: 'date' | 'datetime'
   defaultValue?: DateValueNow | DateValueIsoString
 }
 
@@ -58,21 +59,11 @@ export interface AdominSelectOption<T extends string | number> {
   value: T
 }
 
-export interface AdominStringSelectConfig {
-  subType: 'string'
+export type AdominEnumFieldConfig = AdominBaseFieldConfig & {
+  type: 'enum'
   options: AdominSelectOption<string>[]
   defaultValue?: string
 }
-
-export interface AdominNumberSelectConfig {
-  subType: 'number'
-  options: AdominSelectOption<number>[]
-  defaultValue?: number
-}
-
-export type AdominEnumFieldConfig = AdominBaseFieldConfig & {
-  type: 'enum'
-} & (AdominNumberSelectConfig | AdominStringSelectConfig)
 
 export interface AdominEnumSetFieldConfig extends AdominBaseFieldConfig {
   type: 'enumSet'
@@ -84,6 +75,10 @@ export interface AdominArrayFieldConfig extends AdominBaseFieldConfig {
 
 export interface AdominFileFieldConfig extends AdominBaseFieldConfig {
   type: 'file'
+
+  isImage?: boolean
+  extnames?: string[]
+  maxFileSize?: string
 }
 
 export interface AdominObjectFieldConfig extends AdominBaseFieldConfig {

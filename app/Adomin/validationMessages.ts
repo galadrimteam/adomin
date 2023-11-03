@@ -26,7 +26,7 @@ export const getGenericMessages = (Model: LucidModel): CustomMessages => ({
       return getValidationMessage('rules.email', fieldLabel)
     }
     if (rule === 'required') {
-      return getValidationMessage('rules.email', fieldLabel)
+      return getValidationMessage('rules.required', fieldLabel)
     }
     if (rule === 'unique') {
       return getValidationMessage('rules.unique', fieldLabel)

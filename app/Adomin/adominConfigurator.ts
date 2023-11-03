@@ -34,7 +34,11 @@ const getAdominFieldConfig = (
     const type = scaffoldOptions.type
 
     if (type === 'enum') {
-      return { type, optional, nullable, options: [], subType: 'string' }
+      return { type, optional, nullable, options: [] }
+    }
+
+    if (type === 'date') {
+      return { type, optional, nullable, subType: 'date' }
     }
 
     return { type, optional, nullable }

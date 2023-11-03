@@ -7,10 +7,10 @@ import { filterUndefinedOrNullValues } from 'App/Scaffolder/array'
 
 interface ModelFieldsConfig {
   primaryKey: string
-  fields: FieldConfig[]
+  fields: ColumnConfig[]
 }
 
-interface FieldConfig {
+export interface ColumnConfig {
   name: string
   adomin: AdominFieldConfig
 }

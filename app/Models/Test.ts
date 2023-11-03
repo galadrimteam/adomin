@@ -1,3 +1,4 @@
+import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 import { adomin } from 'App/Adomin/adominConfigurator'
 import { scaffold } from 'App/Scaffolder/scaffolder'
@@ -15,24 +16,16 @@ export default class Test extends BaseModel {
         { label: 'Salut', value: 'hello' },
         { label: 'Au revoir', value: 'bye' },
       ],
-      subType: 'string',
     })
   )
   public stringTest: string
 
-  @column.date(adomin({ type: 'date', defaultValue: { mode: 'now', plusDays: 2 } }))
+  @column.date(
+    adomin({ type: 'date', subType: 'date', defaultValue: { mode: 'now', plusDays: 2 } })
+  )
   public dateTest: DateTime
 
-  @column(
-    adomin({
-      type: 'enum',
-      subType: 'number',
-      options: [
-        { label: 'Premier', value: 1 },
-        { label: 'Deuxieme', value: 2 },
-      ],
-    })
-  )
+  @column(adomin({ type: 'number' }))
   public numberTest: number
 
   @column.dateTime(scaffold('date'))
@@ -44,6 +37,9 @@ export default class Test extends BaseModel {
     ...adomin({ type: 'boolean', variant: 'switch' }),
   })
   public booleanTest: boolean
+
+  @attachment(adomin({ type: 'file', label: 'Avatar' }))
+  public imageTest: AttachmentContract
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
