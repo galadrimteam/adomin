@@ -50,12 +50,13 @@ const getValidationSchemaFromConfig = (
     return schema.string([rules.email()])
   }
 
-  if (config.type === 'object' || config.type === 'array') {
-    const suffix = getSuffix(config)
-    const specialSchema = suffix ? schema[config.type][suffix] : schema[config.type]
+  // TODO: add support for array and object JSON field types
+  // if (config.type === 'object' || config.type === 'array') {
+  //   const suffix = getSuffix(config)
+  //   const specialSchema = suffix ? schema[config.type][suffix] : schema[config.type]
 
-    return specialSchema().anyMembers()
-  }
+  //   return specialSchema().anyMembers()
+  // }
 
   if (config.type === 'file') {
     const suffix = validationMode === 'update' ? 'optional' : getSuffix(config)

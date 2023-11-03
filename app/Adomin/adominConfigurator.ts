@@ -1,11 +1,6 @@
 import { ColumnOptions } from '@ioc:Adonis/Lucid/Orm'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
-import {
-  ScaffolderFieldSuffix,
-  ScaffolderFieldType,
-  ScaffolderFieldTypeWithSuffix,
-  scaffold,
-} from 'App/Scaffolder/scaffolder'
+import { ScaffolderFieldSuffix, ScaffolderFieldType, scaffold } from 'App/Scaffolder/scaffolder'
 
 export type ScaffolderMeta = {
   type: ScaffolderFieldType
@@ -24,14 +19,22 @@ const getOtherColumnOptions = (adominFieldConfig: AdominFieldConfig): Partial<Co
   return result
 }
 
+type ScaffolderFieldTypeWithExclusions = Exclude<
+  ScaffolderFieldType,
+  'enumSet' | 'array' | 'object'
+>
+
+type ScaffolderFieldTypeWithSuffixWithExclusions =
+  `${ScaffolderFieldTypeWithExclusions}.${ScaffolderFieldSuffix}`
+
 const getAdominFieldConfig = (
-  adominFieldConfig: AdominFieldConfig | ScaffolderFieldTypeWithSuffix
+  adominFieldConfig: AdominFieldConfig | ScaffolderFieldTypeWithSuffixWithExclusions
 ): AdominFieldConfig => {
   if (typeof adominFieldConfig === 'string') {
     const scaffoldOptions = scaffold(adominFieldConfig).meta.scaffolder
     const optional = scaffoldOptions.suffix === 'optional' || undefined
     const nullable = scaffoldOptions.suffix === 'nullable' || undefined
-    const type = scaffoldOptions.type
+    const type = scaffoldOptions.type as ScaffolderFieldTypeWithExclusions
 
     if (type === 'enum') {
       return { type, optional, nullable, options: [] }
@@ -47,7 +50,7 @@ const getAdominFieldConfig = (
   return adominFieldConfig
 }
 
-export const adomin = (config: AdominFieldConfig | ScaffolderFieldTypeWithSuffix) => {
+export const adomin = (config: AdominFieldConfig | ScaffolderFieldTypeWithSuffixWithExclusions) => {
   const adominFieldConfig = getAdominFieldConfig(config)
   const withScaffold = adominFieldConfig?.withScaffold === true
   let suffix: ScaffolderFieldSuffix | undefined
