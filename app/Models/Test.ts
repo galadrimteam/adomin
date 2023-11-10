@@ -8,10 +8,13 @@ export default class Test extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
+  @column(adomin({ type: 'string', label: 'Texte libre' }))
+  public freeText: string
+
   @column(
     adomin({
       type: 'enum',
-      label: 'Test de string',
+      label: 'Test select',
       options: [
         { label: 'Salut', value: 'hello' },
         { label: 'Au revoir', value: 'bye' },
