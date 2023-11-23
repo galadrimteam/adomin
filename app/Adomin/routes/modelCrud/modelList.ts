@@ -1,10 +1,11 @@
+import Env from '@ioc:Adonis/Core/Env'
+import { string } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
-import { getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
+import { schema, validator } from '@ioc:Adonis/Core/Validator'
+import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { ColumnConfig, getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
-
-import { schema, validator } from '@ioc:Adonis/Core/Validator'
 
 const paginationSchema = schema.create({
   pageIndex: schema.number(),
@@ -28,28 +29,29 @@ type PaginationSettings = (typeof paginationSchema)['props']
 
 const getDataList = async (
   Model: LucidModel,
-  fieldsStrs: string[],
+  fields: ColumnConfig[],
   primaryKey: string,
   paginationSettings: PaginationSettings
 ) => {
+  const fieldsStrs = fields.map(({ name }) => name)
   const { pageIndex, pageSize } = paginationSettings
   const query = Model.query().select(...fieldsStrs)
 
   const filtersMap = new Map(paginationSettings.filters?.map(({ id, value }) => [id, value]) ?? [])
 
   query.where((builder) => {
-    for (const field of fieldsStrs) {
+    for (const field of fields) {
       if (paginationSettings.globalFilter) {
-        builder.orWhere(field, 'like', `%${paginationSettings.globalFilter}%`)
+        whereLike(builder, 'or', field.name, paginationSettings.globalFilter)
       }
     }
   })
 
   query.andWhere((builder) => {
-    for (const field of fieldsStrs) {
-      const search = filtersMap.get(field)
+    for (const field of fields) {
+      const search = filtersMap.get(field.name)
       if (search) {
-        builder.andWhere(field, 'like', `%${search}%`)
+        whereLike(builder, 'and', field.name, search)
       }
     }
   })
@@ -85,10 +87,24 @@ export const modelList = async ({ params, request }: HttpContextContract) => {
     },
   })
 
-  const fieldsStrs = fields.map(({ name }) => name)
-  const data = await getDataList(Model, fieldsStrs, primaryKey, paginationSettings)
+  const data = await getDataList(Model, fields, primaryKey, paginationSettings)
 
   await loadFilesForInstances(fields, data)
 
   return data
+}
+
+const whereLike = (
+  builder: ModelQueryBuilderContract<LucidModel, LucidRow>,
+  type: 'or' | 'and',
+  column: string,
+  value: string
+) => {
+  if (Env.get('DB_CONNECTION') === 'pg') {
+    const method = type === 'or' ? 'orWhereRaw' : 'andWhereRaw'
+    builder[method](`CAST("${string.snakeCase(column)}" as text) LIKE ?`, [`%${value}%`])
+  } else {
+    const method = type === 'or' ? 'orWhere' : 'andWhere'
+    builder[method](column, 'LIKE', `%${value}%`)
+  }
 }
