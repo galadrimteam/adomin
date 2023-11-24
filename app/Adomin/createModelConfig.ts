@@ -19,7 +19,7 @@ interface ModelConfigStaticOptions {
   validation?: AdominValidation
 }
 
-interface ModelConfig extends ModelConfigStaticOptions {
+export interface ModelConfig extends ModelConfigStaticOptions {
   model: () => LucidModel
   fields: ColumnConfig[]
   name: string

@@ -1,21 +1,20 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
-import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import { AdominValidationMode } from 'App/Adomin/adominValidationHelpers'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
-import { getModelConfig } from './getModelConfig'
+import { ModelConfig } from '../createModelConfig'
 
-export const getValidationSchemaFromLucidModel = (
-  Model: LucidModel,
+export const getValidationSchemaFromConfig = (
+  modelConfig: ModelConfig,
   validationMode: AdominValidationMode
 ) => {
-  const foundConfig = getModelConfig(Model.name)
+  const foundConfig = modelConfig
   const results = foundConfig.fields.map(({ adomin, name: columnName }) => {
-    if (validationMode === 'create' && !adomin.creatable) return null
-    if (validationMode === 'update' && !adomin.editable) return null
+    if (validationMode === 'create' && adomin.creatable === false) return null
+    if (validationMode === 'update' && adomin.editable === false) return null
 
     return {
       columnName,
-      schema: getValidationSchemaFromConfig(adomin, validationMode),
+      schema: getValidationSchemaFromFieldConfig(adomin, validationMode),
     }
   })
 
@@ -36,7 +35,7 @@ const getSuffix = (config: AdominFieldConfig) => {
   return null
 }
 
-const getValidationSchemaFromConfig = (
+const getValidationSchemaFromFieldConfig = (
   config: AdominFieldConfig,
   validationMode: AdominValidationMode
 ) => {

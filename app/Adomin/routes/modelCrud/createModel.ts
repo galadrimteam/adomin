@@ -1,29 +1,29 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { validateOrThrow } from 'App/Adomin/adominValidationHelpers'
 import { getModelData } from 'App/Adomin/routes/getModelData'
-import { getValidationSchemaFromLucidModel } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
+import { getValidationSchemaFromConfig } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
 import { handleFiles, loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { getGenericMessages } from 'App/Adomin/validationMessages'
 
 export const createModel = async (ctx: HttpContextContract) => {
   const { params, response, request } = ctx
-  const modelFound = await getValidatedModelConfig(params)
+  const modelConfig = await getValidatedModelConfig(params)
 
-  if (modelFound.canCreate === false) {
-    return response.badRequest({ error: `Impossible de créer un ${modelFound.label}` })
+  if (modelConfig.canCreate === false) {
+    return response.badRequest({ error: `Impossible de créer un ${modelConfig.label}` })
   }
 
-  const Model = modelFound.model()
+  const Model = modelConfig.model()
 
-  if (modelFound.validation) {
-    const res = await validateOrThrow(ctx, modelFound.validation, 'create')
+  if (modelConfig.validation) {
+    const res = await validateOrThrow(ctx, modelConfig.validation, 'create')
     if (res !== true) return
   }
 
-  const fields = modelFound.fields
+  const fields = modelConfig.fields
 
-  const schema = getValidationSchemaFromLucidModel(Model, 'create')
+  const schema = getValidationSchemaFromConfig(modelConfig, 'create')
   const data = await request.validate({ schema, messages: getGenericMessages(Model) })
 
   const finalData = await handleFiles(fields, data)

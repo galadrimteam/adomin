@@ -12,13 +12,13 @@ export const getModelConfig = (modelName: string) => {
 export const getModelConfigRoute = async ({ params, response }: HttpContextContract) => {
   const modelString = params.model
 
-  const modelFound = ADOMIN_CONFIG.models.find(({ model }) => model().name === modelString)
+  const modelConfig = ADOMIN_CONFIG.models.find(({ model }) => model().name === modelString)
 
-  if (!modelFound) {
+  if (!modelConfig) {
     return response.notFound({ error: `Model '${modelString}' not found` })
   }
 
-  const { fields, primaryKey, label, labelPluralized, name } = modelFound
+  const { fields, primaryKey, label, labelPluralized, name } = modelConfig
 
   return {
     name,

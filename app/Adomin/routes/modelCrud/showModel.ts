@@ -6,11 +6,11 @@ import { validateResourceId } from 'App/Scaffolder/validateResourceId'
 
 export const showModel = async ({ params }: HttpContextContract) => {
   const { id } = await validateResourceId(params)
-  const modelFound = await getValidatedModelConfig(params)
-  const Model = modelFound.model()
+  const modelConfig = await getValidatedModelConfig(params)
+  const Model = modelConfig.model()
   const modelInstance = await getModelData(Model, id)
 
-  await loadFilesForInstances(modelFound.fields, [modelInstance])
+  await loadFilesForInstances(modelConfig.fields, [modelInstance])
 
   return modelInstance
 }

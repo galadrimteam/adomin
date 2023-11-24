@@ -4,13 +4,13 @@ import { validateResourceId } from 'App/Scaffolder/validateResourceId'
 
 export const deleteModel = async ({ params, response }: HttpContextContract) => {
   const { id } = await validateResourceId(params)
-  const modelFound = await getValidatedModelConfig(params)
+  const modelConfig = await getValidatedModelConfig(params)
 
-  if (modelFound.canDelete === false) {
+  if (modelConfig.canDelete === false) {
     return response.badRequest({ error: 'Ce modèle ne peut pas être supprimé' })
   }
 
-  const Model = modelFound.model()
+  const Model = modelConfig.model()
   const modelInstance = await Model.findOrFail(id)
 
   await modelInstance.delete()
