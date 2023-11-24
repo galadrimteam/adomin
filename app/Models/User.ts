@@ -1,16 +1,15 @@
 import Hash from '@ioc:Adonis/Core/Hash'
 import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
-import { adomin } from 'App/Adomin/adominConfigurator'
 import { DateTime } from 'luxon'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column(adomin({ type: 'string', isEmail: true, label: 'Super email' }))
+  @column()
   public email: string
 
-  @column(adomin({ type: 'string', isPassword: true, label: 'Mot de passe' }))
+  @column()
   public password: string
 
   @column()

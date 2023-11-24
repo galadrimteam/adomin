@@ -1,37 +1,26 @@
 import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
-import { adomin } from 'App/Adomin/adominConfigurator'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { scaffold } from 'App/Scaffolder/scaffolder'
 import { DateTime } from 'luxon'
+import User from './User'
 
 export default class Test extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  // @column(adomin({ type: 'array' }))
+  // @column()
   // public stringArrayTest: string[]
 
-  @column(adomin({ type: 'string', label: 'Texte libre' }))
+  @column()
   public freeText: string
 
-  @column(
-    adomin({
-      type: 'enum',
-      label: 'Test select',
-      options: [
-        { label: 'Salut', value: 'hello' },
-        { label: 'Au revoir', value: 'bye' },
-      ],
-    })
-  )
+  @column()
   public stringTest: string
 
-  @column.date(
-    adomin({ type: 'date', subType: 'date', defaultValue: { mode: 'now', plusDays: 2 } })
-  )
+  @column.date()
   public dateTest: DateTime
 
-  @column(adomin({ type: 'number' }))
+  @column()
   public numberTest: number
 
   @column.dateTime(scaffold('date'))
@@ -40,24 +29,20 @@ export default class Test extends BaseModel {
   @column({
     prepare: (value) => (value ? 1 : 0),
     consume: (value) => Boolean(value),
-    ...adomin({ type: 'boolean', variant: 'switch' }),
   })
   public booleanTest: boolean
 
-  @attachment(
-    adomin({
-      type: 'file',
-      label: 'Avatar',
-      isImage: true,
-      quality: 1,
-      maxWidth: 100,
-      maxHeight: 100,
-    })
-  )
+  @attachment()
   public imageTest: AttachmentContract
 
-  @attachment(adomin({ type: 'file', label: 'Contrat' }))
+  @attachment()
   public fileTest: AttachmentContract
+
+  @column()
+  public userId: number | null
+
+  @belongsTo(() => User)
+  public user: BelongsTo<typeof User>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

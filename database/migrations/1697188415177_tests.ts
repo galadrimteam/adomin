@@ -19,6 +19,8 @@ export default class extends BaseSchema {
       // specific to postgresql
       // table.specificType('string_array_test', 'text[]').defaultTo('{}')
 
+      table.integer('user_id').unsigned().references('users.id').onDelete('CASCADE')
+
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })
