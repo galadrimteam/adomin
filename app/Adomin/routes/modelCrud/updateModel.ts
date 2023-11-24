@@ -6,7 +6,7 @@ import { getValidationSchemaFromConfig } from 'App/Adomin/routes/getValidationSc
 import { handleFiles, loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { getGenericMessages } from 'App/Adomin/validationMessages'
-import { validateResourceId } from 'App/Scaffolder/validateResourceId'
+import { validateResourceId } from '../validateResourceId'
 
 const removeUntouchedPassword = (data: any, fields: ColumnConfig[]) => {
   const passwordKeys = fields

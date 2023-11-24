@@ -1,25 +1,5 @@
 {
   "commands": {
-    "scaffold": {
-      "settings": {
-        "loadApp": true,
-        "stayAlive": false
-      },
-      "commandPath": "./commands/Scaffolder",
-      "commandName": "scaffold",
-      "description": "Scaffold a new API controller for a Model",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "modelName",
-          "name": "modelName",
-          "required": true,
-          "description": "Model name, or \"auth\" for scaffolding auth API"
-        }
-      ],
-      "aliases": [],
-      "flags": []
-    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",

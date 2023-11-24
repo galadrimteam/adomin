@@ -1,6 +1,5 @@
 import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import { scaffold } from 'App/Scaffolder/scaffolder'
 import { DateTime } from 'luxon'
 import User from './User'
 
@@ -23,7 +22,7 @@ export default class Test extends BaseModel {
   @column()
   public numberTest: number
 
-  @column.dateTime(scaffold('date'))
+  @column.dateTime()
   public datetimeTest: DateTime
 
   @column({
