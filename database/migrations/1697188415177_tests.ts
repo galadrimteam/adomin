@@ -16,6 +16,9 @@ export default class extends BaseSchema {
       table.json('image_test')
       table.json('file_test')
 
+      // specific to postgresql
+      // table.specificType('string_array_test', 'text[]').defaultTo('{}')
+
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

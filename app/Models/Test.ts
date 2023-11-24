@@ -8,6 +8,9 @@ export default class Test extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
+  // @column(adomin({ type: 'array' }))
+  // public stringArrayTest: string[]
+
   @column(adomin({ type: 'string', label: 'Texte libre' }))
   public freeText: string
 

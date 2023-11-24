@@ -46,6 +46,9 @@ const getValidationSchemaFromConfig = (
     const options = config.options.map((option) => option.value)
     return schema.enum(options)
   }
+  if (config.type === 'array') {
+    return schema.array.optional().members(schema.string())
+  }
   if (config.type === 'string' && config.isEmail) {
     return schema.string([rules.email()])
   }

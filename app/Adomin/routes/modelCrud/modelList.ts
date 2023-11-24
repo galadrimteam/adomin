@@ -56,7 +56,7 @@ const getDataList = async (
     }
   })
 
-  if (paginationSettings.sorting) {
+  if (paginationSettings.sorting && paginationSettings.sorting.length > 0) {
     for (const { id, desc } of paginationSettings.sorting) {
       query.orderBy(id, desc ? 'desc' : 'asc')
     }
