@@ -10,7 +10,7 @@ export const adominLogin = async ({ auth, request }: HttpContextContract) => {
   const { email, password } = await request.validate({
     schema: loginSchema,
   })
-  const token = await auth.attempt(email, password)
+  const token = await auth.use('api').attempt(email, password)
 
   return token
 }

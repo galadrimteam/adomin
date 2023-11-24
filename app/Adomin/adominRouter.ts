@@ -1,6 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route'
 import { adominLogin } from 'App/Adomin/routes/adominLogin'
-import { getModelConfig } from 'App/Adomin/routes/getModelConfig'
+import { getModelConfigRoute } from 'App/Adomin/routes/getModelConfig'
 import { createModel } from 'App/Adomin/routes/modelCrud/createModel'
 import { deleteModel } from 'App/Adomin/routes/modelCrud/deleteModel'
 import { modelList } from 'App/Adomin/routes/modelCrud/modelList'
@@ -11,7 +11,7 @@ import { getAdominConfig } from './routes/getAdominConfig'
 Route.group(() => {
   Route.group(() => {
     Route.get('config', getAdominConfig)
-    Route.get('config/:model', getModelConfig)
+    Route.get('config/:model', getModelConfigRoute)
 
     Route.get('crud/:model', modelList)
     Route.get('crud/:model/:id', showModel)

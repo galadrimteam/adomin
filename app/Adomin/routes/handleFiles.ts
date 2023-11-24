@@ -1,6 +1,6 @@
 import { Attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 import { LucidRow } from '@ioc:Adonis/Lucid/Orm'
-import type { ColumnConfig } from 'App/Adomin/routes/getModelConfig'
+import type { ColumnConfig } from '../createModelConfig'
 
 export const handleFiles = async (fields: ColumnConfig[], data: any) => {
   const newData = { ...data }

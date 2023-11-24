@@ -3,7 +3,7 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator } from '@ioc:Adonis/Core/Validator'
 import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
-import { ColumnConfig, getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
+import { ColumnConfig } from 'App/Adomin/createModelConfig'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 
@@ -70,9 +70,9 @@ const getDataList = async (
 }
 
 export const modelList = async ({ params, request }: HttpContextContract) => {
-  const modelFound = await getValidatedModelConfig(params)
-  const Model = modelFound.model()
-  const { fields, primaryKey } = getConfigFromLucidModel(Model)
+  const modelConfig = await getValidatedModelConfig(params)
+  const Model = modelConfig.model()
+  const { fields, primaryKey } = modelConfig
 
   if (fields.length === 0) return []
 

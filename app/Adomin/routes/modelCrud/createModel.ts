@@ -1,6 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { validateOrThrow } from 'App/Adomin/adominValidationHelpers'
-import { getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromLucidModel } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
 import { handleFiles, loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
@@ -22,7 +21,7 @@ export const createModel = async (ctx: HttpContextContract) => {
     if (res !== true) return
   }
 
-  const { fields } = getConfigFromLucidModel(Model)
+  const fields = modelFound.fields
 
   const schema = getValidationSchemaFromLucidModel(Model, 'create')
   const data = await request.validate({ schema, messages: getGenericMessages(Model) })

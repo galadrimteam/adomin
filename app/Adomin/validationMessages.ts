@@ -1,7 +1,7 @@
 import { CustomMessages } from '@ioc:Adonis/Core/Validator'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
-import { getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
 import { getValidationMessage } from 'App/Adomin/validationLangs/validationEn'
+import { getModelConfig } from './routes/getModelConfig'
 
 // 'test' => 'test'
 // 'arr.0.field' => 'field'
@@ -11,7 +11,7 @@ const getFieldName = (fieldName: string) => {
 }
 
 const getFieldLabel = (fieldName: string, Model: LucidModel) => {
-  const { fields } = getConfigFromLucidModel(Model)
+  const { fields } = getModelConfig(Model.name)
   const found = fields.find(({ name }) => name === fieldName)
 
   return found?.adomin.label ?? fieldName

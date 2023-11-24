@@ -1,7 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { PASSWORD_SERIALIZED_FORM } from 'App/Adomin/adominConfigurator'
 import { validateOrThrow } from 'App/Adomin/adominValidationHelpers'
-import { ColumnConfig, getConfigFromLucidModel } from 'App/Adomin/routes/getModelConfig'
+import { ColumnConfig, PASSWORD_SERIALIZED_FORM } from 'App/Adomin/createModelConfig'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromLucidModel } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
 import { handleFiles, loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
@@ -41,7 +40,7 @@ export const updateModel = async (ctx: HttpContextContract) => {
 
   const schema = getValidationSchemaFromLucidModel(Model, 'update')
   const parsedData = await request.validate({ schema, messages: getGenericMessages(Model) })
-  const { fields } = getConfigFromLucidModel(Model)
+  const fields = modelFound.fields
   const data = removeUntouchedPassword(parsedData, fields)
   const finalData = await handleFiles(fields, data)
 

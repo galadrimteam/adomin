@@ -1,23 +1,21 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
-import { ScaffolderMeta } from 'App/Adomin/adominConfigurator'
 import { AdominValidationMode } from 'App/Adomin/adominValidationHelpers'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
+import { getModelConfig } from './getModelConfig'
 
 export const getValidationSchemaFromLucidModel = (
   Model: LucidModel,
   validationMode: AdominValidationMode
 ) => {
-  const results = Array.from(Model.$columnsDefinitions.entries()).map(([columnName, column]) => {
-    if (column.isPrimary === true) return null
-    if (!column.meta?.adomin) return null
+  const foundConfig = getModelConfig(Model.name)
+  const results = foundConfig.fields.map(({ adomin, name: columnName }) => {
+    if (validationMode === 'create' && !adomin.creatable) return null
+    if (validationMode === 'update' && !adomin.editable) return null
 
     return {
       columnName,
-      schema: getValidationSchemaFromConfig(
-        column.meta.adomin as AdominFieldConfig,
-        validationMode
-      ),
+      schema: getValidationSchemaFromConfig(adomin, validationMode),
     }
   })
 
@@ -53,14 +51,6 @@ const getValidationSchemaFromConfig = (
     return schema.string([rules.email()])
   }
 
-  // TODO: add support for array and object JSON field types
-  // if (config.type === 'object' || config.type === 'array') {
-  //   const suffix = getSuffix(config)
-  //   const specialSchema = suffix ? schema[config.type][suffix] : schema[config.type]
-
-  //   return specialSchema().anyMembers()
-  // }
-
   if (config.type === 'file') {
     const suffix = validationMode === 'update' ? 'optional' : getSuffix(config)
     const specialSchema = suffix ? schema.file[suffix] : schema.file
@@ -75,8 +65,12 @@ const getValidationSchemaFromConfig = (
   return fieldSchema([])
 }
 
-const getBaseSchema = (config: ScaffolderMeta) => {
-  if (config.suffix) return schema[config.type][config.suffix]
+const getBaseSchema = (config: AdominFieldConfig) => {
+  const nullable = config.nullable ? 'nullable' : null
+  const optional = config.optional ? 'optional' : null
+  const suffix = nullable || optional
+
+  if (suffix) return schema[config.type][suffix]
 
   return schema[config.type]
 }

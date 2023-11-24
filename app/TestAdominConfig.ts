@@ -1,4 +1,4 @@
-import { createModelConfig } from './Adomin/config.types'
+import { createModelConfig } from './Adomin/createModelConfig'
 import Test from './Models/Test'
 import User from './Models/User'
 
