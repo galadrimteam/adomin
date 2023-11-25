@@ -196,6 +196,27 @@ export interface AdominObjectFieldConfig extends AdominBaseFieldConfig {
   type: 'object'
 }
 
+export interface AdominForeignKeyFieldConfig extends AdominBaseFieldConfig {
+  type: 'foreignKey'
+  modelName: string
+  labelFields: string[]
+  labelFieldsSeparator?: string
+  searchFields: string[]
+}
+
+// export interface AdominBelongsToFieldConfig extends AdominBaseFieldConfig {
+//   type: 'belongsTo'
+
+//   /**
+//    * Name of the foreign key column in the model (eg. profileId)
+//    */
+//   foreignKey: string
+//   /**
+//    * Config of the model this field belongs to
+//    */
+//   config: ModelConfig
+// }
+
 export type AdominFieldConfig =
   | AdominStringFieldConfig
   | AdominNumberFieldConfig
@@ -204,5 +225,7 @@ export type AdominFieldConfig =
   | AdominEnumFieldConfig
   | AdominFileFieldConfig
   | AdominArrayFieldConfig
+  | AdominForeignKeyFieldConfig
+// | AdominBelongsToFieldConfig
 // | AdominEnumSetFieldConfig
 // | AdominObjectFieldConfig

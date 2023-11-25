@@ -8,6 +8,13 @@ export const USER_CONFIG = createModelConfig(() => User, {
   columns: {
     email: { type: 'string', isEmail: true, label: 'Super email' },
     password: { type: 'string', isPassword: true, label: 'Mot de passe' },
+    profileId: {
+      type: 'foreignKey',
+      modelName: 'Profile',
+      labelFields: ['name'],
+      searchFields: ['name'],
+      nullable: true,
+    },
   },
 })
 

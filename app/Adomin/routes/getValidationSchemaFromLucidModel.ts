@@ -68,8 +68,9 @@ const getBaseSchema = (config: AdominFieldConfig) => {
   const nullable = config.nullable ? 'nullable' : null
   const optional = config.optional ? 'optional' : null
   const suffix = nullable || optional
+  const type = config.type === 'foreignKey' ? 'number' : config.type
 
-  if (suffix) return schema[config.type][suffix]
+  if (suffix) return schema[type][suffix]
 
-  return schema[config.type]
+  return schema[type]
 }
