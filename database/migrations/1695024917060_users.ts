@@ -12,7 +12,7 @@ export default class extends BaseSchema {
       table.string('password', 180).notNullable()
       table.string('remember_me_token').nullable()
 
-      table.integer('profile_id').unsigned().references('profiles.id').onDelete('CASCADE')
+      table.integer('profile_id').unsigned().references('profiles.id').onDelete('SET NULL')
 
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()
