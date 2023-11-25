@@ -1,4 +1,5 @@
 import { createModelConfig } from './Adomin/createModelConfig'
+import Profile from './Models/Profile'
 import Test from './Models/Test'
 import User from './Models/User'
 
@@ -7,6 +8,14 @@ export const USER_CONFIG = createModelConfig(() => User, {
   columns: {
     email: { type: 'string', isEmail: true, label: 'Super email' },
     password: { type: 'string', isPassword: true, label: 'Mot de passe' },
+  },
+})
+
+export const PROFILE_CONFIG = createModelConfig(() => Profile, {
+  label: 'Profil',
+  columns: {
+    name: { type: 'string' },
+    age: { type: 'number' },
   },
 })
 
