@@ -199,9 +199,8 @@ export interface AdominObjectFieldConfig extends AdominBaseFieldConfig {
 export interface AdominForeignKeyFieldConfig extends AdominBaseFieldConfig {
   type: 'foreignKey'
   modelName: string
-  labelFields: string[]
-  labelFieldsSeparator?: string
-  searchFields: string[]
+  labelField: string
+  subType: 'string' | 'number'
 }
 
 // export interface AdominBelongsToFieldConfig extends AdominBaseFieldConfig {

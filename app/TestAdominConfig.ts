@@ -11,9 +11,9 @@ export const USER_CONFIG = createModelConfig(() => User, {
     profileId: {
       type: 'foreignKey',
       modelName: 'Profile',
-      labelFields: ['name'],
-      searchFields: ['name'],
+      labelField: 'name',
       nullable: true,
+      subType: 'number',
     },
   },
 })
