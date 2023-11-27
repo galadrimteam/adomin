@@ -198,23 +198,23 @@ export interface AdominObjectFieldConfig extends AdominBaseFieldConfig {
 
 export interface AdominForeignKeyFieldConfig extends AdominBaseFieldConfig {
   type: 'foreignKey'
+  /**
+   * Model referenced by this foreign key
+   */
   modelName: string
-  labelField: string
+  /**
+   * Fields to use for label
+   */
+  labelFields: string[]
+  /**
+   * Separator between label fields, default is ", "
+   */
+  labelFieldsSeparator?: string
+  /**
+   * type of the foreign key
+   */
   subType: 'string' | 'number'
 }
-
-// export interface AdominBelongsToFieldConfig extends AdominBaseFieldConfig {
-//   type: 'belongsTo'
-
-//   /**
-//    * Name of the foreign key column in the model (eg. profileId)
-//    */
-//   foreignKey: string
-//   /**
-//    * Config of the model this field belongs to
-//    */
-//   config: ModelConfig
-// }
 
 export type AdominFieldConfig =
   | AdominStringFieldConfig

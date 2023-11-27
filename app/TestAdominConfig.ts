@@ -12,7 +12,7 @@ export const USER_CONFIG = createModelConfig(() => User, {
       label: 'Profil',
       type: 'foreignKey',
       modelName: 'Profile',
-      labelField: 'name',
+      labelFields: ['id', 'name', 'age'],
       nullable: true,
       subType: 'number',
     },

@@ -17,6 +17,7 @@ const paginationSchema = schema.create({
       value: schema.string.nullable(),
     })
   ),
+  filtersMode: schema.enum.optional(['and', 'or'] as const),
   sorting: schema.array.optional().members(
     schema.object().members({
       id: schema.string(),
@@ -27,12 +28,19 @@ const paginationSchema = schema.create({
 
 type PaginationSettings = (typeof paginationSchema)['props']
 
-const getDataList = async (
-  Model: LucidModel,
-  fields: ColumnConfig[],
-  primaryKey: string,
+interface GetDataListOptions {
+  Model: LucidModel
+  fields: ColumnConfig[]
+  primaryKey: string
   paginationSettings: PaginationSettings
-) => {
+}
+
+const getDataList = async ({
+  Model,
+  fields,
+  paginationSettings,
+  primaryKey,
+}: GetDataListOptions) => {
   const fieldsStrs = fields.map(({ name }) => name)
   const { pageIndex, pageSize } = paginationSettings
   const query = Model.query().select(...fieldsStrs)
@@ -51,7 +59,7 @@ const getDataList = async (
     for (const field of fields) {
       const search = filtersMap.get(field.name)
       if (search !== undefined) {
-        whereLike(builder, 'and', field.name, search)
+        whereLike(builder, paginationSettings.filtersMode ?? 'and', field.name, search)
       }
     }
   })
@@ -87,7 +95,7 @@ export const modelList = async ({ params, request }: HttpContextContract) => {
     },
   })
 
-  const data = await getDataList(Model, fields, primaryKey, paginationSettings)
+  const data = await getDataList({ Model, fields, primaryKey, paginationSettings })
 
   await loadFilesForInstances(fields, data)
 
