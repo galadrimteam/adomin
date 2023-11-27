@@ -39,20 +39,24 @@ const getValidationSchemaFromFieldConfig = (
   config: AdominFieldConfig,
   validationMode: AdominValidationMode
 ) => {
+  const suffix = getSuffix(config)
+
   if (config.type === 'enum') {
     const options = config.options.map((option) => option.value)
+    if (suffix) return schema.enum[suffix](options)
     return schema.enum(options)
   }
   if (config.type === 'array') {
     return schema.array.optional().members(schema.string())
   }
   if (config.type === 'string' && config.isEmail) {
+    if (suffix) return schema.string[suffix]([rules.email()])
     return schema.string([rules.email()])
   }
 
   if (config.type === 'file') {
-    const suffix = validationMode === 'update' ? 'optional' : getSuffix(config)
-    const specialSchema = suffix ? schema.file[suffix] : schema.file
+    const suffixToApply = validationMode === 'update' ? 'optional' : suffix
+    const specialSchema = suffixToApply ? schema.file[suffixToApply] : schema.file
     return specialSchema({
       size: config.maxFileSize,
       extnames: config.extnames,
@@ -65,9 +69,7 @@ const getValidationSchemaFromFieldConfig = (
 }
 
 const getBaseSchema = (config: AdominFieldConfig) => {
-  const nullable = config.nullable ? 'nullable' : null
-  const optional = config.optional ? 'optional' : null
-  const suffix = nullable || optional
+  const suffix = getSuffix(config)
   const type = config.type === 'foreignKey' ? config.subType : config.type
 
   if (suffix) return schema[type][suffix]
