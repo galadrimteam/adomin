@@ -18,7 +18,7 @@ export const getModelConfigRoute = async ({ params, response }: HttpContextContr
     return response.notFound({ error: `Model '${modelString}' not found` })
   }
 
-  const { fields, primaryKey, label, labelPluralized, name } = modelConfig
+  const { fields, primaryKey, label, labelPluralized, name, isHidden } = modelConfig
 
   return {
     name,
@@ -26,5 +26,6 @@ export const getModelConfigRoute = async ({ params, response }: HttpContextContr
     labelPluralized,
     fields,
     primaryKey,
+    isHidden: isHidden ?? false,
   }
 }

@@ -17,6 +17,7 @@ interface ModelConfigStaticOptions {
   canUpdate?: boolean
   canDelete?: boolean
   validation?: AdominValidation
+  isHidden?: boolean
 }
 
 export interface ModelConfig extends ModelConfigStaticOptions {
@@ -99,5 +100,6 @@ export const createModelConfig = <T extends LucidModel>(
     label,
     labelPluralized,
     primaryKey,
+    isHidden: options.isHidden,
   }
 }
