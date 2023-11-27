@@ -214,6 +214,7 @@ export interface AdominForeignKeyFieldConfig extends AdominBaseFieldConfig {
    * type of the foreign key
    */
   subType: 'string' | 'number'
+  showLabelInTable?: boolean
 }
 
 export type AdominFieldConfig =

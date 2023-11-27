@@ -15,6 +15,7 @@ export const USER_CONFIG = createModelConfig(() => User, {
       labelFields: ['id', 'name', 'age'],
       nullable: true,
       subType: 'number',
+      showLabelInTable: true,
     },
   },
 })
