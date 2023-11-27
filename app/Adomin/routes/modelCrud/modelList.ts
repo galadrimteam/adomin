@@ -14,7 +14,7 @@ const paginationSchema = schema.create({
   filters: schema.array.optional().members(
     schema.object().members({
       id: schema.string(),
-      value: schema.string(),
+      value: schema.string.nullable(),
     })
   ),
   sorting: schema.array.optional().members(
@@ -50,7 +50,7 @@ const getDataList = async (
   query.andWhere((builder) => {
     for (const field of fields) {
       const search = filtersMap.get(field.name)
-      if (search) {
+      if (search !== undefined) {
         whereLike(builder, 'and', field.name, search)
       }
     }
@@ -98,8 +98,13 @@ const whereLike = (
   builder: ModelQueryBuilderContract<LucidModel, LucidRow>,
   type: 'or' | 'and',
   column: string,
-  value: string
+  value: string | null
 ) => {
+  if (value === null) {
+    const method = type === 'or' ? 'orWhereNull' : 'andWhereNull'
+    builder[method](column)
+    return
+  }
   if (Env.get('DB_CONNECTION') === 'pg') {
     const method = type === 'or' ? 'orWhereRaw' : 'andWhereRaw'
     builder[method](`CAST("${string.snakeCase(column)}" as text) LIKE ?`, [`%${value}%`])

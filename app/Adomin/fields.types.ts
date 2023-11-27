@@ -128,7 +128,7 @@ interface DateValueIsoString {
   value: string
 }
 
-export interface AdominSelectOption<T extends string | number> {
+export interface AdominSelectOption<T extends string | number | null> {
   /**
    * Label shown on the frontend
    */
@@ -144,7 +144,7 @@ export type AdominEnumFieldConfig = AdominBaseFieldConfig & {
   /**
    * options for the select component
    */
-  options: AdominSelectOption<string>[]
+  options: AdominSelectOption<string | null>[]
   /**
    * default value for this field on the creation form
    */

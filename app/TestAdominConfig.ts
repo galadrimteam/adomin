@@ -9,6 +9,7 @@ export const USER_CONFIG = createModelConfig(() => User, {
     email: { type: 'string', isEmail: true, label: 'Super email' },
     password: { type: 'string', isPassword: true, label: 'Mot de passe' },
     profileId: {
+      label: 'Profil',
       type: 'foreignKey',
       modelName: 'Profile',
       labelField: 'name',
@@ -32,9 +33,11 @@ export const TEST_CONFIG = createModelConfig(() => Test, {
     // stringArrayTest: { type: 'array' },
     freeText: { type: 'string', label: 'Texte libre' },
     stringTest: {
+      nullable: true,
       type: 'enum',
       label: 'Test select',
       options: [
+        { label: '(Non renseigné)', value: null },
         { label: 'Salut', value: 'hello' },
         { label: 'Au revoir', value: 'bye' },
       ],
