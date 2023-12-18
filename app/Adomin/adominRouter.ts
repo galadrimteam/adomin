@@ -6,6 +6,7 @@ import { deleteModel } from 'App/Adomin/routes/modelCrud/deleteModel'
 import { modelList } from 'App/Adomin/routes/modelCrud/modelList'
 import { showModel } from 'App/Adomin/routes/modelCrud/showModel'
 import { updateModel } from 'App/Adomin/routes/modelCrud/updateModel'
+import { adominLogout } from './routes/adominLogout'
 import { getAdominConfig } from './routes/getAdominConfig'
 
 Route.group(() => {
@@ -18,6 +19,7 @@ Route.group(() => {
     Route.put('crud/:model/:id', updateModel)
     Route.delete('crud/:model/:id', deleteModel)
     Route.post('crud/:model', createModel)
+    Route.post('logout', adominLogout)
   }).middleware('auth')
   // ! please restrict this route group for only admins of your app
 

@@ -42,6 +42,10 @@ type ExcludeIfMethod<T, S> = T extends Function ? never : S
 
 export interface AdominConfig {
   title: string
+  /** The key of the user property to show to logged in administrators
+   * @default 'email'
+   */
+  userDisplayKey?: string
   footerText?: string
   models: ModelConfig[]
 }
