@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { computeRightsCheck } from 'App/Adomin/adominRoutesOverridesAndRights'
 import { validateOrThrow } from 'App/Adomin/adominValidationHelpers'
 import { ColumnConfig, PASSWORD_SERIALIZED_FORM } from 'App/Adomin/createModelConfig'
 import { getModelData } from 'App/Adomin/routes/getModelData'
@@ -27,9 +28,12 @@ export const updateModel = async (ctx: HttpContextContract) => {
   const { id } = await validateResourceId(params)
   const modelConfig = await getValidatedModelConfig(params)
 
-  if (modelConfig.canUpdate === false) {
+  if (modelConfig.staticRights?.update === false) {
     return response.badRequest({ error: 'Ce modèle ne peut pas être mis à jour' })
   }
+
+  const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.update)
+  if (accesResult === 'STOP') return
 
   const override = modelConfig.routesOverrides?.update
   if (override) return override(ctx)

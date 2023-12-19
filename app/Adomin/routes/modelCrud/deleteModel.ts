@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { computeRightsCheck } from 'App/Adomin/adominRoutesOverridesAndRights'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { validateResourceId } from '../validateResourceId'
 
@@ -7,9 +8,12 @@ export const deleteModel = async (ctx: HttpContextContract) => {
   const { id } = await validateResourceId(params)
   const modelConfig = await getValidatedModelConfig(params)
 
-  if (modelConfig.canDelete === false) {
+  if (modelConfig.staticRights?.delete === false) {
     return response.badRequest({ error: 'Ce modèle ne peut pas être supprimé' })
   }
+
+  const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.delete)
+  if (accesResult === 'STOP') return
 
   const override = modelConfig.routesOverrides?.delete
   if (override) return override(ctx)

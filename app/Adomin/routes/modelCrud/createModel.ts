@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { computeRightsCheck } from 'App/Adomin/adominRoutesOverridesAndRights'
 import { validateOrThrow } from 'App/Adomin/adominValidationHelpers'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromConfig } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
@@ -10,9 +11,12 @@ export const createModel = async (ctx: HttpContextContract) => {
   const { params, response, request } = ctx
   const modelConfig = await getValidatedModelConfig(params)
 
-  if (modelConfig.canCreate === false) {
+  if (modelConfig.staticRights?.create === false) {
     return response.badRequest({ error: `Impossible de créer un ${modelConfig.label}` })
   }
+
+  const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.create)
+  if (accesResult === 'STOP') return
 
   const override = modelConfig.routesOverrides?.create
   if (override) return override(ctx)

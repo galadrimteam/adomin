@@ -3,6 +3,7 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator } from '@ioc:Adonis/Core/Validator'
 import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { computeRightsCheck } from 'App/Adomin/adominRoutesOverridesAndRights'
 import { ColumnConfig } from 'App/Adomin/createModelConfig'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
@@ -78,8 +79,15 @@ const getDataList = async ({
 }
 
 export const modelList = async (ctx: HttpContextContract) => {
-  const { params, request } = ctx
+  const { params, request, response } = ctx
   const modelConfig = await getValidatedModelConfig(params)
+
+  if (modelConfig.staticRights?.list === false) {
+    return response.badRequest({ error: 'Ce modèle ne peut pas être listé' })
+  }
+
+  const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.list)
+  if (accesResult === 'STOP') return
 
   const override = modelConfig.routesOverrides?.list
   if (override) return override(ctx)

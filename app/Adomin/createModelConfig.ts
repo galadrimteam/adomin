@@ -1,6 +1,11 @@
 import { string } from '@ioc:Adonis/Core/Helpers'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
-import { AdominRouteOverrides } from './adominRoutesOverridesHelpers'
+import {
+  AdominRightsCheckConfig,
+  AdominRightsCheckFunction,
+  AdominRouteOverrides,
+  AdominStaticRightsConfig,
+} from './adominRoutesOverridesAndRights'
 import { AdominValidation } from './adominValidationHelpers'
 import { AdominFieldConfig, AdominNumberFieldConfig } from './fields.types'
 
@@ -14,11 +19,13 @@ export const PASSWORD_SERIALIZED_FORM = '***'
 interface ModelConfigStaticOptions {
   label: string
   labelPluralized: string
-  canCreate?: boolean
-  canUpdate?: boolean
-  canDelete?: boolean
   validation?: AdominValidation
   routesOverrides?: AdominRouteOverrides
+  staticRights?: AdominStaticRightsConfig
+  /** Granular dynamic access checks for each CRUDL action */
+  crudlRights?: AdominRightsCheckConfig
+  /** Check if logged in user can see this model */
+  visibilityCheck?: AdominRightsCheckFunction
   isHidden?: boolean
 }
 
@@ -107,5 +114,9 @@ export const createModelConfig = <T extends LucidModel>(
     labelPluralized,
     primaryKey,
     isHidden: options.isHidden,
+    staticRights: options.staticRights,
+    routesOverrides: options.routesOverrides,
+    validation: options.validation,
+    crudlRights: options.crudlRights,
   }
 }
