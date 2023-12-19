@@ -14,6 +14,9 @@ export const createModel = async (ctx: HttpContextContract) => {
     return response.badRequest({ error: `Impossible de créer un ${modelConfig.label}` })
   }
 
+  const override = modelConfig.routesOverrides?.create
+  if (override) return override(ctx)
+
   const Model = modelConfig.model()
 
   if (modelConfig.validation) {

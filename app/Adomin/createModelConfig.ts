@@ -1,5 +1,6 @@
 import { string } from '@ioc:Adonis/Core/Helpers'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
+import { AdominRouteOverrides } from './adominRoutesOverridesHelpers'
 import { AdominValidation } from './adominValidationHelpers'
 import { AdominFieldConfig, AdominNumberFieldConfig } from './fields.types'
 
@@ -17,6 +18,7 @@ interface ModelConfigStaticOptions {
   canUpdate?: boolean
   canDelete?: boolean
   validation?: AdominValidation
+  routesOverrides?: AdominRouteOverrides
   isHidden?: boolean
 }
 

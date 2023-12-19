@@ -77,8 +77,13 @@ const getDataList = async ({
   return data
 }
 
-export const modelList = async ({ params, request }: HttpContextContract) => {
+export const modelList = async (ctx: HttpContextContract) => {
+  const { params, request } = ctx
   const modelConfig = await getValidatedModelConfig(params)
+
+  const override = modelConfig.routesOverrides?.list
+  if (override) return override(ctx)
+
   const Model = modelConfig.model()
   const { fields, primaryKey } = modelConfig
 

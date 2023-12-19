@@ -31,6 +31,9 @@ export const updateModel = async (ctx: HttpContextContract) => {
     return response.badRequest({ error: 'Ce modèle ne peut pas être mis à jour' })
   }
 
+  const override = modelConfig.routesOverrides?.update
+  if (override) return override(ctx)
+
   const Model = modelConfig.model()
 
   if (modelConfig.validation) {
