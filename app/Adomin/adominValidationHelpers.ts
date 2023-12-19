@@ -15,32 +15,13 @@ const ADOMIN_VALIDATION_MODES = ['create', 'update'] as const
 
 export type AdominValidationMode = (typeof ADOMIN_VALIDATION_MODES)[number]
 
-export type CustomisableAdominValidation = {
-  [K in AdominValidationMode]?: AdominValidationAtom
+export type AdominValidation = {
+  create?: AdominValidationAtom
+  update?: AdominValidationAtom
 }
-
-export type AdominValidation = AdominValidationAtom | CustomisableAdominValidation
 
 export const isAdonisSchema = (input: unknown): input is ParsedTypedSchema<TypedSchema> => {
   return typeof input === 'object' && input !== null && 'props' in input && 'tree' in input
-}
-
-export const isAdominValidationWithSchema = (
-  input: AdominValidation
-): input is AdominValidationWithSchema => {
-  if (typeof input !== 'object') return false
-
-  return 'schema' in input && isAdonisSchema(input.schema)
-}
-
-export const isCustomisableAdominValidation = (
-  input: AdominValidation
-): input is CustomisableAdominValidation => {
-  const isSchema = isAdominValidationWithSchema(input)
-
-  if (typeof input !== 'object' || isSchema) return false
-
-  return true
 }
 
 const validateAtom = async (ctx: HttpContextContract, atom: AdominValidationAtom) => {
@@ -66,11 +47,7 @@ export const validateOrThrow = async (
   validationParams: AdominValidation,
   mode: AdominValidationMode
 ) => {
-  if (isCustomisableAdominValidation(validationParams)) {
-    const validationAtom = validationParams[mode]
-    if (!validationAtom) return true
-    return validateAtom(ctx, validationAtom)
-  }
-
-  return validateAtom(ctx, validationParams)
+  const validationAtom = validationParams[mode]
+  if (!validationAtom) return true
+  return validateAtom(ctx, validationAtom)
 }
