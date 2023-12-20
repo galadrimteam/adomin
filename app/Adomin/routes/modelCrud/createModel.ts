@@ -15,6 +15,8 @@ export const createModel = async (ctx: HttpContextContract) => {
     return response.badRequest({ error: `Impossible de créer un ${modelConfig.label}` })
   }
 
+  const visibilityCheck = await computeRightsCheck(ctx, modelConfig.visibilityCheck)
+  if (visibilityCheck === 'STOP') return
   const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.create)
   if (accesResult === 'STOP') return
 

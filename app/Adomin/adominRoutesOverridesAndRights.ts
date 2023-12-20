@@ -11,10 +11,6 @@ export type AdominRouteOverrides = {
 }
 
 export interface AdominRightsCheckResult {
-  /** if you return hasAccess = false, with errorMessage = undefined, you have to send the error
-   *
-   * e.g. with request.badRequest({ error: 'oups' })
-   */
   hasAccess: boolean
   errorMessage?: string
 }
@@ -36,14 +32,15 @@ export type ComputRightsCheckResult = 'OK' | 'STOP'
 /** when computeRightsCheck returns **true**, caller should stop execution too */
 export const computeRightsCheck = async (
   ctx: HttpContextContract,
-  fn?: AdominRightsCheckFunction
+  fn?: AdominRightsCheckFunction,
+  sendBadRequestWithErrorMessage = true
 ): Promise<ComputRightsCheckResult> => {
   if (!fn) return 'OK'
 
   const res = await fn(ctx)
 
   if (res.hasAccess === false) {
-    if (res.errorMessage) {
+    if (res.errorMessage && sendBadRequestWithErrorMessage) {
       ctx.response.badRequest({ error: res.errorMessage })
     }
 

@@ -12,6 +12,8 @@ export const deleteModel = async (ctx: HttpContextContract) => {
     return response.badRequest({ error: 'Ce modèle ne peut pas être supprimé' })
   }
 
+  const visibilityCheck = await computeRightsCheck(ctx, modelConfig.visibilityCheck)
+  if (visibilityCheck === 'STOP') return
   const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.delete)
   if (accesResult === 'STOP') return
 

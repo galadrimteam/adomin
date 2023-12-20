@@ -19,13 +19,33 @@ export const PASSWORD_SERIALIZED_FORM = '***'
 interface ModelConfigStaticOptions {
   label: string
   labelPluralized: string
+  /** Use this if you want to add more checks to the default adomin validation
+   *
+   * e.g. for checking that a field should exist only if another exist or so
+   *
+   * If you want to change what is stored, or how it is stored, you will have to use *routesOverrides* instead
+   */
   validation?: AdominValidation
+  /** Use this to overide the adomin API route for a CRUDL action
+   *
+   * e.g. for using a custom logic for creating a resource
+   */
   routesOverrides?: AdominRouteOverrides
+  /** Static rights to define if some actions are restricted for everyone */
   staticRights?: AdominStaticRightsConfig
-  /** Granular dynamic access checks for each CRUDL action */
+  /** Granular dynamic access checks for each CRUDL action
+   *
+   * For each function, if you return hasAccess = false, with errorMessage = undefined,
+   * you will have to send the error response yourself
+   *
+   * e.g. with request.badRequest({ error: 'oups' })
+   */
   crudlRights?: AdominRightsCheckConfig
-  /** Check if logged in user can see this model */
+  /** Check if logged in user can see this model*/
   visibilityCheck?: AdominRightsCheckFunction
+  /** Use this if you want to hide this model on the frontend
+   *
+   * frontend routes for create/update/list will still be created and available, but the navbar won't show it */
   isHidden?: boolean
 }
 
@@ -118,5 +138,6 @@ export const createModelConfig = <T extends LucidModel>(
     routesOverrides: options.routesOverrides,
     validation: options.validation,
     crudlRights: options.crudlRights,
+    visibilityCheck: options.visibilityCheck,
   }
 }

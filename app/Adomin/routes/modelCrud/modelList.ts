@@ -86,6 +86,8 @@ export const modelList = async (ctx: HttpContextContract) => {
     return response.badRequest({ error: 'Ce modèle ne peut pas être listé' })
   }
 
+  const visibilityCheck = await computeRightsCheck(ctx, modelConfig.visibilityCheck)
+  if (visibilityCheck === 'STOP') return
   const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.list)
   if (accesResult === 'STOP') return
 

@@ -14,6 +14,8 @@ export const showModel = async (ctx: HttpContextContract) => {
     return response.badRequest({ error: 'Ce modèle ne peut pas être montré' })
   }
 
+  const visibilityCheck = await computeRightsCheck(ctx, modelConfig.visibilityCheck)
+  if (visibilityCheck === 'STOP') return
   const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.read)
   if (accesResult === 'STOP') return
 

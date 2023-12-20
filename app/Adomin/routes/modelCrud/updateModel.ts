@@ -32,6 +32,8 @@ export const updateModel = async (ctx: HttpContextContract) => {
     return response.badRequest({ error: 'Ce modèle ne peut pas être mis à jour' })
   }
 
+  const visibilityCheck = await computeRightsCheck(ctx, modelConfig.visibilityCheck)
+  if (visibilityCheck === 'STOP') return
   const accesResult = await computeRightsCheck(ctx, modelConfig.crudlRights?.update)
   if (accesResult === 'STOP') return
 
