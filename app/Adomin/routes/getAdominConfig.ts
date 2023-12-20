@@ -9,7 +9,6 @@ export const getAdominConfig = async (ctx: HttpContextContract) => {
   const user = auth.user!
   const modelsPromises = ADOMIN_CONFIG.models.map(async (conf) => {
     const { label, labelPluralized, name, isHidden } = conf
-    console.log(conf.name, conf.visibilityCheck)
 
     const visibilityCheck = await computeRightsCheck(ctx, conf.visibilityCheck, false)
 
