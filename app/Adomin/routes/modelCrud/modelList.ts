@@ -3,10 +3,10 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator } from '@ioc:Adonis/Core/Validator'
 import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
-import { computeRightsCheck } from 'App/Adomin/adominRoutesOverridesAndRights'
 import { ColumnConfig } from 'App/Adomin/createModelConfig'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
+import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
 
 const paginationSchema = schema.create({
   pageIndex: schema.number(),

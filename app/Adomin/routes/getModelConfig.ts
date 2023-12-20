@@ -1,5 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { ADOMIN_CONFIG } from 'App/Adomin/CONFIG'
+import { ADOMIN_CONFIG } from '../config/ADOMIN_CONFIG'
 
 export const getModelConfig = (modelName: string) => {
   const foundConfig = ADOMIN_CONFIG.models.find((config) => config.model().name === modelName)

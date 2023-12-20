@@ -6,8 +6,8 @@ import { deleteModel } from 'App/Adomin/routes/modelCrud/deleteModel'
 import { modelList } from 'App/Adomin/routes/modelCrud/modelList'
 import { showModel } from 'App/Adomin/routes/modelCrud/showModel'
 import { updateModel } from 'App/Adomin/routes/modelCrud/updateModel'
-import { adominLogout } from './routes/adominLogout'
-import { getAdominConfig } from './routes/getAdominConfig'
+import { adominLogout } from './adominLogout'
+import { getAdominConfig } from './getAdominConfig'
 
 Route.group(() => {
   Route.group(() => {

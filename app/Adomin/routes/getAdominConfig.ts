@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { ADOMIN_CONFIG } from 'App/Adomin/CONFIG'
-import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
+import { ADOMIN_CONFIG } from '../config/ADOMIN_CONFIG'
+import { computeRightsCheck } from './adominRoutesOverridesAndRights'
 
 const defaultText = 'Made with ❤️ by Galadrim'
 

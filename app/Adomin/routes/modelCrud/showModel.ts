@@ -1,8 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { computeRightsCheck } from 'App/Adomin/adominRoutesOverridesAndRights'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
+import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
 import { validateResourceId } from '../validateResourceId'
 
 export const showModel = async (ctx: HttpContextContract) => {

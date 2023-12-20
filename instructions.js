@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 
 function copyDir(src, dest) {
@@ -22,10 +22,25 @@ function copyDir(src, dest) {
  * Instructions to be executed when setting up the package.
  */
 async function instructions(projectRoot, app, sink) {
-  const pathFrom = path.join(__dirname, 'build/templates/Adomin')
-  const pathTo = path.join(projectRoot, 'app/Adomin')
+  const pathWithFilesToCopy = path.join(__dirname, 'build/templates/Adomin')
+  const userAdominFiles = path.join(projectRoot, 'app/Adomin')
 
-  copyDir(pathFrom, pathTo)
+  const configPath = path.join(projectRoot, 'app/Adomin/config')
+  const configExists = fs.existsSync(configPath)
+
+  const tmpDir = fs.mkdtempSync('ADOMIN')
+  const tmpPath = path.join(tmpDir, 'config')
+
+  if (configExists) {
+    fs.moveSync(configPath, tmpPath)
+    fs.rmSync(userAdominFiles, { recursive: true, force: true })
+  }
+
+  copyDir(pathWithFilesToCopy, userAdominFiles)
+
+  if (configExists) {
+    fs.moveSync(tmpPath, configPath)
+  }
 
   sink.logger.success('Adomin files created')
   sink.logger.info(

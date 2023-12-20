@@ -1,6 +1,6 @@
 {
   "name": "@galadrim/adomin",
-  "version": "3.3.3",
+  "version": "3.4.0",
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",

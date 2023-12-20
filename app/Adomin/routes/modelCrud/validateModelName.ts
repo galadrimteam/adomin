@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator } from '@ioc:Adonis/Core/Validator'
-import { ADOMIN_CONFIG } from 'App/Adomin/CONFIG'
+import { ADOMIN_CONFIG } from 'App/Adomin/config/ADOMIN_CONFIG'
 import { getModelConfig } from '../getModelConfig'
 
 const modelsEnum = ADOMIN_CONFIG.models.map(({ model }) => model().name)

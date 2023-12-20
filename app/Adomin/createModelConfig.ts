@@ -1,13 +1,13 @@
 import { string } from '@ioc:Adonis/Core/Helpers'
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
+import { AdominFieldConfig, AdominNumberFieldConfig } from './fields.types'
 import {
   AdominRightsCheckConfig,
   AdominRightsCheckFunction,
   AdominRouteOverrides,
   AdominStaticRightsConfig,
-} from './adominRoutesOverridesAndRights'
-import { AdominValidation } from './adominValidationHelpers'
-import { AdominFieldConfig, AdominNumberFieldConfig } from './fields.types'
+} from './routes/adominRoutesOverridesAndRights'
+import { AdominValidation } from './validation/adominValidationHelpers'
 
 export interface ColumnConfig {
   name: string
