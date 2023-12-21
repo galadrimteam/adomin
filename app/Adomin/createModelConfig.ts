@@ -38,7 +38,7 @@ interface ModelConfigStaticOptions {
    * For each function, if you return hasAccess = false, with errorMessage = undefined,
    * you will have to send the error response yourself
    *
-   * e.g. with request.badRequest({ error: 'oups' })
+   * e.g. with response.badRequest({ error: 'oups' })
    */
   crudlRights?: AdominRightsCheckConfig
   /** Check if logged in user can see this model*/

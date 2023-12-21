@@ -1,8 +1,26 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ParsedTypedSchema, TypedSchema } from '@ioc:Adonis/Core/Validator'
 
-// inside your validation function, you can return a string or a boolean, you can also throw the error you want directly
-export type AdominCustomFunctionValidation = (ctx: HttpContextContract) => Promise<boolean | string>
+export interface ValidationFunctionResult {
+  valid: boolean
+  /**
+   * if you return valid = false, with errorMessage = undefined,
+   * you will have to send the error response yourself
+   *
+   * e.g. with response.badRequest({ error: 'oups' })
+   */
+  errorMessage?: string
+}
+
+/**
+ * if you return valid = false, with errorMessage = undefined,
+ * you will have to send the error response yourself
+ *
+ * e.g. with response.badRequest({ error: 'oups' })
+ */
+export type AdominCustomFunctionValidation = (
+  ctx: HttpContextContract
+) => Promise<ValidationFunctionResult>
 
 export type AdominValidationWithSchema = {
   schema: ParsedTypedSchema<TypedSchema>
@@ -28,13 +46,12 @@ const validateAtom = async (ctx: HttpContextContract, atom: AdominValidationAtom
   if (typeof atom === 'function') {
     const result = await atom(ctx)
 
-    if (result === true) return true
+    if (result.valid === true) return true
+    if (result.errorMessage === undefined) return false
 
-    const message = result === false ? 'Custom validation failed' : result
+    ctx.response.badRequest({ error: result.errorMessage })
 
-    ctx.response.badRequest({ error: message })
-
-    return true
+    return false
   }
 
   await ctx.request.validate({ schema: atom.schema, messages: atom.messages })
