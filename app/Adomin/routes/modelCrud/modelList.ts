@@ -6,6 +6,7 @@ import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Luc
 import { ColumnConfig } from 'App/Adomin/createModelConfig'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
+import { BASE_64 } from 'App/Adomin/utils/base64'
 import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
 
 const paginationSchema = schema.create({
@@ -78,6 +79,16 @@ const getDataList = async ({
   return data
 }
 
+const prepareQsObject = (input?: string) => {
+  if (!input) return []
+
+  const decoded = BASE_64.decode(input)
+
+  if (!decoded) return []
+
+  return JSON.parse(decoded)
+}
+
 export const modelList = async (ctx: HttpContextContract) => {
   const { params, request, response } = ctx
   const modelConfig = await getValidatedModelConfig(params)
@@ -101,12 +112,15 @@ export const modelList = async (ctx: HttpContextContract) => {
 
   const qs = request.qs()
 
+  const filters = prepareQsObject(qs.filters)
+  const sorting = prepareQsObject(qs.sorting)
+
   const paginationSettings = await validator.validate({
     schema: paginationSchema,
     data: {
       ...qs,
-      filters: JSON.parse(qs.filters ?? '[]'),
-      sorting: JSON.parse(qs.sorting ?? '[]'),
+      filters,
+      sorting,
     },
   })
 
