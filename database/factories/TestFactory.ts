@@ -1,8 +1,8 @@
 import Factory from '@ioc:Adonis/Lucid/Factory'
-import TestFactory from 'App/Models/Test'
+import Test from 'App/Models/Test'
 import { DateTime } from 'luxon'
 
-export default Factory.define(TestFactory, ({ faker }) => {
+export default Factory.define(Test, ({ faker }) => {
   const options = ['hello', 'bye']
 
   return {
