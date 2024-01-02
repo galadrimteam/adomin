@@ -6,7 +6,6 @@ import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Luc
 import { ColumnConfig } from 'App/Adomin/createModelConfig'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
-import { BASE_64 } from 'App/Adomin/utils/base64'
 import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
 
 const paginationSchema = schema.create({
@@ -82,7 +81,7 @@ const getDataList = async ({
 const prepareQsObject = (input?: string) => {
   if (!input) return []
 
-  const decoded = BASE_64.decode(input)
+  const decoded = decodeURIComponent(input)
 
   if (!decoded) return []
 
