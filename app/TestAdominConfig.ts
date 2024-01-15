@@ -44,6 +44,7 @@ export const TEST_CONFIG = createModelConfig(() => Test, {
       ],
     },
     dateTest: { type: 'date', subType: 'date', defaultValue: { mode: 'now', plusDays: 2 } },
+    datetimeTest: { type: 'date', subType: 'datetime', defaultValue: { mode: 'now', plusDays: 2 } },
     numberTest: { type: 'number' },
     booleanTest: { type: 'boolean', variant: 'switch' },
     imageTest: {

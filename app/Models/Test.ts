@@ -23,7 +23,7 @@ export default class Test extends BaseModel {
   public numberTest: number
 
   @column.dateTime()
-  public datetimeTest: DateTime
+  public datetimeTest: DateTime | null
 
   @column({
     prepare: (value) => (value ? 1 : 0),
