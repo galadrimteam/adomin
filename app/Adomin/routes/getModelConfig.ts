@@ -1,5 +1,13 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ADOMIN_CONFIG } from '../config/ADOMIN_CONFIG'
+import { AdominStaticRightsConfig } from './adominRoutesOverridesAndRights'
+
+export const DEFAULT_STATIC_RIGHTS: AdominStaticRightsConfig = {
+  create: true,
+  read: true,
+  update: true,
+  delete: true,
+}
 
 export const getModelConfig = (modelName: string) => {
   const foundConfig = ADOMIN_CONFIG.models.find((config) => config.model().name === modelName)
@@ -20,6 +28,11 @@ export const getModelConfigRoute = async ({ params, response }: HttpContextContr
 
   const { fields, primaryKey, label, labelPluralized, name, isHidden } = modelConfig
 
+  const staticRights = {
+    ...DEFAULT_STATIC_RIGHTS,
+    ...modelConfig.staticRights,
+  }
+
   return {
     name,
     label,
@@ -27,5 +40,6 @@ export const getModelConfigRoute = async ({ params, response }: HttpContextContr
     fields,
     primaryKey,
     isHidden: isHidden ?? false,
+    staticRights,
   }
 }
