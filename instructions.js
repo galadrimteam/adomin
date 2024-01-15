@@ -32,6 +32,7 @@ async function instructions(projectRoot, app, sink) {
   const tmpPath = path.join(tmpDir, 'config')
 
   if (configExists) {
+    fs.rmSync(tmpPath, { recursive: true, force: true })
     fs.moveSync(configPath, tmpPath)
     fs.rmSync(userAdominFiles, { recursive: true, force: true })
   }
