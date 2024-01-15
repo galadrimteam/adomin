@@ -4,6 +4,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator } from '@ioc:Adonis/Core/Validator'
 import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import { ColumnConfig } from 'App/Adomin/createModelConfig'
+import { AdominFieldConfig } from 'App/Adomin/fields.types'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
@@ -29,6 +30,15 @@ const paginationSchema = schema.create({
 
 type PaginationSettings = (typeof paginationSchema)['props']
 
+const ADOMIN_EXACT_FIELD_LIST: AdominFieldConfig['type'][] = [
+  'enum',
+  'boolean',
+  'date',
+  'number',
+  'foreignKey',
+]
+const ADOMIN_EXACT_FIELD_SET = new Set(ADOMIN_EXACT_FIELD_LIST)
+
 interface GetDataListOptions {
   Model: LucidModel
   fields: ColumnConfig[]
@@ -51,7 +61,8 @@ const getDataList = async ({
   query.where((builder) => {
     for (const field of fields) {
       if (paginationSettings.globalFilter) {
-        whereLike(builder, 'or', field.name, paginationSettings.globalFilter)
+        const exact = ADOMIN_EXACT_FIELD_SET.has(field.adomin.type)
+        whereLike(builder, 'or', field.name, paginationSettings.globalFilter, exact)
       }
     }
   })
@@ -60,7 +71,8 @@ const getDataList = async ({
     for (const field of fields) {
       const search = filtersMap.get(field.name)
       if (search !== undefined) {
-        whereLike(builder, paginationSettings.filtersMode ?? 'and', field.name, search)
+        const exact = ADOMIN_EXACT_FIELD_SET.has(field.adomin.type)
+        whereLike(builder, paginationSettings.filtersMode ?? 'and', field.name, search, exact)
       }
     }
   })
@@ -134,13 +146,21 @@ const whereLike = (
   builder: ModelQueryBuilderContract<LucidModel, LucidRow>,
   type: 'or' | 'and',
   column: string,
-  value: string | null
+  value: string | null,
+  exact: boolean
 ) => {
   if (value === null) {
     const method = type === 'or' ? 'orWhereNull' : 'andWhereNull'
     builder[method](column)
     return
   }
+
+  if (exact) {
+    const method = type === 'or' ? 'orWhere' : 'andWhere'
+    builder[method](column, value)
+    return
+  }
+
   if (Env.get('DB_CONNECTION') === 'pg') {
     const method = type === 'or' ? 'orWhereRaw' : 'andWhereRaw'
     builder[method](`CAST("${string.snakeCase(column)}" as text) LIKE ?`, [`%${value}%`])
