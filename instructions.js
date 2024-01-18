@@ -40,6 +40,7 @@ async function instructions(projectRoot, app, sink) {
   copyDir(pathWithFilesToCopy, userAdominFiles)
 
   if (configExists) {
+    fs.rmSync(configPath, { recursive: true, force: true })
     fs.moveSync(tmpPath, configPath)
   }
 

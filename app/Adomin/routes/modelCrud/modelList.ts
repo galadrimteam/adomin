@@ -61,8 +61,7 @@ const getDataList = async ({
   query.where((builder) => {
     for (const field of fields) {
       if (paginationSettings.globalFilter) {
-        const exact = ADOMIN_EXACT_FIELD_SET.has(field.adomin.type)
-        whereLike(builder, 'or', field.name, paginationSettings.globalFilter, exact)
+        whereLike(builder, 'or', field.name, paginationSettings.globalFilter, false)
       }
     }
   })
