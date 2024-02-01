@@ -17,10 +17,6 @@ export interface AdominBaseFieldConfig {
    * Size of the field on the frontend, default is 120
    */
   size?: number
-  /**
-   * Setup scaffolder for this field
-   */
-  withScaffold?: boolean
 }
 
 export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
@@ -42,6 +38,12 @@ export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
    * default value for this field on the creation form
    */
   defaultValue?: number
+  /**
+   * Define a template to customize the value displayed in the table
+   *
+   * e.g. "{{value}} €"
+   */
+  valueDisplayTemplate?: string
 }
 
 export interface AdominStringFieldConfig extends AdominBaseFieldConfig {
@@ -59,6 +61,12 @@ export interface AdominStringFieldConfig extends AdominBaseFieldConfig {
    * default value for this field on the creation form
    */
   defaultValue?: string
+  /**
+   * Define a template to customize the value displayed in the table
+   *
+   * e.g. "{{value}} €"
+   */
+  valueDisplayTemplate?: string
 }
 
 export interface AdominBooleanFieldConfig extends AdominBaseFieldConfig {
