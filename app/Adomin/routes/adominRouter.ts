@@ -14,6 +14,7 @@ Route.group(() => {
     Route.get('config', getAdominConfig)
     Route.get('config/:model', getModelConfigRoute)
 
+    Route.post('crud/export/:model', modelList)
     Route.get('crud/:model', modelList)
     Route.get('crud/:model/:id', showModel)
     Route.put('crud/:model/:id', updateModel)

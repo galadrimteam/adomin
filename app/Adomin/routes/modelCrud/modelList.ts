@@ -7,7 +7,12 @@ import { ColumnConfig } from 'App/Adomin/createModelConfig'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
+import { toCSVString } from 'App/Adomin/utils/csvUtils'
 import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
+
+const EXPORT_TYPES = ['csv', 'xlsx', 'json'] as const
+
+type ExportType = (typeof EXPORT_TYPES)[number]
 
 const paginationSchema = schema.create({
   pageIndex: schema.number(),
@@ -26,6 +31,7 @@ const paginationSchema = schema.create({
       desc: schema.boolean(),
     })
   ),
+  exportType: schema.enum.optional(EXPORT_TYPES),
 })
 
 type PaginationSettings = (typeof paginationSchema)['props']
@@ -84,6 +90,12 @@ const getDataList = async ({
     query.orderBy(primaryKey, 'asc')
   }
 
+  if (paginationSettings.exportType) {
+    const dataWithoutPagination = await query.exec()
+
+    return dataWithoutPagination
+  }
+
   const data = await query.paginate(pageIndex, pageSize)
 
   return data
@@ -136,6 +148,10 @@ export const modelList = async (ctx: HttpContextContract) => {
 
   const data = await getDataList({ Model, fields, primaryKey, paginationSettings })
 
+  if (paginationSettings.exportType) {
+    return downloadExportFile(ctx, data, paginationSettings.exportType)
+  }
+
   await loadFilesForInstances(fields, data)
 
   return data
@@ -167,4 +183,29 @@ const whereLike = (
     const method = type === 'or' ? 'orWhere' : 'andWhere'
     builder[method](column, 'LIKE', `%${value}%`)
   }
+}
+
+const downloadExportFile = async (
+  { response }: HttpContextContract,
+  data: LucidRow[],
+  exportType: ExportType
+) => {
+  if (exportType === 'json') {
+    response.header('Content-Type', 'application/octet-stream')
+
+    return response.send(JSON.stringify(data))
+  }
+
+  if (exportType === 'csv') {
+    const json = data.map((row) => row.toJSON())
+    const csv = toCSVString(json)
+
+    response.header('Content-Type', 'text/csv')
+
+    return response.send(csv)
+  }
+
+  return response.notImplemented({
+    error: `L'export de type '${exportType}' n'est pas encore implémenté`,
+  })
 }
