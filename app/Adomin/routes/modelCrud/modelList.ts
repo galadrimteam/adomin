@@ -196,13 +196,29 @@ const downloadExportFile = async (
     return response.send(JSON.stringify(data))
   }
 
+  const json = data.map((row) => row.toJSON())
+
   if (exportType === 'csv') {
-    const json = data.map((row) => row.toJSON())
     const csv = toCSVString(json)
 
-    response.header('Content-Type', 'text/csv')
+    response.header('Content-Type', 'application/octet-stream')
 
     return response.send(csv)
+  }
+
+  if (exportType === 'xlsx') {
+    const xlsx = await import('xlsx')
+
+    const wb = xlsx.utils.book_new()
+    const ws = xlsx.utils.json_to_sheet(json)
+
+    xlsx.utils.book_append_sheet(wb, ws, 'Sheet1')
+
+    const buffer = xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' })
+
+    response.header('Content-Type', 'application/octet-stream')
+
+    return response.send(buffer)
   }
 
   return response.notImplemented({

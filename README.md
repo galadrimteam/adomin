@@ -11,8 +11,11 @@ Adomin is meant to be used as a base for a quick and solid backoffice with the a
 
 ## Install
 
-- npm `npm i -D @galadrim/adomin`
-- yarn `yarn add --dev @galadrim/adomin`
+```bash
+yarn add --dev @galadrim/adomin
+yarn add xlsx # needed for excel export
+# if you don't need excel export, remove the excel export related code
+```
 
 ## Install backend files
 
