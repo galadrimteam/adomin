@@ -17,6 +17,11 @@ export interface AdominBaseFieldConfig {
    * Size of the field on the frontend, default is 120
    */
   size?: number
+  /**
+   * If this field is a @computed() field in your model
+   * you must set this to true along with creatable and editable to false
+   */
+  computed?: boolean
 }
 
 export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {

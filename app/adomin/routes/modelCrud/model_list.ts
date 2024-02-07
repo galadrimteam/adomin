@@ -58,7 +58,7 @@ const getDataList = async ({
   paginationSettings,
   primaryKey,
 }: GetDataListOptions) => {
-  const fieldsStrs = fields.map(({ name }) => name)
+  const fieldsStrs = fields.filter(({ adomin }) => adomin.computed !== true).map(({ name }) => name)
   const { pageIndex, pageSize } = paginationSettings
   const query = Model.query().select(...fieldsStrs)
 
