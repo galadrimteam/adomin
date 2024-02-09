@@ -19,6 +19,9 @@ export default class User extends BaseModel {
   @column()
   public rememberMeToken: string | null
 
+  @column()
+  public rights: number
+
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
 
