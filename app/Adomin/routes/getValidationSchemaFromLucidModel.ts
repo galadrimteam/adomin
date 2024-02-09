@@ -9,8 +9,11 @@ export const getValidationSchemaFromConfig = (
 ) => {
   const foundConfig = modelConfig
   const results = foundConfig.fields.map(({ adomin, name: columnName }) => {
-    if (validationMode === 'create' && adomin.creatable === false) return null
-    if (validationMode === 'update' && adomin.editable === false) return null
+    const notCreatable = adomin.creatable === false || adomin.computed === true
+    const notEditable = adomin.editable === false || adomin.computed === true
+
+    if (validationMode === 'create' && notCreatable) return null
+    if (validationMode === 'update' && notEditable) return null
 
     return {
       columnName,

@@ -9,6 +9,7 @@ import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { toCSVString } from 'App/Adomin/utils/csvUtils'
 import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
+import { getModelFieldStrs } from '../getModelConfig'
 
 const EXPORT_TYPES = ['csv', 'xlsx', 'json'] as const
 
@@ -58,7 +59,7 @@ const getDataList = async ({
   paginationSettings,
   primaryKey,
 }: GetDataListOptions) => {
-  const fieldsStrs = fields.map(({ name }) => name)
+  const fieldsStrs = getModelFieldStrs(fields)
   const { pageIndex, pageSize } = paginationSettings
   const query = Model.query().select(...fieldsStrs)
 

@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ADOMIN_CONFIG } from '../config/ADOMIN_CONFIG'
+import { ColumnConfig } from '../createModelConfig'
 import { AdominStaticRightsConfig } from './adominRoutesOverridesAndRights'
 
 export const DEFAULT_STATIC_RIGHTS: AdominStaticRightsConfig = {
@@ -7,6 +8,10 @@ export const DEFAULT_STATIC_RIGHTS: AdominStaticRightsConfig = {
   read: true,
   update: true,
   delete: true,
+}
+
+export const getModelFieldStrs = (fields: ColumnConfig[]) => {
+  return fields.filter(({ adomin }) => adomin.computed !== true).map(({ name }) => name)
 }
 
 export const getModelConfig = (modelName: string) => {
