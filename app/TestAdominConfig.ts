@@ -2,6 +2,7 @@ import { createModelConfig } from './Adomin/createModelConfig'
 import Profile from './Models/Profile'
 import Test from './Models/Test'
 import User from './Models/User'
+import { RIGHTS, RIGHTS_LABELS } from './rights'
 
 export const USER_CONFIG = createModelConfig(() => User, {
   label: 'Utilisateur',
@@ -17,6 +18,16 @@ export const USER_CONFIG = createModelConfig(() => User, {
       subType: 'number',
       showLabelInTable: true,
     },
+    rights: {
+      type: 'number',
+      label: 'Roles',
+      variant: {
+        type: 'bitset',
+        bitsetValues: RIGHTS,
+        bitsetLabels: RIGHTS_LABELS,
+      },
+    },
+    isBeautifull: { type: 'boolean', label: 'Beau', computed: true },
   },
 })
 

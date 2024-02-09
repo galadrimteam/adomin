@@ -1,5 +1,12 @@
 import Hash from '@ioc:Adonis/Core/Hash'
-import { BaseModel, BelongsTo, beforeSave, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  beforeSave,
+  belongsTo,
+  column,
+  computed,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Profile from './Profile'
 
@@ -21,6 +28,11 @@ export default class User extends BaseModel {
 
   @column()
   public rights: number
+
+  @computed()
+  public get isBeautifull() {
+    return this.email === 'damien@galadrim.fr'
+  }
 
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
