@@ -68,7 +68,7 @@ const getDataList = async ({
   query.where((builder) => {
     for (const field of fields) {
       if (paginationSettings.globalFilter) {
-        whereLike(builder, 'or', field.name, paginationSettings.globalFilter, false)
+        whereClause(builder, 'or', field.name, paginationSettings.globalFilter, false)
       }
     }
   })
@@ -86,7 +86,7 @@ const getDataList = async ({
           continue
         }
         const exact = ADOMIN_EXACT_FIELD_SET.has(field.adomin.type)
-        whereLike(builder, paginationSettings.filtersMode ?? 'and', field.name, search, exact)
+        whereClause(builder, paginationSettings.filtersMode ?? 'and', field.name, search, exact)
       }
     }
   })
@@ -166,7 +166,7 @@ export const modelList = async (ctx: HttpContextContract) => {
   return data
 }
 
-const whereLike = (
+const whereClause = (
   builder: ModelQueryBuilderContract<LucidModel, LucidRow>,
   type: 'or' | 'and',
   column: string,
@@ -179,13 +179,20 @@ const whereLike = (
     return
   }
 
-  if (exact) {
-    const method = type === 'or' ? 'orWhere' : 'andWhere'
-    builder[method](column, value)
+  const isPostgres = Env.get('DB_CONNECTION') === 'pg'
+
+  if (exact && isPostgres) {
+    const method = type === 'or' ? 'orWhereRaw' : 'andWhereRaw'
+    builder[method](`CAST("${string.snakeCase(column)}" as text) = ?`, [value])
     return
   }
 
-  if (Env.get('DB_CONNECTION') === 'pg') {
+  if (exact && !isPostgres) {
+    const method = type === 'or' ? 'orWhere' : 'andWhere'
+    builder[method](column, value)
+  }
+
+  if (isPostgres) {
     const method = type === 'or' ? 'orWhereRaw' : 'andWhereRaw'
     builder[method](`CAST("${string.snakeCase(column)}" as text) LIKE ?`, [`%${value}%`])
   } else {
