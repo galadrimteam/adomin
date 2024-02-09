@@ -2,12 +2,15 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import {
   BaseModel,
   BelongsTo,
+  HasMany,
   beforeSave,
   belongsTo,
   column,
   computed,
+  hasMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
+import Idea from './Idea'
 import Profile from './Profile'
 
 export default class User extends BaseModel {
@@ -36,6 +39,9 @@ export default class User extends BaseModel {
 
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
+
+  @hasMany(() => Idea)
+  public ideas: HasMany<typeof Idea>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

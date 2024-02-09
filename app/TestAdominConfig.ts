@@ -1,4 +1,5 @@
 import { createModelConfig } from './Adomin/createModelConfig'
+import Idea from './Models/Idea'
 import Profile from './Models/Profile'
 import Test from './Models/Test'
 import User from './Models/User'
@@ -67,5 +68,20 @@ export const TEST_CONFIG = createModelConfig(() => Test, {
       maxHeight: 100,
     },
     fileTest: { type: 'file', label: 'Contrat' },
+  },
+})
+
+export const IDEA_CONFIG = createModelConfig(() => Idea, {
+  columns: {
+    title: { type: 'string', label: 'Titre' },
+    description: { type: 'string', label: 'Description' },
+    userId: {
+      type: 'foreignKey',
+      subType: 'number',
+      modelName: 'User',
+      label: 'Auteur',
+      labelFields: ['email'],
+      showLabelInTable: true,
+    },
   },
 })
