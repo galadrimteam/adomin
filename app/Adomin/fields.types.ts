@@ -48,6 +48,27 @@ export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
    * e.g. "{{value}} €"
    */
   valueDisplayTemplate?: string
+
+  /**
+   * Number component variant, e.g. bitset
+   */
+  variant?: AdominNumberFieldConfigVariant
+}
+
+export type AdominNumberFieldConfigVariant = {
+  type: 'bitset'
+  /**
+   * Values for the bitset
+   *
+   * e.g. { 'DEFAULT': 0b0, 'ROLE1': 0b1, 'ROLE2': 0b10, 'ROLE3': 0b100 }
+   */
+  bitsetValues: { [K in string]: number }
+  /**
+   * Labels for the bitset
+   *
+   * e.g. { 'DEFAULT': 'Utilisateur', 'ROLE1': 'Role 1', 'ROLE2': 'Role 2', 'ROLE3': 'Role 3' }
+   */
+  bitsetLabels?: { [K in string]: string }
 }
 
 export interface AdominStringFieldConfig extends AdominBaseFieldConfig {

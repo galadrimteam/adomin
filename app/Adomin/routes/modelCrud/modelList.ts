@@ -77,6 +77,14 @@ const getDataList = async ({
     for (const field of fields) {
       const search = filtersMap.get(field.name)
       if (search !== undefined) {
+        if (
+          field.adomin.type === 'number' &&
+          field.adomin.variant?.type === 'bitset' &&
+          search !== '0'
+        ) {
+          builder.whereRaw(`(${field.name} & ${search}) = ${search}`)
+          continue
+        }
         const exact = ADOMIN_EXACT_FIELD_SET.has(field.adomin.type)
         whereLike(builder, paginationSettings.filtersMode ?? 'and', field.name, search, exact)
       }
