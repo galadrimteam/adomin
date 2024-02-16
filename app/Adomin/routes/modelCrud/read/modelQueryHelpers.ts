@@ -1,7 +1,12 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import { schema } from '@ioc:Adonis/Core/Validator'
-import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import {
+  LucidModel,
+  LucidRow,
+  ModelQueryBuilderContract,
+  RelationSubQueryBuilderContract,
+} from '@ioc:Adonis/Lucid/Orm'
 import { ColumnConfig } from 'App/Adomin/createModelConfig'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
 import { getSqlColumnToUse } from '../../getModelConfig'
@@ -40,9 +45,21 @@ const ADOMIN_EXACT_FIELD_LIST: AdominFieldConfig['type'][] = [
 
 const ADOMIN_EXACT_FIELD_SET = new Set(ADOMIN_EXACT_FIELD_LIST)
 
-const shouldIgnoreFieldFilters = (field: ColumnConfig) => {
+const shouldIgnoreFieldFilters = ({
+  field,
+  isGlobal,
+}: {
+  field: ColumnConfig
+  isGlobal: boolean
+}) => {
   if (field.adomin.computed) return true
-  if (field.adomin.type === 'hasManyRelation') return true
+  if (field.adomin.type === 'hasManyRelation') {
+    const isGlobalSearchable = field.adomin.allowGlobalFilterSearch ?? false
+
+    if (isGlobalSearchable) return false
+
+    return isGlobal
+  }
 
   return false
 }
@@ -56,12 +73,21 @@ export const applyGlobalFilters = (
 
   query.where((builder) => {
     for (const field of fields) {
-      if (shouldIgnoreFieldFilters(field)) continue
+      if (shouldIgnoreFieldFilters({ field, isGlobal: true })) continue
+      if (!globalFilter) continue
+
+      if (field.adomin.type === 'hasManyRelation') {
+        const labelFields = field.adomin.labelFields
+        builder.orWhereHas(field.name as unknown as undefined, (subquery) => {
+          for (const labelField of labelFields) {
+            whereClause(subquery, 'or', labelField, globalFilter, false)
+          }
+        })
+        continue
+      }
 
       const sqlColumn = getSqlColumnToUse(field)
-      if (globalFilter) {
-        whereClause(builder, 'or', sqlColumn, globalFilter, false)
-      }
+      whereClause(builder, 'or', sqlColumn, globalFilter, false)
     }
   })
 }
@@ -74,6 +100,8 @@ export const applyColumnFilters = (
 ) => {
   query.andWhere((builder) => {
     for (const field of fields) {
+      if (shouldIgnoreFieldFilters({ field, isGlobal: false })) continue
+
       const search = filtersMap.get(field.name)
       const sqlColumn = getSqlColumnToUse(field)
 
@@ -84,9 +112,20 @@ export const applyColumnFilters = (
         field.adomin.variant?.type === 'bitset' &&
         search !== '0'
       ) {
-        builder.whereRaw(`(${sqlColumn} & ${search}) = ${search}`)
+        builder.andWhereRaw(`(${sqlColumn} & ${search}) = ${search}`)
         continue
       }
+
+      if (field.adomin.type === 'hasManyRelation') {
+        const labelFields = field.adomin.labelFields
+        builder.andWhereHas(field.name as unknown as undefined, (subquery) => {
+          for (const labelField of labelFields) {
+            whereClause(subquery, 'or', labelField, search, false)
+          }
+        })
+        continue
+      }
+
       const exact = ADOMIN_EXACT_FIELD_SET.has(field.adomin.type)
       whereClause(builder, filtersMode ?? 'and', sqlColumn, search, exact)
     }
@@ -124,7 +163,9 @@ export const loadRelations = (
 }
 
 const whereClause = (
-  builder: ModelQueryBuilderContract<LucidModel, LucidRow>,
+  builder:
+    | ModelQueryBuilderContract<LucidModel, LucidRow>
+    | RelationSubQueryBuilderContract<LucidModel>,
   type: 'or' | 'and',
   column: string,
   value: string | null,

@@ -13,7 +13,7 @@ export const USER_CONFIG = createModelConfig(() => User, {
     profile: {
       type: 'belongsToRelation',
       modelName: 'Profile',
-      labelFields: ['id', 'name', 'age'],
+      labelFields: ['name', 'age'],
       label: 'Profil',
     },
     rights: {
@@ -28,15 +28,16 @@ export const USER_CONFIG = createModelConfig(() => User, {
     isBeautifull: { type: 'boolean', label: 'Beau', computed: true },
     ideas: {
       type: 'hasManyRelation',
+      label: 'Idées',
       modelName: 'Idea',
       labelFields: ['title'],
       creatable: false,
       editable: false,
     },
   },
-  queryBuilderCallback: (q) => {
-    q.preload('ideas')
-  },
+  // queryBuilderCallback: (q) => {
+  //   q.preload('ideas')
+  // },
 })
 
 export const PROFILE_CONFIG = createModelConfig(() => Profile, {
