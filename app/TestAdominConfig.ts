@@ -10,14 +10,19 @@ export const USER_CONFIG = createModelConfig(() => User, {
   columns: {
     email: { type: 'string', isEmail: true, label: 'Super email' },
     password: { type: 'string', isPassword: true, label: 'Mot de passe' },
-    profileId: {
-      label: 'Profil',
-      type: 'foreignKey',
+    // profileId: {
+    //   label: 'Profil',
+    //   type: 'foreignKey',
+    //   modelName: 'Profile',
+    //   labelFields: ['id', 'name', 'age'],
+    //   nullable: true,
+    //   showLabelInTable: true,
+    // },
+    profile: {
+      type: 'belongsToRelation',
       modelName: 'Profile',
       labelFields: ['id', 'name', 'age'],
-      nullable: true,
-      subType: 'number',
-      showLabelInTable: true,
+      label: 'Profil',
     },
     rights: {
       type: 'number',
@@ -29,6 +34,16 @@ export const USER_CONFIG = createModelConfig(() => User, {
       },
     },
     isBeautifull: { type: 'boolean', label: 'Beau', computed: true },
+    ideas: {
+      type: 'hasManyRelation',
+      modelName: 'Idea',
+      labelFields: ['title'],
+      creatable: false,
+      editable: false,
+    },
+  },
+  queryBuilderCallback: (q) => {
+    q.preload('ideas')
   },
 })
 
@@ -77,7 +92,6 @@ export const IDEA_CONFIG = createModelConfig(() => Idea, {
     description: { type: 'string', label: 'Description' },
     userId: {
       type: 'foreignKey',
-      subType: 'number',
       modelName: 'User',
       label: 'Auteur',
       labelFields: ['email'],

@@ -71,9 +71,16 @@ const getValidationSchemaFromFieldConfig = (
   return fieldSchema([])
 }
 
+const getType = (config: AdominFieldConfig) => {
+  if (config.type === 'foreignKey') return config.fkType ?? 'number'
+  if (config.type === 'belongsToRelation') return config.fkType ?? 'number'
+
+  return config.type
+}
+
 const getBaseSchema = (config: AdominFieldConfig) => {
   const suffix = getSuffix(config)
-  const type = config.type === 'foreignKey' ? config.subType : config.type
+  const type = getType(config)
 
   if (suffix) return schema[type][suffix]
 

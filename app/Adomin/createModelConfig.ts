@@ -1,5 +1,5 @@
 import { string } from '@ioc:Adonis/Core/Helpers'
-import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
+import { LucidModel, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import { AdominFieldConfig, AdominNumberFieldConfig } from './fields.types'
 import {
   AdominRightsCheckConfig,
@@ -54,6 +54,7 @@ export interface ModelConfig extends ModelConfigStaticOptions {
   fields: ColumnConfig[]
   name: string
   primaryKey: string
+  queryBuilderCallback?: (q: ModelQueryBuilderContract<LucidModel>) => void
 }
 
 interface ModelConfigDynamicOptions<T extends LucidModel> {
@@ -63,6 +64,17 @@ interface ModelConfigDynamicOptions<T extends LucidModel> {
       '$'
     >]: AdominFieldConfig
   }>
+  /**
+   * You can use this callback to customize the query built for this model
+   *
+   * @param q The query builder for the model
+   *
+   * e.g. for preloading a relation
+   * ```ts
+   * q.preload('ideas')
+   * ```
+   */
+  queryBuilderCallback?: (q: ModelQueryBuilderContract<T>) => void
 }
 
 // Type helper pour exclure les clés commençant par un certain caractère
@@ -139,5 +151,6 @@ export const createModelConfig = <T extends LucidModel>(
     validation: options.validation,
     crudlRights: options.crudlRights,
     visibilityCheck: options.visibilityCheck,
+    queryBuilderCallback: options.queryBuilderCallback,
   }
 }

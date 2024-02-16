@@ -3,7 +3,7 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator } from '@ioc:Adonis/Core/Validator'
 import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
-import { ColumnConfig } from 'App/Adomin/createModelConfig'
+import { ModelConfig } from 'App/Adomin/createModelConfig'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
@@ -47,18 +47,14 @@ const ADOMIN_EXACT_FIELD_LIST: AdominFieldConfig['type'][] = [
 const ADOMIN_EXACT_FIELD_SET = new Set(ADOMIN_EXACT_FIELD_LIST)
 
 interface GetDataListOptions {
-  Model: LucidModel
-  fields: ColumnConfig[]
-  primaryKey: string
   paginationSettings: PaginationSettings
+  modelConfig: ModelConfig
 }
 
-const getDataList = async ({
-  Model,
-  fields,
-  paginationSettings,
-  primaryKey,
-}: GetDataListOptions) => {
+const getDataList = async ({ paginationSettings, modelConfig }: GetDataListOptions) => {
+  const Model = modelConfig.model()
+  const { fields, primaryKey, queryBuilderCallback } = modelConfig
+
   const fieldsStrs = getModelFieldStrs(fields)
   const { pageIndex, pageSize } = paginationSettings
   const query = Model.query().select(...fieldsStrs)
@@ -105,6 +101,16 @@ const getDataList = async ({
     return dataWithoutPagination
   }
 
+  for (const field of fields) {
+    if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'belongsToRelation') {
+      if (field.adomin.preload !== false) query.preload(field.name as never)
+    }
+  }
+
+  if (queryBuilderCallback) {
+    queryBuilderCallback(query)
+  }
+
   const data = await query.paginate(pageIndex, pageSize)
 
   return data
@@ -136,10 +142,7 @@ export const modelList = async (ctx: HttpContextContract) => {
   const override = modelConfig.routesOverrides?.list
   if (override) return override(ctx)
 
-  const Model = modelConfig.model()
-  const { fields, primaryKey } = modelConfig
-
-  if (fields.length === 0) return []
+  if (modelConfig.fields.length === 0) return []
 
   const qs = request.qs()
 
@@ -155,13 +158,13 @@ export const modelList = async (ctx: HttpContextContract) => {
     },
   })
 
-  const data = await getDataList({ Model, fields, primaryKey, paginationSettings })
+  const data = await getDataList({ paginationSettings, modelConfig })
 
   if (paginationSettings.exportType) {
     return downloadExportFile(ctx, data, paginationSettings.exportType)
   }
 
-  await loadFilesForInstances(fields, data)
+  await loadFilesForInstances(modelConfig.fields, data)
 
   return data
 }
