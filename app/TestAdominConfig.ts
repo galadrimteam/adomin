@@ -10,14 +10,6 @@ export const USER_CONFIG = createModelConfig(() => User, {
   columns: {
     email: { type: 'string', isEmail: true, label: 'Super email' },
     password: { type: 'string', isPassword: true, label: 'Mot de passe' },
-    // profileId: {
-    //   label: 'Profil',
-    //   type: 'foreignKey',
-    //   modelName: 'Profile',
-    //   labelFields: ['id', 'name', 'age'],
-    //   nullable: true,
-    //   showLabelInTable: true,
-    // },
     profile: {
       type: 'belongsToRelation',
       modelName: 'Profile',

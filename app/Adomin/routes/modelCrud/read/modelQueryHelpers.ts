@@ -35,6 +35,7 @@ const ADOMIN_EXACT_FIELD_LIST: AdominFieldConfig['type'][] = [
   'date',
   'number',
   'foreignKey',
+  'belongsToRelation',
 ]
 
 const ADOMIN_EXACT_FIELD_SET = new Set(ADOMIN_EXACT_FIELD_LIST)
