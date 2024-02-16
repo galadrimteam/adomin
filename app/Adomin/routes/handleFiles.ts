@@ -1,20 +1,6 @@
-import { Attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
+import { AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 import { LucidRow } from '@ioc:Adonis/Lucid/Orm'
 import type { ColumnConfig } from '../createModelConfig'
-
-export const handleFiles = async (fields: ColumnConfig[], data: any) => {
-  const newData = { ...data }
-
-  fields.forEach((field) => {
-    if (field.adomin.type === 'file') {
-      if (newData[field.name]) {
-        newData[field.name] = Attachment.fromFile(newData[field.name])
-      }
-    }
-  })
-
-  return newData
-}
 
 export const loadFilesForInstances = async (fields: ColumnConfig[], modelInstances: LucidRow[]) => {
   const filesColumn = fields.filter(({ adomin }) => adomin.type === 'file')

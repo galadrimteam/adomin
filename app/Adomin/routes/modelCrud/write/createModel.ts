@@ -1,11 +1,12 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromConfig } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
-import { handleFiles, loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
+import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { validateOrThrow } from 'App/Adomin/validation/adominValidationHelpers'
 import { getGenericMessages } from 'App/Adomin/validation/validationMessages'
 import { computeRightsCheck } from '../../adominRoutesOverridesAndRights'
+import { attachFieldsToModel } from './attachFieldsToModel'
 
 export const createModel = async (ctx: HttpContextContract) => {
   const { params, response, request } = ctx
@@ -35,9 +36,11 @@ export const createModel = async (ctx: HttpContextContract) => {
   const schema = getValidationSchemaFromConfig(modelConfig, 'create')
   const data = await request.validate({ schema, messages: getGenericMessages(Model) })
 
-  const finalData = await handleFiles(fields, data)
+  const createdInstance = new Model()
 
-  const createdInstance = await Model.create(finalData)
+  await attachFieldsToModel(createdInstance, fields, data)
+
+  await createdInstance.save()
 
   const modelInstance = await getModelData(Model, createdInstance[Model.primaryKey])
 
