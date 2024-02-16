@@ -5,7 +5,7 @@ import { handleFiles, loadFilesForInstances } from 'App/Adomin/routes/handleFile
 import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { validateOrThrow } from 'App/Adomin/validation/adominValidationHelpers'
 import { getGenericMessages } from 'App/Adomin/validation/validationMessages'
-import { computeRightsCheck } from '../adominRoutesOverridesAndRights'
+import { computeRightsCheck } from '../../adominRoutesOverridesAndRights'
 
 export const createModel = async (ctx: HttpContextContract) => {
   const { params, response, request } = ctx

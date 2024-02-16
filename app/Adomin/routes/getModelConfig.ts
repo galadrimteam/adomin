@@ -11,7 +11,7 @@ export const DEFAULT_STATIC_RIGHTS: AdominStaticRightsConfig = {
   delete: true,
 }
 
-const getFieldNameToUse = (field: ColumnConfig) => {
+export const getSqlColumnToUse = (field: ColumnConfig) => {
   if (field.adomin.type === 'belongsToRelation') {
     return field.adomin.fkName ?? string.camelCase(field.adomin.modelName) + 'Id'
   }
@@ -21,7 +21,7 @@ const getFieldNameToUse = (field: ColumnConfig) => {
 export const getModelFieldStrs = (fields: ColumnConfig[]) => {
   return fields
     .filter(({ adomin }) => adomin.computed !== true && adomin.type !== 'hasManyRelation')
-    .map((f) => getFieldNameToUse(f))
+    .map((f) => getSqlColumnToUse(f))
 }
 
 export const getModelConfig = (modelName: string) => {

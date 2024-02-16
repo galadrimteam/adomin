@@ -295,8 +295,10 @@ export interface AdominBelongsToRelationFieldConfig extends AdominBaseFieldConfi
    */
   labelFieldsSeparator?: string
   /**
-   * Name of the foreign key in the referenced model
+   * Name of the foreign key for the referenced model
    * @default `${camelCase(modelName)}Id`
+   *
+   * e.g. if modelName is 'User', the default value will be 'userId'
    */
   fkName?: string
   /**
@@ -304,6 +306,11 @@ export interface AdominBelongsToRelationFieldConfig extends AdominBaseFieldConfi
    * @default 'number'
    */
   fkType?: 'string' | 'number'
+  /**
+   * Name of the local key in the referenced model
+   * @default 'id'
+   */
+  localKeyName?: string
   /**
    * If true, adomin will preload the relation
    *

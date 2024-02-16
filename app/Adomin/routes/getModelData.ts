@@ -1,14 +1,22 @@
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import { getModelConfig, getModelFieldStrs } from './getModelConfig'
+import { loadRelations } from './modelCrud/read/modelQueryHelpers'
 
 export const getModelData = async (Model: LucidModel, primaryKeyValue: string | number) => {
-  const { fields, primaryKey } = getModelConfig(Model.name)
+  const { fields, primaryKey, queryBuilderCallback } = getModelConfig(Model.name)
   const fieldsStrs = getModelFieldStrs(fields)
 
-  const modelToReturn = await Model.query()
+  const query = Model.query()
     .select(...fieldsStrs)
     .where(primaryKey, primaryKeyValue)
-    .firstOrFail()
+
+  loadRelations(query, fields)
+
+  if (queryBuilderCallback) {
+    queryBuilderCallback(query)
+  }
+
+  const modelToReturn = await query.firstOrFail()
 
   return modelToReturn
 }

@@ -1,13 +1,13 @@
 import Route from '@ioc:Adonis/Core/Route'
 import { adominLogin } from 'App/Adomin/routes/adominLogin'
 import { getModelConfigRoute } from 'App/Adomin/routes/getModelConfig'
-import { createModel } from 'App/Adomin/routes/modelCrud/createModel'
-import { deleteModel } from 'App/Adomin/routes/modelCrud/deleteModel'
-import { modelList } from 'App/Adomin/routes/modelCrud/modelList'
-import { showModel } from 'App/Adomin/routes/modelCrud/showModel'
-import { updateModel } from 'App/Adomin/routes/modelCrud/updateModel'
 import { adominLogout } from './adominLogout'
 import { getAdominConfig } from './getAdominConfig'
+import { modelList } from './modelCrud/read/modelList'
+import { showModel } from './modelCrud/read/showModel'
+import { createModel } from './modelCrud/write/createModel'
+import { deleteModel } from './modelCrud/write/deleteModel'
+import { updateModel } from './modelCrud/write/updateModel'
 
 Route.group(() => {
   Route.group(() => {
