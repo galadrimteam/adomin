@@ -82,12 +82,11 @@ export const IDEA_CONFIG = createModelConfig(() => Idea, {
   columns: {
     title: { type: 'string', label: 'Titre' },
     description: { type: 'string', label: 'Description' },
-    userId: {
-      type: 'foreignKey',
+    author: {
+      type: 'belongsToRelation',
       modelName: 'User',
       label: 'Auteur',
       labelFields: ['email'],
-      showLabelInTable: true,
     },
   },
 })

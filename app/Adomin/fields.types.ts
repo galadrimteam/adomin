@@ -272,12 +272,25 @@ export interface AdominHasManyRelationFieldConfig extends AdominBaseFieldConfig 
    */
   fkType?: 'string' | 'number'
   /**
+   * Name of the local key in the referenced model
+   * @default 'id'
+   */
+  localKeyName?: string
+  /**
    * If true, adomin will preload the relation
    *
    * Setting to false can be usefull if you need to customize the query with queryBuilderCallback
    * @default true
    */
   preload?: boolean
+  /**
+   * Creation of related models on the fly is not possible yet
+   */
+  creatable: false
+  /**
+   * Edition of related models on the fly is not possible yet
+   */
+  editable: false
 }
 
 export interface AdominBelongsToRelationFieldConfig extends AdominBaseFieldConfig {
