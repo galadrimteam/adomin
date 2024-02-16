@@ -48,7 +48,6 @@ export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
    * e.g. "{{value}} €"
    */
   valueDisplayTemplate?: string
-
   /**
    * Number component variant, e.g. bitset
    */
@@ -182,10 +181,6 @@ export type AdominEnumFieldConfig = AdominBaseFieldConfig & {
    * default value for this field on the creation form
    */
   defaultValue?: string
-}
-
-export interface AdominEnumSetFieldConfig extends AdominBaseFieldConfig {
-  type: 'enumSet'
 }
 
 export interface AdominArrayFieldConfig extends AdominBaseFieldConfig {

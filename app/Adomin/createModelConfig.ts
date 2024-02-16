@@ -1,6 +1,20 @@
+import { AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 import { string } from '@ioc:Adonis/Core/Helpers'
-import { LucidModel, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
-import { AdominFieldConfig, AdominNumberFieldConfig } from './fields.types'
+import { BelongsTo, HasMany, LucidModel, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon'
+import {
+  AdominArrayFieldConfig,
+  AdominBelongsToRelationFieldConfig,
+  AdominBooleanFieldConfig,
+  AdominDateFieldConfig,
+  AdominEnumFieldConfig,
+  AdominFieldConfig,
+  AdominFileFieldConfig,
+  AdominForeignKeyFieldConfig,
+  AdominHasManyRelationFieldConfig,
+  AdominNumberFieldConfig,
+  AdominStringFieldConfig,
+} from './fields.types'
 import {
   AdominRightsCheckConfig,
   AdominRightsCheckFunction,
@@ -57,12 +71,30 @@ export interface ModelConfig extends ModelConfigStaticOptions {
   queryBuilderCallback?: (q: ModelQueryBuilderContract<LucidModel>) => void
 }
 
+type GetAdominTypeFromModelFieldType<T> = T extends number
+  ? AdominNumberFieldConfig | AdominForeignKeyFieldConfig
+  : T extends string
+  ? AdominStringFieldConfig | AdominEnumFieldConfig | AdominForeignKeyFieldConfig
+  : T extends BelongsTo<LucidModel>
+  ? AdominBelongsToRelationFieldConfig
+  : T extends HasMany<LucidModel>
+  ? AdominHasManyRelationFieldConfig
+  : T extends DateTime
+  ? AdominDateFieldConfig
+  : T extends boolean
+  ? AdominBooleanFieldConfig
+  : T extends Array<any>
+  ? AdominArrayFieldConfig
+  : T extends AttachmentContract
+  ? AdominFileFieldConfig
+  : AdominFieldConfig
+
 interface ModelConfigDynamicOptions<T extends LucidModel> {
   columns: Partial<{
     [K in keyof InstanceType<T> as ExcludeIfStartsWith<
       ExcludeIfMethod<InstanceType<T>[K], K>,
       '$'
-    >]: AdominFieldConfig
+    >]: GetAdominTypeFromModelFieldType<NonNullable<InstanceType<T>[K]>>
   }>
   /**
    * You can use this callback to customize the query built for this model
