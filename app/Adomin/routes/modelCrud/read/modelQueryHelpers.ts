@@ -53,6 +53,7 @@ const shouldIgnoreFieldFilters = ({
   isGlobal: boolean
 }) => {
   if (field.adomin.computed) return true
+  if (field.adomin.type === 'string' && field.adomin.isPassword) return true
   if (field.adomin.type === 'hasManyRelation') {
     const isGlobalSearchable = field.adomin.allowGlobalFilterSearch ?? false
 
@@ -132,6 +133,16 @@ export const applyColumnFilters = (
   })
 }
 
+const shouldIgnoreSorting = (field: ColumnConfig) => {
+  if (field.adomin.computed) return true
+  if (field.adomin.type === 'hasManyRelation') return true
+  if (field.adomin.type === 'belongsToRelation') return true
+  if (field.adomin.type === 'foreignKey') return true
+  if (field.adomin.type === 'string' && field.adomin.isPassword) return true
+
+  return false
+}
+
 export const applySorting = (
   query: ModelQueryBuilderContract<LucidModel, LucidRow>,
   fieldsMap: Map<string, ColumnConfig>,
@@ -145,7 +156,9 @@ export const applySorting = (
 
   for (const { id, desc } of sorting) {
     const field = fieldsMap.get(id)
-    if (!field || field.adomin.type === 'hasManyRelation') continue
+    if (!field || shouldIgnoreSorting(field)) {
+      continue
+    }
     const sqlColumn = getSqlColumnToUse(field)
     query.orderBy(sqlColumn, desc ? 'desc' : 'asc')
   }
