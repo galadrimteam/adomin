@@ -145,7 +145,7 @@ export const applySorting = (
 
   for (const { id, desc } of sorting) {
     const field = fieldsMap.get(id)
-    if (!field) continue
+    if (!field || field.adomin.type === 'hasManyRelation') continue
     const sqlColumn = getSqlColumnToUse(field)
     query.orderBy(sqlColumn, desc ? 'desc' : 'asc')
   }
