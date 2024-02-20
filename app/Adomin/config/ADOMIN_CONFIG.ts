@@ -1,4 +1,4 @@
-import { AdominConfig } from '../createModelConfig'
+import { AdominConfig } from '../adominConfig'
 
 /**
  * This file will contain your Adomin Config
@@ -9,5 +9,5 @@ import { AdominConfig } from '../createModelConfig'
 
 export const ADOMIN_CONFIG: AdominConfig = {
   title: 'Adomin (edit this)',
-  models: [],
+  views: [],
 }
