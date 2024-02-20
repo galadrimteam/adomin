@@ -1,11 +1,11 @@
-import { createModelConfig } from './Adomin/createModelConfig'
+import { createModelViewConfig } from './Adomin/createModelViewConfig'
 import Idea from './Models/Idea'
 import Profile from './Models/Profile'
 import Test from './Models/Test'
 import User from './Models/User'
 import { RIGHTS, RIGHTS_LABELS } from './rights'
 
-export const USER_CONFIG = createModelConfig(() => User, {
+export const USER_CONFIG = createModelViewConfig(() => User, {
   label: 'Utilisateur',
   columns: {
     email: { type: 'string', isEmail: true, label: 'Super email' },
@@ -40,7 +40,7 @@ export const USER_CONFIG = createModelConfig(() => User, {
   // },
 })
 
-export const PROFILE_CONFIG = createModelConfig(() => Profile, {
+export const PROFILE_CONFIG = createModelViewConfig(() => Profile, {
   label: 'Profil',
   columns: {
     name: { type: 'string' },
@@ -48,7 +48,7 @@ export const PROFILE_CONFIG = createModelConfig(() => Profile, {
   },
 })
 
-export const TEST_CONFIG = createModelConfig(() => Test, {
+export const TEST_CONFIG = createModelViewConfig(() => Test, {
   label: 'Test',
   columns: {
     // stringArrayTest: { type: 'array' },
@@ -79,7 +79,7 @@ export const TEST_CONFIG = createModelConfig(() => Test, {
   },
 })
 
-export const IDEA_CONFIG = createModelConfig(() => Idea, {
+export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
   columns: {
     title: { type: 'string', label: 'Titre' },
     description: { type: 'string', label: 'Description' },

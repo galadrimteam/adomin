@@ -3,7 +3,14 @@ import { schema, validator } from '@ioc:Adonis/Core/Validator'
 import { ADOMIN_CONFIG } from 'App/Adomin/config/ADOMIN_CONFIG'
 import { getModelConfig } from '../getModelConfig'
 
-const modelsEnum = ADOMIN_CONFIG.models.map(({ model }) => model().name)
+const isNotNull = <T>(value: T | null): value is T => value !== null
+
+const modelsEnum = ADOMIN_CONFIG.views
+  .map((conf) => {
+    if (conf.type !== 'model') return null
+    return conf.model().name
+  })
+  .filter(isNotNull)
 
 const modelNameSchema = schema.create({ model: schema.enum(modelsEnum) })
 

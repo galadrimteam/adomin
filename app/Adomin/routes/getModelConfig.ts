@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { string } from '@poppinss/utils/build/helpers'
 import { ADOMIN_CONFIG } from '../config/ADOMIN_CONFIG'
-import { ColumnConfig } from '../createModelConfig'
+import { ColumnConfig } from '../createModelViewConfig'
 import { AdominStaticRightsConfig } from './adominRoutesOverridesAndRights'
 
 export const DEFAULT_STATIC_RIGHTS: AdominStaticRightsConfig = {
@@ -25,7 +25,7 @@ export const getModelFieldStrs = (fields: ColumnConfig[]) => {
 }
 
 export const getModelConfig = (modelName: string) => {
-  const foundConfig = ADOMIN_CONFIG.models.find((config) => config.model().name === modelName)
+  const foundConfig = ADOMIN_CONFIG.views.find((config) => config.model().name === modelName)
 
   if (!foundConfig) throw new Error(`No ADOMIN config found for model ${modelName}`)
 
@@ -35,7 +35,7 @@ export const getModelConfig = (modelName: string) => {
 export const getModelConfigRoute = async ({ params, response }: HttpContextContract) => {
   const modelString = params.model
 
-  const modelConfig = ADOMIN_CONFIG.models.find(({ model }) => model().name === modelString)
+  const modelConfig = ADOMIN_CONFIG.views.find(({ model }) => model().name === modelString)
 
   if (!modelConfig) {
     return response.notFound({ error: `Model '${modelString}' not found` })

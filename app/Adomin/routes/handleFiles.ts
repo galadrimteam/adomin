@@ -1,6 +1,6 @@
 import { AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 import { LucidRow } from '@ioc:Adonis/Lucid/Orm'
-import type { ColumnConfig } from '../createModelConfig'
+import type { ColumnConfig } from '../createModelViewConfig'
 
 export const loadFilesForInstances = async (fields: ColumnConfig[], modelInstances: LucidRow[]) => {
   const filesColumn = fields.filter(({ adomin }) => adomin.type === 'file')

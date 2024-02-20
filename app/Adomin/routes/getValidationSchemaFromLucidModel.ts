@@ -1,6 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
-import { ModelConfig } from '../createModelConfig'
+import { ModelConfig } from '../createModelViewConfig'
 import { AdominValidationMode } from '../validation/adominValidationHelpers'
 
 export const getValidationSchemaFromConfig = (

@@ -1,4 +1,4 @@
-import { ModelConfig } from 'App/Adomin/createModelConfig'
+import { ModelConfig } from 'App/Adomin/createModelViewConfig'
 import { getModelFieldStrs } from '../../getModelConfig'
 import {
   PaginationSettings,

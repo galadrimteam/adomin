@@ -30,7 +30,8 @@ export interface ColumnConfig {
 
 export const PASSWORD_SERIALIZED_FORM = '***'
 
-interface ModelConfigStaticOptions {
+export interface ModelConfigStaticOptions {
+  type: 'model'
   label: string
   labelPluralized: string
   /** Use this if you want to add more checks to the default adomin validation
@@ -113,16 +114,6 @@ interface ModelConfigDynamicOptions<T extends LucidModel> {
 type ExcludeIfStartsWith<T, Prefix extends string> = T extends `${Prefix}${infer _Rest}` ? never : T
 type ExcludeIfMethod<T, S> = T extends Function ? never : S
 
-export interface AdominConfig {
-  title: string
-  /** The key of the user property to show to logged in administrators
-   * @default 'email'
-   */
-  userDisplayKey?: string
-  footerText?: string
-  models: ModelConfig[]
-}
-
 const serializePasswords = (Model: LucidModel, columnsObj: Record<string, AdominFieldConfig>) => {
   const passwords = Object.entries(columnsObj)
     .filter(([, conf]) => conf.type === 'string' && conf.isPassword)
@@ -145,7 +136,7 @@ const PRIMARY_KEY_DEFAULT_CONFIG: AdominNumberFieldConfig = {
   creatable: false,
 }
 
-export const createModelConfig = <T extends LucidModel>(
+export const createModelViewConfig = <T extends LucidModel>(
   Model: () => T,
   options: Partial<ModelConfigStaticOptions> & ModelConfigDynamicOptions<T>
 ): ModelConfig => {
@@ -171,6 +162,7 @@ export const createModelConfig = <T extends LucidModel>(
   }
 
   return {
+    type: 'model',
     name: modelString,
     model: Model,
     fields: columnsConfig,
