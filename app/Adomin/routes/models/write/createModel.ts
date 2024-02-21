@@ -1,11 +1,11 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { getModelData } from 'App/Adomin/routes/getModelData'
 import { getValidationSchemaFromConfig } from 'App/Adomin/routes/getValidationSchemaFromLucidModel'
 import { loadFilesForInstances } from 'App/Adomin/routes/handleFiles'
-import { getValidatedModelConfig } from 'App/Adomin/routes/modelCrud/validateModelName'
 import { validateOrThrow } from 'App/Adomin/validation/adominValidationHelpers'
 import { getGenericMessages } from 'App/Adomin/validation/validationMessages'
 import { computeRightsCheck } from '../../adominRoutesOverridesAndRights'
+import { getModelData } from '../getModelData'
+import { getValidatedModelConfig } from '../validateModelName'
 import { attachFieldsToModel } from './attachFieldsToModel'
 
 export const createModel = async (ctx: HttpContextContract) => {

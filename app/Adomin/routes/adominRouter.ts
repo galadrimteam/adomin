@@ -1,16 +1,18 @@
 import Route from '@ioc:Adonis/Core/Route'
 import { adominLogin } from 'App/Adomin/routes/adominLogin'
-import { getModelConfigRoute } from 'App/Adomin/routes/getModelConfig'
 import { adominLogout } from './adominLogout'
 import { getAdominConfig } from './getAdominConfig'
-import { modelList } from './modelCrud/read/modelList'
-import { showModel } from './modelCrud/read/showModel'
-import { createModel } from './modelCrud/write/createModel'
-import { deleteModel } from './modelCrud/write/deleteModel'
-import { updateModel } from './modelCrud/write/updateModel'
+import { getModelConfigRoute } from './models/getModelConfig'
+import { modelList } from './models/read/modelList'
+import { showModel } from './models/read/showModel'
+import { createModel } from './models/write/createModel'
+import { deleteModel } from './models/write/deleteModel'
+import { updateModel } from './models/write/updateModel'
 
 Route.group(() => {
   Route.group(() => {
+    // Route.get('config/stats/:view', )
+
     Route.get('config', getAdominConfig)
     Route.get('config/:model', getModelConfigRoute)
 

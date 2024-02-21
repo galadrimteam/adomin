@@ -1,5 +1,5 @@
 import { ModelConfig } from 'App/Adomin/createModelViewConfig'
-import { getModelFieldStrs } from '../../getModelConfig'
+import { getModelFieldStrs } from '../getModelConfig'
 import {
   PaginationSettings,
   applyColumnFilters,

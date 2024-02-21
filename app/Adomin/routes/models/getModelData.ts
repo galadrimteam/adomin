@@ -1,6 +1,6 @@
 import { LucidModel } from '@ioc:Adonis/Lucid/Orm'
 import { getModelConfig, getModelFieldStrs } from './getModelConfig'
-import { loadRelations } from './modelCrud/read/modelQueryHelpers'
+import { loadRelations } from './read/modelQueryHelpers'
 
 export const getModelData = async (Model: LucidModel, primaryKeyValue: string | number) => {
   const { fields, primaryKey, queryBuilderCallback } = getModelConfig(Model.name)

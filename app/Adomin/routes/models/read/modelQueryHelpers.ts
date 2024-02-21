@@ -9,7 +9,7 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import { ColumnConfig } from 'App/Adomin/createModelViewConfig'
 import { AdominFieldConfig } from 'App/Adomin/fields.types'
-import { getSqlColumnToUse } from '../../getModelConfig'
+import { getSqlColumnToUse } from '../getModelConfig'
 import { EXPORT_TYPES } from './downloadExportFile'
 
 export const paginationSchema = schema.create({
