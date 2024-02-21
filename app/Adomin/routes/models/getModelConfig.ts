@@ -3,7 +3,7 @@ import { string } from '@poppinss/utils/build/helpers'
 import { AdominViewConfig } from '../../adominConfig'
 import { ADOMIN_CONFIG } from '../../config/ADOMIN_CONFIG'
 import { ColumnConfig, ModelConfig } from '../../createModelViewConfig'
-import { AdominStaticRightsConfig } from '../adominRoutesOverridesAndRights'
+import { AdominStaticRightsConfig, computeRightsCheck } from '../adominRoutesOverridesAndRights'
 
 export const DEFAULT_STATIC_RIGHTS: AdominStaticRightsConfig = {
   create: true,
@@ -39,7 +39,8 @@ export const getModelConfig = (modelName: string) => {
   return foundConfig
 }
 
-export const getModelConfigRoute = async ({ params, response }: HttpContextContract) => {
+export const getModelConfigRoute = async (ctx: HttpContextContract) => {
+  const { params, response } = ctx
   const modelString = params.model
 
   const modelConfig = ADOMIN_CONFIG.views
@@ -50,7 +51,12 @@ export const getModelConfigRoute = async ({ params, response }: HttpContextContr
     return response.notFound({ error: `Model '${modelString}' not found` })
   }
 
-  const { fields, primaryKey, label, labelPluralized, name, isHidden } = modelConfig
+  const { fields, primaryKey, label, labelPluralized, name, isHidden, visibilityCheck } =
+    modelConfig
+
+  const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck)
+
+  if (visibilityCheckResult === 'STOP') return
 
   const staticRights = {
     ...DEFAULT_STATIC_RIGHTS,

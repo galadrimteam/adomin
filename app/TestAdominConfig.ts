@@ -1,3 +1,4 @@
+import Database from '@ioc:Adonis/Lucid/Database'
 import { createModelViewConfig } from './Adomin/createModelViewConfig'
 import { createStatsViewConfig } from './Adomin/createStatsViewConfig'
 import Idea from './Models/Idea'
@@ -93,18 +94,60 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
   },
 })
 
+const dataFetcher = async () => {
+  const res = await Database.from('profiles')
+    .select(
+      Database.raw(
+        'FLOOR(age / 10) * 10 as age_range_start, FLOOR(age / 10) * 10 + 9 as age_range_end'
+      )
+    )
+    .count('age as count')
+    .groupByRaw('FLOOR(age / 10)')
+    .orderBy('age_range_start', 'asc')
+
+  const rows = res as { age_range_start: number; age_range_end: number; count: string }[]
+
+  const data = rows.map(({ age_range_end, age_range_start, count }): [string, number] => [
+    `${age_range_start} - ${age_range_end}`,
+    +count,
+  ])
+
+  return data
+}
+
 export const STATS_CONFIG = createStatsViewConfig({
   path: 'kpis',
-  label: 'My Stats View',
+  label: 'Les super KPI',
   stats: [
     {
-      type: 'piechart',
-      label: 'test pie chart',
-      dataFetcher: () =>
-        Promise.resolve([
-          ['Blueberry', 44],
-          ['Strawberry', 23],
-        ]),
+      type: 'pie',
+      label: "Utilisateurs par tranche d'âge",
+      name: 'users-by-age-range',
+      dataFetcher,
+    },
+    {
+      type: 'bar',
+      label: 'test bar chart',
+      name: 'testBarChart',
+      dataFetcher,
+    },
+    {
+      type: 'column',
+      label: 'test column chart',
+      name: 'testColumnChart',
+      dataFetcher,
+    },
+    {
+      type: 'line',
+      label: 'test line chart',
+      name: 'testLineChart',
+      dataFetcher,
+    },
+    {
+      type: 'line',
+      label: 'test line chart (2)',
+      name: 'testLineChart2',
+      dataFetcher,
     },
   ],
 })

@@ -26,23 +26,27 @@ export interface StatsViewConfig {
   isHidden?: boolean
 }
 
-export interface AdominPieChart {
-  type: 'piechart'
-  label: string
-  dataFetcher: (options: any) => Promise<any>
-}
+type ChartDataRow = [string, number]
 
-export interface AdominBarChart {
-  type: 'barchart'
-  label: string
-}
+type ChartMultipleSeriesDataRow = { name: string; data: ChartDataRow[] }
 
-export interface AdominLineChart {
-  type: 'linechart'
+interface AdominStat {
+  type: 'pie' | 'bar' | 'column' | 'line'
+  /**
+   * Label of the stat, displayed in the frontend
+   */
   label: string
+  /**
+   * Name of the stat, used to identify it in the frontend
+   *
+   * (e.g. in the react key prop)
+   */
+  name: string
+  /**
+   * function to fetch the data to displayed in the chart
+   */
+  dataFetcher: () => Promise<ChartMultipleSeriesDataRow[] | ChartDataRow[]>
 }
-
-export type AdominStat = AdominBarChart | AdominPieChart | AdominLineChart
 
 export type StatsViewConfigStaticOptions = Omit<StatsViewConfig, 'type'>
 

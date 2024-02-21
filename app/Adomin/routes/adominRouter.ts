@@ -8,10 +8,11 @@ import { showModel } from './models/read/showModel'
 import { createModel } from './models/write/createModel'
 import { deleteModel } from './models/write/deleteModel'
 import { updateModel } from './models/write/updateModel'
+import { getStatConfigRoute } from './stats/getStatConfig'
 
 Route.group(() => {
   Route.group(() => {
-    // Route.get('config/stats/:view', )
+    Route.get('config/stats/:view', getStatConfigRoute)
 
     Route.get('config', getAdominConfig)
     Route.get('config/:model', getModelConfigRoute)

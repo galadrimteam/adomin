@@ -4,7 +4,7 @@ import type { ModelConfig } from '../createModelViewConfig'
 import { StatsViewConfig } from '../createStatsViewConfig'
 import { computeRightsCheck } from './adominRoutesOverridesAndRights'
 
-const defaultText = 'Made with ❤️ by Galadrim'
+export const defaultFooterText = 'Made with ❤️ by Galadrim'
 
 const getModelViewConfig = async (ctx: HttpContextContract, conf: ModelConfig) => {
   const { label, labelPluralized, name, isHidden, visibilityCheck } = conf
@@ -48,7 +48,7 @@ export const getAdominConfig = async (ctx: HttpContextContract) => {
   const viewsToFilter = await Promise.all(viewsPromises)
   const views = viewsToFilter.filter(({ visibilityCheckPassed }) => visibilityCheckPassed)
 
-  const footerText = ADOMIN_CONFIG.footerText ?? defaultText
+  const footerText = ADOMIN_CONFIG.footerText ?? defaultFooterText
 
   return {
     title: ADOMIN_CONFIG.title,
