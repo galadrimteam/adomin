@@ -31,6 +31,9 @@ type ChartDataRow = [string, number]
 type ChartMultipleSeriesDataRow = { name: string; data: ChartDataRow[] }
 
 interface AdominStat {
+  /**
+   * Type of the chart to display
+   */
   type: 'pie' | 'bar' | 'column' | 'line'
   /**
    * Label of the stat, displayed in the frontend
