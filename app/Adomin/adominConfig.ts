@@ -1,6 +1,7 @@
 import type { ModelConfig } from './createModelViewConfig'
+import { StatsViewConfig } from './createStatsViewConfig'
 
-export type AdominViewConfig = ModelConfig
+export type AdominViewConfig = ModelConfig | StatsViewConfig
 
 export interface AdominConfig {
   title: string

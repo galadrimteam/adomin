@@ -1,4 +1,5 @@
 import { createModelViewConfig } from './Adomin/createModelViewConfig'
+import { createStatsViewConfig } from './Adomin/createStatsViewConfig'
 import Idea from './Models/Idea'
 import Profile from './Models/Profile'
 import Test from './Models/Test'
@@ -90,4 +91,20 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
       labelFields: ['email'],
     },
   },
+})
+
+export const STATS_CONFIG = createStatsViewConfig({
+  path: 'kpis',
+  label: 'My Stats View',
+  stats: [
+    {
+      type: 'piechart',
+      label: 'test pie chart',
+      dataFetcher: () =>
+        Promise.resolve([
+          ['Blueberry', 44],
+          ['Strawberry', 23],
+        ]),
+    },
+  ],
 })
