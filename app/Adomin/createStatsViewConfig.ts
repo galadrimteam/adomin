@@ -34,7 +34,7 @@ interface AdominStat {
   /**
    * Type of the chart to display
    */
-  type: 'pie' | 'bar' | 'column' | 'line'
+  type: 'pie' | 'bar' | 'column' | 'line' | 'area'
   /**
    * Label of the stat, displayed in the frontend
    */
