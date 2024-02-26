@@ -6,6 +6,7 @@ const getDayOfWeekSql = (column: string) => {
   const dbType = Env.get('DB_CONNECTION')
   switch (dbType) {
     case 'mysql':
+      return `DAYOFWEEK(${column})`
     case 'pg':
       return `EXTRACT(DOW FROM ${column})`
     case 'sqlite':
