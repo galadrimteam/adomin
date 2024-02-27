@@ -17,7 +17,7 @@ export const getStatConfig = (viewName: string) => {
 }
 
 const getFrontendStatConfig = async (config: StatsViewConfig) => {
-  const promises = config.stats.map(async ({ label, dataFetcher, name, type }) => {
+  const promises = config.stats.map(async ({ label, dataFetcher, name, type, options }) => {
     const data = await dataFetcher()
 
     return {
@@ -25,6 +25,7 @@ const getFrontendStatConfig = async (config: StatsViewConfig) => {
       name,
       label,
       data,
+      options,
     }
   })
 

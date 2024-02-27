@@ -89,7 +89,15 @@ const getHourSql = (column: string) => {
   }
 }
 
-export async function groupByHour(table: string, column: string): Promise<[string, number][]> {
+interface GroupByHourOptions {
+  allHours?: boolean
+}
+
+export async function groupByHour(
+  table: string,
+  column: string,
+  options: GroupByHourOptions = {}
+): Promise<[string, number][]> {
   const hourSql = getHourSql(column)
 
   const results = await Database.from(table)
@@ -98,10 +106,23 @@ export async function groupByHour(table: string, column: string): Promise<[strin
     .groupBy('hour')
     .orderBy('hour', 'asc')
 
-  const hourMap = results.map((row) => {
-    const res: [string, number] = [row.hour.toString(), Number(row.count)]
-    return res
-  })
+  if (!options.allHours) {
+    return results.map((row) => [row.hour.toString(), Number(row.count)] as [string, number])
+  }
 
-  return hourMap
+  // Convert results to a map for quicker access
+  const countsByHour: Map<number, number> = new Map(
+    results.map((row) => [Number(row.hour), Number(row.count)])
+  )
+
+  // Generate all hours (0-23) and map to result format, using counts from query or defaulting to 0
+  const allHours: [string, number][] = []
+
+  for (let hour = 0; hour < 25; hour++) {
+    const hourStr = hour.toString().padStart(2, '0') // Ensure two-digit format
+    const value = countsByHour.get(hour % 24) || 0
+    allHours.push([hourStr, value])
+  }
+
+  return allHours
 }

@@ -107,15 +107,37 @@ export const STATS_CONFIG = createStatsViewConfig({
     },
     {
       type: 'line',
-      label: 'Profils par date de création',
-      name: 'profiles-by-creation-date',
-      dataFetcher: () => groupByDate('profiles', 'created_at'),
+      label: "Création d'utilisateurs vs idées par heure",
+      name: 'users-vs-ideas-by-hour',
+      options: {
+        download: true,
+        xtitle: 'Heure de la journée',
+        ytitle: 'Quantité',
+      },
+      dataFetcher: async () => {
+        const users = await groupByHour('users', 'created_at', { allHours: true })
+        const ideas = await groupByHour('ideas', 'created_at', { allHours: true })
+
+        return [
+          {
+            name: 'Utilisateurs',
+            data: users,
+            color: 'goldenrod',
+          },
+          {
+            name: 'Idées',
+            data: ideas,
+            color: 'darkcyan',
+          },
+        ]
+      },
     },
     {
       type: 'area',
-      label: "Création d'utilisateurs par heure",
-      name: 'users-by-hour',
-      dataFetcher: () => groupByHour('users', 'created_at'),
+      label: 'Profils par date de création',
+      name: 'profiles-by-creation-date',
+      dataFetcher: () => groupByDate('profiles', 'created_at'),
+      options: { thousands: ',', download: true },
     },
     {
       type: 'pie',
