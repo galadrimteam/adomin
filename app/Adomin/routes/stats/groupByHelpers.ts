@@ -1,12 +1,11 @@
 import Env from '@ioc:Adonis/Core/Env'
 import Database from '@ioc:Adonis/Lucid/Database'
-import { DateTime } from 'luxon'
 
 const getDayOfWeekSql = (column: string) => {
   const dbType = Env.get('DB_CONNECTION')
   switch (dbType) {
     case 'mysql':
-      return `DAYOFWEEK(${column})`
+      return `DAYOFWEEK(${column}) - 1`
     case 'pg':
       return `EXTRACT(DOW FROM ${column})`
     case 'sqlite':
@@ -18,6 +17,8 @@ const getDayOfWeekSql = (column: string) => {
   }
 }
 
+const DAY_LABELS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
+
 export async function groupByDayOfWeek(table: string, column: string): Promise<[string, number][]> {
   const dayOfWeekSql = getDayOfWeekSql(column)
 
@@ -25,14 +26,12 @@ export async function groupByDayOfWeek(table: string, column: string): Promise<[
     .select(Database.raw(`${dayOfWeekSql} as day_of_week`))
     .count('* as count')
     .groupBy('day_of_week')
+    .orderBy('day_of_week', 'asc')
 
   const dayOfWeekMap = results.map((row) => {
     // For SQLite, the day_of_week values are strings, convert them to numbers for consistency
     const dayOfWeek = +row.day_of_week
-    const dayName = DateTime.fromObject({ weekday: dayOfWeek === 0 ? 7 : dayOfWeek }).toFormat(
-      'ccc',
-      { locale: 'fr' }
-    )
+    const dayName = DAY_LABELS[dayOfWeek]
     const res: [string, number] = [dayName, Number(row.count)]
 
     return res
@@ -63,6 +62,7 @@ export async function groupByDate(table: string, column: string): Promise<[strin
     .select(Database.raw(`${dateSql} as date`))
     .count('* as count')
     .groupBy('date')
+    .orderBy('date', 'asc')
 
   const dateMap = results.map((row) => {
     const res: [string, number] = [row.date, Number(row.count)]
@@ -125,4 +125,42 @@ export async function groupByHour(
   }
 
   return allHours
+}
+
+export const groupByYear = async (table: string, column: string): Promise<[string, number][]> => {
+  const results = await Database.from(table)
+    .select(Database.raw(`YEAR(${column}) as year`))
+    .count('* as count')
+    .groupBy('year')
+    .orderBy('year', 'asc')
+
+  return results.map((row) => [row.year, Number(row.count)] as [string, number])
+}
+
+const MONTH_LABELS = [
+  'Jan',
+  'Fév',
+  'Mar',
+  'Avr',
+  'Mai',
+  'Juin',
+  'Juil',
+  'Août',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Déc',
+]
+
+export const groupByMonth = async (table: string, column: string): Promise<[string, number][]> => {
+  const dbType = Env.get('DB_CONNECTION')
+  const monthSql = dbType === 'pg' ? `EXTRACT(MONTH FROM ${column})` : `MONTH(${column})`
+
+  const results = await Database.from(table)
+    .select(Database.raw(`${monthSql} as month`))
+    .count('* as count')
+    .groupBy('month')
+    .orderBy('month', 'asc')
+
+  return results.map((row) => [MONTH_LABELS[row.month - 1], Number(row.count)] as [string, number])
 }
