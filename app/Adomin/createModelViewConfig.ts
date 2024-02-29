@@ -75,7 +75,11 @@ export interface ModelConfig extends ModelConfigStaticOptions {
 type GetAdominTypeFromModelFieldType<T> = T extends number
   ? AdominNumberFieldConfig | AdominForeignKeyFieldConfig
   : T extends string
-  ? AdominStringFieldConfig | AdominEnumFieldConfig | AdominForeignKeyFieldConfig
+  ?
+      | AdominStringFieldConfig
+      | AdominEnumFieldConfig
+      | AdominForeignKeyFieldConfig
+      | AdominFileFieldConfig
   : T extends BelongsTo<LucidModel>
   ? AdominBelongsToRelationFieldConfig
   : T extends HasMany<LucidModel>

@@ -40,6 +40,9 @@ export default class Test extends BaseModel {
   @column()
   public userId: number | null
 
+  @column()
+  public fileUrl: string | null
+
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 

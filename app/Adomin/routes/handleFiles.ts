@@ -3,7 +3,9 @@ import { LucidRow } from '@ioc:Adonis/Lucid/Orm'
 import type { ColumnConfig } from '../createModelViewConfig'
 
 export const loadFilesForInstances = async (fields: ColumnConfig[], modelInstances: LucidRow[]) => {
-  const filesColumn = fields.filter(({ adomin }) => adomin.type === 'file')
+  const filesColumn = fields.filter(
+    ({ adomin }) => adomin.type === 'file' && adomin.subType === 'attachment'
+  )
 
   const promises = modelInstances.flatMap(async (modelInstance) => {
     const innerPromises = filesColumn.map(async ({ name }) => {

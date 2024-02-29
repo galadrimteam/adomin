@@ -38,6 +38,18 @@ const getSuffix = (config: AdominFieldConfig) => {
   return null
 }
 
+const getFileSchema = (
+  validationMode: AdominValidationMode,
+  suffix: 'nullable' | 'optional' | null
+) => {
+  // on update, null = delete file, undefined = keep file, file = update file
+  if (validationMode === 'update') return schema.file.nullableAndOptional
+
+  if (!suffix) return schema.file
+
+  return schema.file[suffix]
+}
+
 const getValidationSchemaFromFieldConfig = (
   config: AdominFieldConfig,
   validationMode: AdominValidationMode
@@ -58,8 +70,8 @@ const getValidationSchemaFromFieldConfig = (
   }
 
   if (config.type === 'file') {
-    const suffixToApply = validationMode === 'update' ? 'optional' : suffix
-    const specialSchema = suffixToApply ? schema.file[suffixToApply] : schema.file
+    const specialSchema = getFileSchema(validationMode, suffix)
+
     return specialSchema({
       size: config.maxFileSize,
       extnames: config.extnames,

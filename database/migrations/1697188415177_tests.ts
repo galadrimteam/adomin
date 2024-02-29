@@ -15,6 +15,7 @@ export default class extends BaseSchema {
       table.boolean('boolean_test').defaultTo(false)
       table.json('image_test')
       table.json('file_test')
+      table.string('file_url')
 
       // specific to postgresql
       // table.specificType('string_array_test', 'text[]').defaultTo('{}')

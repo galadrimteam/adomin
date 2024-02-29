@@ -1,4 +1,6 @@
+import Drive from '@ioc:Adonis/Core/Drive'
 import Database from '@ioc:Adonis/Lucid/Database'
+import fs from 'fs'
 import { createModelViewConfig } from './Adomin/createModelViewConfig'
 import { createStatsViewConfig } from './Adomin/createStatsViewConfig'
 import { groupByDate, groupByDayOfWeek, groupByHour } from './Adomin/routes/stats/groupByHelpers'
@@ -77,8 +79,33 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
       quality: 1,
       maxWidth: 100,
       maxHeight: 100,
+      subType: 'attachment',
     },
-    fileTest: { type: 'file', label: 'Contrat' },
+    fileTest: { type: 'file', label: 'Contrat', subType: 'attachment' },
+    fileUrl: {
+      type: 'file',
+      label: 'Fichier par url',
+      subType: 'url',
+      isImage: true,
+      optional: true,
+      createFile: async (file) => {
+        const extname = file.extname ?? 'txt'
+        const fileName = `${file.clientName}-${Date.now().toString().slice(-6)}.${extname}`
+        const path = file.tmpPath
+
+        if (!path) {
+          throw new Error('No file path')
+        }
+
+        const buffer = fs.readFileSync(path)
+        await Drive.put(fileName, buffer)
+
+        return Drive.getUrl(fileName)
+      },
+      deleteFile: async (fileUrl) => {
+        return Drive.delete(fileUrl)
+      },
+    },
   },
 })
 
