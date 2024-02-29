@@ -77,9 +77,9 @@ const getHourSql = (column: string) => {
   const dbType = Env.get('DB_CONNECTION')
   switch (dbType) {
     case 'mysql':
-      return `HOUR(${column})`
+      return `HOUR(CONVERT_TZ(${column}, 'UTC', 'Europe/Paris'))`
     case 'pg':
-      return `EXTRACT(HOUR FROM ${column})`
+      return `EXTRACT(HOUR FROM ${column} AT TIME ZONE 'Europe/Paris')`
     case 'sqlite':
       return `STRFTIME('%H', ${column})`
     default:
