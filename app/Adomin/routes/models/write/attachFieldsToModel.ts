@@ -1,8 +1,7 @@
-import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
-import { MultipartFileContract } from '@ioc:Adonis/Core/BodyParser'
 import { LucidRow } from '@ioc:Adonis/Lucid/Orm'
 import { ColumnConfig, PASSWORD_SERIALIZED_FORM } from 'App/Adomin/createModelViewConfig'
 import { getSqlColumnToUse } from '../getModelConfig'
+import { handleFilePersist } from './handleFilePersist'
 
 export const attachFieldsToModel = async (
   instance: LucidRow,
@@ -26,11 +25,7 @@ export const attachFieldsToModel = async (
     }
 
     if (field.adomin.type === 'file') {
-      const fileData = data[field.name] as MultipartFileContract | null | undefined
-
-      if (fileData !== undefined) {
-        instance[field.name] = fileData ? Attachment.fromFile(fileData) : null
-      }
+      await handleFilePersist(field.adomin, instance, field.name, data)
 
       continue
     }
