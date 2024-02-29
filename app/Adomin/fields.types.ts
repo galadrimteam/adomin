@@ -1,3 +1,6 @@
+import { MultipartFileContract } from '@ioc:Adonis/Core/BodyParser'
+import { LucidRow } from '@ioc:Adonis/Lucid/Orm'
+
 export interface AdominBaseFieldConfig {
   nullable?: boolean
   optional?: boolean
@@ -188,7 +191,7 @@ export interface AdominArrayFieldConfig extends AdominBaseFieldConfig {
   type: 'array'
 }
 
-export interface AdominFileFieldConfig extends AdominBaseFieldConfig {
+export type AdominFileFieldConfig = AdominBaseFieldConfig & {
   type: 'file'
 
   /**
@@ -222,7 +225,29 @@ export interface AdominFileFieldConfig extends AdominBaseFieldConfig {
    * @default 0.5
    */
   quality?: number
-}
+} & FileSubType
+
+type FileSubType =
+  | {
+      /** Use this when your file is an Adonis AttachmentLite */
+      subType: 'attachment'
+    }
+  | {
+      /** Use this when your file is represented as a string in your DB */
+      subType: 'url'
+      /** This function takes a file, persists it and returns the file URL */
+      createFile: (file: MultipartFileContract) => Promise<string>
+      /** This function takes a file URL and destroys the file */
+      deleteFile: (fileUrl: string) => Promise<void>
+    }
+  | {
+      /** Use this when your file is  */
+      subType: 'custom'
+      /** This function takes a LucidRow and a file, it must persist the file and update the model file column */
+      createFile: (model: LucidRow, file: MultipartFileContract) => Promise<void>
+      /** This function takes a LucidRow, create the file and update the file column */
+      deleteFile: (model: LucidRow) => Promise<void>
+    }
 
 export interface AdominObjectFieldConfig extends AdominBaseFieldConfig {
   type: 'object'
