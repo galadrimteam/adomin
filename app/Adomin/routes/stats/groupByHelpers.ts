@@ -128,8 +128,11 @@ export async function groupByHour(
 }
 
 export const groupByYear = async (table: string, column: string): Promise<[string, number][]> => {
+  const dbType = Env.get('DB_CONNECTION')
+  const yearSql = dbType === 'pg' ? `EXTRACT(YEAR FROM ${column})` : `YEAR(${column})`
+
   const results = await Database.from(table)
-    .select(Database.raw(`YEAR(${column}) as year`))
+    .select(Database.raw(`${yearSql} as year`))
     .count('* as count')
     .groupBy('year')
     .orderBy('year', 'asc')
