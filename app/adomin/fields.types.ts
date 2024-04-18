@@ -1,3 +1,6 @@
+import { MultipartFile } from '@adonisjs/core/bodyparser'
+import { LucidRow } from '@adonisjs/lucid/types/model'
+
 export interface AdominBaseFieldConfig {
   nullable?: boolean
   optional?: boolean
@@ -14,12 +17,12 @@ export interface AdominBaseFieldConfig {
    */
   creatable?: boolean
   /**
-   * Size of the field on the frontend, default is 120
+   * Size of the field on the frontend
+   * @default 120
    */
   size?: number
   /**
-   * If this field is a @computed() field in your model
-   * you must set this to true along with creatable and editable to false
+   * If this field is a \@computed() field in your model you must set this to true
    */
   computed?: boolean
 }
@@ -49,6 +52,26 @@ export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
    * e.g. "{{value}} €"
    */
   valueDisplayTemplate?: string
+  /**
+   * Number component variant, e.g. bitset
+   */
+  variant?: AdominNumberFieldConfigVariant
+}
+
+export type AdominNumberFieldConfigVariant = {
+  type: 'bitset'
+  /**
+   * Values for the bitset
+   *
+   * e.g. { 'DEFAULT': 0b0, 'ROLE1': 0b1, 'ROLE2': 0b10, 'ROLE3': 0b100 }
+   */
+  bitsetValues: { [K in string]: number }
+  /**
+   * Labels for the bitset
+   *
+   * e.g. { 'DEFAULT': 'Utilisateur', 'ROLE1': 'Role 1', 'ROLE2': 'Role 2', 'ROLE3': 'Role 3' }
+   */
+  bitsetLabels?: { [K in string]: string }
 }
 
 export interface AdominStringFieldConfig extends AdominBaseFieldConfig {
@@ -164,15 +187,11 @@ export type AdominEnumFieldConfig = AdominBaseFieldConfig & {
   defaultValue?: string
 }
 
-export interface AdominEnumSetFieldConfig extends AdominBaseFieldConfig {
-  type: 'enumSet'
-}
-
 export interface AdominArrayFieldConfig extends AdominBaseFieldConfig {
   type: 'array'
 }
 
-export interface AdominFileFieldConfig extends AdominBaseFieldConfig {
+export type AdominFileFieldConfig = AdominBaseFieldConfig & {
   type: 'file'
 
   /**
@@ -192,18 +211,49 @@ export interface AdominFileFieldConfig extends AdominBaseFieldConfig {
    */
   noResize?: boolean
   /**
-   * used during resizing, defaults to 1200
+   * used during resizing
+   * @default 1200
    */
   maxWidth?: number
   /**
-   * used during resizing, defaults to 800
+   * used during resizing
+   * @default 800
    */
   maxHeight?: number
   /**
-   * used during resizing, must be between 0 and 1, defaults to 0.5
+   * used during resizing, must be between 0 and 1
+   * @default 0.5
    */
   quality?: number
-}
+} & FileSubType
+
+type FileSubType =
+  | {
+      /** Use this when your file is an Adonis AttachmentLite */
+      subType: 'attachment'
+    }
+  | {
+      /** Use this when your file is represented as a string in your DB */
+      subType: 'url'
+      /** This function takes a file, persists it and returns the file URL
+       *
+       * note: if there is an old file, it will be deleted using the deleteFile function you provided, so you don't have to worry about it
+       */
+      createFile: (file: MultipartFile) => Promise<string>
+      /** This function takes a file URL and destroys the file */
+      deleteFile: (fileUrl: string) => Promise<void>
+    }
+  | {
+      /** Use this when your file is stored in a custom way in your DB (e.g. a json format) */
+      subType: 'custom'
+      /** This function takes a LucidRow and a file, it must persist the file and update the model file column
+       *
+       * note: if there is an old file, it will be deleted using the deleteFile function you provided, so you don't have to worry about it
+       */
+      createFile: (model: LucidRow, file: MultipartFile) => Promise<void>
+      /** This function takes a LucidRow, delete the file and update the file column */
+      deleteFile: (model: LucidRow) => Promise<void>
+    }
 
 export interface AdominObjectFieldConfig extends AdominBaseFieldConfig {
   type: 'object'
@@ -220,14 +270,110 @@ export interface AdominForeignKeyFieldConfig extends AdominBaseFieldConfig {
    */
   labelFields: string[]
   /**
-   * Separator between label fields, default is ", "
+   * Separator between label fields
+   * @default ', '
    */
   labelFieldsSeparator?: string
   /**
    * type of the foreign key
+   * @default 'number'
    */
-  subType: 'string' | 'number'
+  fkType?: 'string' | 'number'
+  /**
+   * If true, adomin frontend will fetch the referenced model and use it for list view
+   *
+   * This can result in a lot of queries on the list view, so use with caution
+   * @default false
+   */
   showLabelInTable?: boolean
+}
+
+export interface AdominHasManyRelationFieldConfig extends AdominBaseFieldConfig {
+  type: 'hasManyRelation'
+  /**
+   * Model referenced by this foreign key
+   */
+  modelName: string
+  /**
+   * Fields to use for label
+   */
+  labelFields: string[]
+  /**
+   * Separator between label fields
+   * @default ', '
+   */
+  labelFieldsSeparator?: string
+  /**
+   * type of the foreign key
+   * @default 'number'
+   */
+  fkType?: 'string' | 'number'
+  /**
+   * Name of the local key in the referenced model
+   * @default 'id'
+   */
+  localKeyName?: string
+  /**
+   * If true, adomin will preload the relation
+   *
+   * Setting to false can be usefull if you need to customize the query with queryBuilderCallback
+   * @default true
+   */
+  preload?: boolean
+  /**
+   * If true, adomin will allow to search in the related models through the global filter
+   * @default false
+   */
+  allowGlobalFilterSearch?: boolean
+  /**
+   * Creation of related models on the fly is not possible yet
+   */
+  creatable: false
+  /**
+   * Edition of related models on the fly is not possible yet
+   */
+  editable: false
+}
+
+export interface AdominBelongsToRelationFieldConfig extends AdominBaseFieldConfig {
+  type: 'belongsToRelation'
+  /**
+   * Model referenced by this foreign key
+   */
+  modelName: string
+  /**
+   * Fields to use for label
+   */
+  labelFields: string[]
+  /**
+   * Separator between label fields
+   * @default ', '
+   */
+  labelFieldsSeparator?: string
+  /**
+   * Name of the foreign key for the referenced model
+   * @default `${camelCase(modelName)}Id`
+   *
+   * e.g. if modelName is 'User', the default value will be 'userId'
+   */
+  fkName?: string
+  /**
+   * type of the foreign key
+   * @default 'number'
+   */
+  fkType?: 'string' | 'number'
+  /**
+   * Name of the local key in the referenced model
+   * @default 'id'
+   */
+  localKeyName?: string
+  /**
+   * If true, adomin will preload the relation
+   *
+   * Setting to false can be usefull if you need to customize the query with queryBuilderCallback
+   * @default true
+   */
+  preload?: boolean
 }
 
 export type AdominFieldConfig =
@@ -239,6 +385,6 @@ export type AdominFieldConfig =
   | AdominFileFieldConfig
   | AdominArrayFieldConfig
   | AdominForeignKeyFieldConfig
-// | AdominBelongsToFieldConfig
-// | AdominEnumSetFieldConfig
+  | AdominHasManyRelationFieldConfig
+  | AdominBelongsToRelationFieldConfig
 // | AdominObjectFieldConfig

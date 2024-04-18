@@ -27,7 +27,7 @@ export type AdominRightsCheckConfig = {
 
 export type ComputRightsCheckResult = 'OK' | 'STOP'
 
-/** when computeRightsCheck returns **true**, caller should stop execution too */
+/** when computeRightsCheck returns **STOP**, caller should stop execution too */
 export const computeRightsCheck = async (
   ctx: HttpContext,
   fn?: AdominRightsCheckFunction,

@@ -2,8 +2,10 @@ import { withAuthFinder } from '@adonisjs/auth'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { compose } from '@adonisjs/core/helpers'
 import hash from '@adonisjs/core/services/hash'
-import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
+import { BaseModel, column, computed, hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
+import Idea from './idea.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -22,6 +24,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare password: string
+
+  @column()
+  declare rights: number
+
+  @hasMany(() => Idea)
+  declare ideas: HasMany<typeof Idea>
 
   @computed()
   get isBeautifull() {

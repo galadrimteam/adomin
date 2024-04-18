@@ -1,5 +1,4 @@
 import { HttpContext } from '@adonisjs/core/http'
-import { validator } from '@adonisjs/validator'
 import { ParsedTypedSchema, TypedSchema } from '@adonisjs/validator/types'
 
 export interface ValidationFunctionResult {
@@ -53,9 +52,7 @@ const validateAtom = async (ctx: HttpContext, atom: AdominValidationAtom) => {
     return false
   }
 
-  const data = ctx.request.all()
-
-  await validator.validate({ schema: atom.schema, messages: atom.messages, data })
+  await ctx.request.validate({ schema: atom.schema, messages: atom.messages })
 
   return true
 }

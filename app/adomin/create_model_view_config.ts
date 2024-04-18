@@ -1,13 +1,28 @@
 import string from '@adonisjs/core/helpers/string'
-import { LucidModel } from '@adonisjs/lucid/types/model'
-import { AdominFieldConfig, AdominNumberFieldConfig } from './fields.types.js'
-import {
+import { LucidModel, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
+import { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import { DateTime } from 'luxon'
+import type {
+  AdominArrayFieldConfig,
+  AdominBelongsToRelationFieldConfig,
+  AdominBooleanFieldConfig,
+  AdominDateFieldConfig,
+  AdominEnumFieldConfig,
+  AdominFieldConfig,
+  AdominFileFieldConfig,
+  AdominForeignKeyFieldConfig,
+  AdominHasManyRelationFieldConfig,
+  AdominNumberFieldConfig,
+  AdominStringFieldConfig,
+} from './fields.types.js'
+import type {
   AdominRightsCheckConfig,
   AdominRightsCheckFunction,
   AdominRouteOverrides,
   AdominStaticRightsConfig,
 } from './routes/adomin_routes_overrides_and_rights.js'
-import { AdominValidation } from './validation/adomin_validation_helpers.js'
+import type { AttachmentContract } from './routes/handle_files.js'
+import type { AdominValidation } from './validation/adomin_validation_helpers.js'
 
 export interface ColumnConfig {
   name: string
@@ -16,7 +31,8 @@ export interface ColumnConfig {
 
 export const PASSWORD_SERIALIZED_FORM = '***'
 
-interface ModelConfigStaticOptions {
+export interface ModelConfigStaticOptions {
+  type: 'model'
   label: string
   labelPluralized: string
   /** Use this if you want to add more checks to the default adomin validation
@@ -54,30 +70,54 @@ export interface ModelConfig extends ModelConfigStaticOptions {
   fields: ColumnConfig[]
   name: string
   primaryKey: string
+  queryBuilderCallback?: (q: ModelQueryBuilderContract<any>) => void
 }
+
+type GetAdominTypeFromModelFieldType<T> = T extends number
+  ? AdominNumberFieldConfig | AdominForeignKeyFieldConfig
+  : T extends string
+    ?
+        | AdominStringFieldConfig
+        | AdominEnumFieldConfig
+        | AdominForeignKeyFieldConfig
+        | AdominFileFieldConfig
+    : T extends BelongsTo<LucidModel>
+      ? AdominBelongsToRelationFieldConfig
+      : T extends HasMany<LucidModel>
+        ? AdominHasManyRelationFieldConfig
+        : T extends DateTime
+          ? AdominDateFieldConfig
+          : T extends boolean
+            ? AdominBooleanFieldConfig
+            : T extends Array<any>
+              ? AdominArrayFieldConfig
+              : T extends AttachmentContract
+                ? AdominFileFieldConfig
+                : AdominFieldConfig
 
 interface ModelConfigDynamicOptions<T extends LucidModel> {
   columns: Partial<{
     [K in keyof InstanceType<T> as ExcludeIfStartsWith<
       ExcludeIfMethod<InstanceType<T>[K], K>,
       '$'
-    >]: AdominFieldConfig
+    >]: GetAdominTypeFromModelFieldType<NonNullable<InstanceType<T>[K]>>
   }>
+  /**
+   * You can use this callback to customize the query built for this model
+   *
+   * @param q The query builder for the model
+   *
+   * e.g. for preloading a relation
+   * ```ts
+   * q.preload('ideas')
+   * ```
+   */
+  queryBuilderCallback?: (q: ModelQueryBuilderContract<T>) => void
 }
 
 // Type helper pour exclure les clés commençant par un certain caractère
 type ExcludeIfStartsWith<T, Prefix extends string> = T extends `${Prefix}${infer _Rest}` ? never : T
 type ExcludeIfMethod<T, S> = T extends Function ? never : S
-
-export interface AdominConfig {
-  title: string
-  /** The key of the user property to show to logged in administrators
-   * @default 'email'
-   */
-  userDisplayKey?: string
-  footerText?: string
-  models: ModelConfig[]
-}
 
 const serializePasswords = (Model: LucidModel, columnsObj: Record<string, AdominFieldConfig>) => {
   const passwords = Object.entries(columnsObj)
@@ -101,7 +141,7 @@ const PRIMARY_KEY_DEFAULT_CONFIG: AdominNumberFieldConfig = {
   creatable: false,
 }
 
-export const createModelConfig = <T extends LucidModel>(
+export const createModelViewConfig = <T extends LucidModel>(
   Model: () => T,
   options: Partial<ModelConfigStaticOptions> & ModelConfigDynamicOptions<T>
 ): ModelConfig => {
@@ -127,6 +167,7 @@ export const createModelConfig = <T extends LucidModel>(
   }
 
   return {
+    type: 'model',
     name: modelString,
     model: Model,
     fields: columnsConfig,
@@ -139,5 +180,6 @@ export const createModelConfig = <T extends LucidModel>(
     validation: options.validation,
     crudlRights: options.crudlRights,
     visibilityCheck: options.visibilityCheck,
+    queryBuilderCallback: options.queryBuilderCallback,
   }
 }

@@ -1,13 +1,22 @@
+import { AdominConfig } from '#adomin/adomin_config.types'
+
 /**
  * This file will contain your Adomin Config
- * For each model you want to have in you backoffice, you will need to add in the "models" array,
+ * For each view you want to have in you backoffice, you will need to add your views config in the "views" array,
  * with the following syntax:
- * createModelConfig(() => YourModel, {label: '', columns: {}})
+ *
+ * ```ts
+ * const YOUR_MODEL_CONFIG = createModelViewConfig(() => YourModel, {})
+ * export const ADOMIN_CONFIG: AdominConfig = {
+ *  title: 'Your backoffice title',
+ *  views: [YOUR_MODEL_CONFIG],
+ * }
+```
+ *
+ * if you want to add a stat view use `createStatsViewConfig` instead of `createModelViewConfig`
  */
-
-import { AdominConfig } from '../create_model_config.js'
 
 export const ADOMIN_CONFIG: AdominConfig = {
   title: 'Adomin (edit this)',
-  models: [],
+  views: [],
 }

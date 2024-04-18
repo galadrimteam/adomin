@@ -1,5 +1,5 @@
 import { rules, schema } from '@adonisjs/validator'
-import { ModelConfig } from '../create_model_config.js'
+import { ModelConfig } from '../create_model_view_config.js'
 import { AdominFieldConfig } from '../fields.types.js'
 import { AdominValidationMode } from '../validation/adomin_validation_helpers.js'
 
@@ -9,8 +9,11 @@ export const getValidationSchemaFromConfig = (
 ) => {
   const foundConfig = modelConfig
   const results = foundConfig.fields.map(({ adomin, name: columnName }) => {
-    if (validationMode === 'create' && adomin.creatable === false) return null
-    if (validationMode === 'update' && adomin.editable === false) return null
+    const notCreatable = adomin.creatable === false || adomin.computed === true
+    const notEditable = adomin.editable === false || adomin.computed === true
+
+    if (validationMode === 'create' && notCreatable) return null
+    if (validationMode === 'update' && notEditable) return null
 
     return {
       columnName,
@@ -35,6 +38,18 @@ const getSuffix = (config: AdominFieldConfig) => {
   return null
 }
 
+const getFileSchema = (
+  validationMode: AdominValidationMode,
+  suffix: 'nullable' | 'optional' | null
+) => {
+  // on update, null = delete file, undefined = keep file, file = update file
+  if (validationMode === 'update') return schema.file.nullableAndOptional
+
+  if (!suffix) return schema.file
+
+  return schema.file[suffix]
+}
+
 const getValidationSchemaFromFieldConfig = (
   config: AdominFieldConfig,
   validationMode: AdominValidationMode
@@ -55,8 +70,8 @@ const getValidationSchemaFromFieldConfig = (
   }
 
   if (config.type === 'file') {
-    const suffixToApply = validationMode === 'update' ? 'optional' : suffix
-    const specialSchema = suffixToApply ? schema.file[suffixToApply] : schema.file
+    const specialSchema = getFileSchema(validationMode, suffix)
+
     return specialSchema({
       size: config.maxFileSize,
       extnames: config.extnames,
@@ -68,9 +83,20 @@ const getValidationSchemaFromFieldConfig = (
   return fieldSchema([])
 }
 
+const getType = (config: AdominFieldConfig) => {
+  if (config.type === 'foreignKey') return config.fkType ?? 'number'
+  if (config.type === 'belongsToRelation') return config.fkType ?? 'number'
+
+  if (config.type === 'hasManyRelation') {
+    throw new Error('hasManyRelation update/create not yet supported')
+  }
+
+  return config.type
+}
+
 const getBaseSchema = (config: AdominFieldConfig) => {
   const suffix = getSuffix(config)
-  const type = config.type === 'foreignKey' ? config.subType : config.type
+  const type = getType(config)
 
   if (suffix) return schema[type][suffix]
 

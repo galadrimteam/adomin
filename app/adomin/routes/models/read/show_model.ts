@@ -1,9 +1,9 @@
 import { HttpContext } from '@adonisjs/core/http'
-import { computeRightsCheck } from '../adomin_routes_overrides_and_rights.js'
+import { computeRightsCheck } from '../../adomin_routes_overrides_and_rights.js'
+import { loadFilesForInstances } from '../../handle_files.js'
+import { validateResourceId } from '../../validate_resource_id.js'
 import { getModelData } from '../get_model_data.js'
-import { loadFilesForInstances } from '../handle_files.js'
-import { validateResourceId } from '../resource_id_validator.js'
-import { getValidatedModelConfig } from './validate_model_name.js'
+import { getValidatedModelConfig } from '../validate_model_name.js'
 
 export const showModel = async (ctx: HttpContext) => {
   const { params, response } = ctx

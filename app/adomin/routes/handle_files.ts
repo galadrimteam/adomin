@@ -1,26 +1,14 @@
 import { LucidRow } from '@adonisjs/lucid/types/model'
-import { ColumnConfig } from '../create_model_config.js'
+import type { ColumnConfig } from '../create_model_view_config.js'
 
 // Fake Attachment until attchmentLite ships to v6
-type AttachmentContract = any
+export type AttachmentContract = any
 export const Attachment = { fromFile: (_o: unknown) => null }
 
-export const handleFiles = async (fields: ColumnConfig[], data: any) => {
-  const newData = { ...data }
-
-  fields.forEach((field) => {
-    if (field.adomin.type === 'file') {
-      if (newData[field.name]) {
-        newData[field.name] = Attachment.fromFile(newData[field.name])
-      }
-    }
-  })
-
-  return newData
-}
-
 export const loadFilesForInstances = async (fields: ColumnConfig[], modelInstances: LucidRow[]) => {
-  const filesColumn = fields.filter(({ adomin }) => adomin.type === 'file')
+  const filesColumn = fields.filter(
+    ({ adomin }) => adomin.type === 'file' && adomin.subType === 'attachment'
+  )
 
   const promises = modelInstances.flatMap(async (modelInstance) => {
     const innerPromises = filesColumn.map(async ({ name }) => {

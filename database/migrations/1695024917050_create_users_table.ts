@@ -1,3 +1,4 @@
+import hash from '@adonisjs/core/services/hash'
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
@@ -10,8 +11,21 @@ export default class extends BaseSchema {
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
 
+      table.integer('rights').notNullable().defaultTo(0)
+
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
+
+      this.defer(async (db) => {
+        const now = new Date()
+
+        await db.table(this.tableName).insert({
+          email: 'test@test.fr',
+          password: await hash.make('test'),
+          created_at: now,
+          updated_at: now,
+        })
+      })
     })
   }
 
