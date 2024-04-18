@@ -11,16 +11,15 @@ Adomin is meant to be used as a base for a quick and solid backoffice with the a
 
 ## Install
 
+To install Adomin, you will need to copy the folder `./app/adomin` into your backend code,
+to do so, git clone this project and copy the `./app/adomin` into your project
+
+Then :
+install xlsx package (needed for excel import)
+if you don't need excel export and you don't want to import xlsx, remove the excel export related code
+
 ```bash
-yarn add --dev @galadrim/adomin
 yarn add xlsx # needed for excel export
-# if you don't need excel export, remove the excel export related code
-```
-
-## Install backend files
-
-```
-node ace configure @galadrim/adomin
 ```
 
 - edit `package.json` and add `"#adomin/*": "./app/adomin/*.js"` inside the `"imports"` object
@@ -35,10 +34,10 @@ import '#adomin/routes/adomin_router'
 
 - check the content of `app/adomin/routes/adomin_router.ts` this is all the backend routes of Adomin, it's here that you can change things to restrict route access
 
-- add some config inside `app/Adomin/CONFIG.ts`
+- add some config inside `app/adomin/adomin_config.ts`
 
 ```ts
-const USER_CONFIG = createModelConfig(() => User, {
+const USER_CONFIG = createModelViewConfig(() => User, {
   label: 'Adominer',
   columns: {
     email: { type: 'string', isEmail: true, label: 'Super email' },
