@@ -91,6 +91,10 @@ const getType = (config: AdominFieldConfig) => {
     throw new Error('hasManyRelation update/create not yet supported')
   }
 
+  if (config.type === 'hasOneRelation') {
+    throw new Error('hasOneRelation update/create not yet supported')
+  }
+
   return config.type
 }
 

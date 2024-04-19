@@ -24,7 +24,12 @@ export const getSqlColumnToUse = (field: ColumnConfig) => {
 
 export const getModelFieldStrs = (fields: ColumnConfig[]) => {
   return fields
-    .filter(({ adomin }) => adomin.computed !== true && adomin.type !== 'hasManyRelation')
+    .filter(
+      ({ adomin }) =>
+        adomin.computed !== true &&
+        adomin.type !== 'hasManyRelation' &&
+        adomin.type !== 'hasOneRelation'
+    )
     .map((f) => getSqlColumnToUse(f))
 }
 

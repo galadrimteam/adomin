@@ -50,7 +50,7 @@ const shouldIgnoreFieldFilters = ({
 }) => {
   if (field.adomin.computed) return true
   if (field.adomin.type === 'string' && field.adomin.isPassword) return true
-  if (field.adomin.type === 'hasManyRelation') {
+  if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'hasOneRelation') {
     const isGlobalSearchable = field.adomin.allowGlobalFilterSearch ?? false
 
     if (isGlobalSearchable) return false
@@ -73,7 +73,7 @@ export const applyGlobalFilters = (
       if (shouldIgnoreFieldFilters({ field, isGlobal: true })) continue
       if (!globalFilter) continue
 
-      if (field.adomin.type === 'hasManyRelation') {
+      if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'hasOneRelation') {
         const labelFields = field.adomin.labelFields
         builder.orWhereHas(field.name as unknown as undefined, (subquery) => {
           for (const labelField of labelFields) {
@@ -113,7 +113,7 @@ export const applyColumnFilters = (
         continue
       }
 
-      if (field.adomin.type === 'hasManyRelation') {
+      if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'hasOneRelation') {
         const labelFields = field.adomin.labelFields
         builder.andWhereHas(field.name as unknown as undefined, (subquery) => {
           for (const labelField of labelFields) {
@@ -165,7 +165,11 @@ export const loadRelations = (
   fields: ColumnConfig[]
 ) => {
   for (const field of fields) {
-    if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'belongsToRelation') {
+    if (
+      field.adomin.type === 'hasManyRelation' ||
+      field.adomin.type === 'belongsToRelation' ||
+      field.adomin.type === 'hasOneRelation'
+    ) {
       if (field.adomin.preload !== false) query.preload(field.name as never)
     }
   }
