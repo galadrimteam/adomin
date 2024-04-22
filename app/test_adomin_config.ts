@@ -33,6 +33,14 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
       creatable: false,
       editable: false,
     },
+    idea: {
+      type: 'hasOneRelation',
+      label: 'Idée',
+      labelFields: ['title'],
+      modelName: 'Idea',
+      creatable: false,
+      editable: false,
+    },
   },
   // queryBuilderCallback: (q) => {
   //   q.preload('ideas')

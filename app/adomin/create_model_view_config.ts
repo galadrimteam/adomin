@@ -1,6 +1,6 @@
 import string from '@adonisjs/core/helpers/string'
 import { LucidModel, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
-import { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
 import type {
   AdominArrayFieldConfig,
@@ -12,6 +12,7 @@ import type {
   AdominFileFieldConfig,
   AdominForeignKeyFieldConfig,
   AdominHasManyRelationFieldConfig,
+  AdominHasOneRelationFieldConfig,
   AdominNumberFieldConfig,
   AdominStringFieldConfig,
 } from './fields.types.js'
@@ -83,17 +84,19 @@ type GetAdominTypeFromModelFieldType<T> = T extends number
         | AdominFileFieldConfig
     : T extends BelongsTo<LucidModel>
       ? AdominBelongsToRelationFieldConfig
-      : T extends HasMany<LucidModel>
-        ? AdominHasManyRelationFieldConfig
-        : T extends DateTime
-          ? AdominDateFieldConfig
-          : T extends boolean
-            ? AdominBooleanFieldConfig
-            : T extends Array<any>
-              ? AdominArrayFieldConfig
-              : T extends AttachmentContract
-                ? AdominFileFieldConfig
-                : AdominFieldConfig
+      : T extends HasOne<LucidModel>
+        ? AdominHasOneRelationFieldConfig
+        : T extends HasMany<LucidModel>
+          ? AdominHasManyRelationFieldConfig
+          : T extends DateTime
+            ? AdominDateFieldConfig
+            : T extends boolean
+              ? AdominBooleanFieldConfig
+              : T extends Array<any>
+                ? AdominArrayFieldConfig
+                : T extends AttachmentContract
+                  ? AdominFileFieldConfig
+                  : AdominFieldConfig
 
 interface ModelConfigDynamicOptions<T extends LucidModel> {
   columns: Partial<{
