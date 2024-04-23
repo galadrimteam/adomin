@@ -1,6 +1,6 @@
 {
-  "name": "adomin-v6",
-  "version": "6.0.0",
+  "name": "adomin",
+  "version": "6.1.0",
   "private": true,
   "type": "module",
   "license": "UNLICENSED",
