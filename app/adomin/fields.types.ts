@@ -392,6 +392,13 @@ export interface AdominHasOneRelationFieldConfig extends AdominBaseFieldConfig {
    */
   labelFieldsSeparator?: string
   /**
+   * Name of the foreign key for the referenced model
+   * @default `${thisModelName}Id`
+   *
+   * e.g. if you have User that hasOne Idea, the default value will be 'userId'
+   */
+  fkName?: string
+  /**
    * type of the foreign key
    * @default 'number'
    */
@@ -414,13 +421,17 @@ export interface AdominHasOneRelationFieldConfig extends AdominBaseFieldConfig {
    */
   allowGlobalFilterSearch?: boolean
   /**
-   * Creation of related models on the fly is not possible yet
+   * Use this to allow linking the related model on the fly
    */
-  creatable: false
+  creatable?: boolean
   /**
-   * Edition of related models on the fly is not possible yet
+   * Use this to allow editing the related model on the fly
+   * note that if there was already a related model, it will be set to null before linking the new one
+   *
+   * e.g. if you have a User (id 1) that hasOne Idea A (with userId = 1)
+   * If you update your user so it hasOne Idea B, we will set userId = null for Idea A and set userId = 1 for Idea B
    */
-  editable: false
+  editable?: boolean
 }
 
 export type AdominFieldConfig =

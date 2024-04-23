@@ -6,7 +6,7 @@ import { getValidationSchemaFromConfig } from '../../get_validation_schema_from_
 import { loadFilesForInstances } from '../../handle_files.js'
 import { getModelData } from '../get_model_data.js'
 import { getValidatedModelConfig } from '../validate_model_name.js'
-import { attachFieldsToModel } from './attach_fields_to_model.js'
+import { attachFieldsToModel, attachForeignFields } from './attach_fields_to_model.js'
 
 export const createModel = async (ctx: HttpContext) => {
   const { params, response, request } = ctx
@@ -38,12 +38,14 @@ export const createModel = async (ctx: HttpContext) => {
 
   const createdInstance = new Model()
 
-  await attachFieldsToModel(createdInstance, fields, data)
+  const foreignFields = await attachFieldsToModel(createdInstance, fields, data)
 
   await createdInstance.save()
 
   // @ts-expect-error
   const modelInstance = await getModelData(Model, createdInstance[Model.primaryKey])
+
+  await attachForeignFields(modelInstance, foreignFields, data, Model)
 
   await loadFilesForInstances(fields, [modelInstance])
 

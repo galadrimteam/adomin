@@ -32,7 +32,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare ideas: HasMany<typeof Idea>
 
   @hasOne(() => Idea)
-  declare idea: HasOne<typeof Idea>
+  declare idea: HasOne<typeof Idea> | null
 
   @computed()
   get isBeautifull() {

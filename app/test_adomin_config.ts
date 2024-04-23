@@ -38,8 +38,7 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
       label: 'Idée',
       labelFields: ['title'],
       modelName: 'Idea',
-      creatable: false,
-      editable: false,
+      nullable: true,
     },
   },
   // queryBuilderCallback: (q) => {
@@ -112,6 +111,7 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
       modelName: 'User',
       label: 'Auteur',
       labelFields: ['email'],
+      nullable: true,
     },
   },
 })

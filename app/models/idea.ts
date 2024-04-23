@@ -14,7 +14,7 @@ export default class Idea extends BaseModel {
   declare description: string
 
   @column()
-  declare userId: number
+  declare userId: number | null
 
   @belongsTo(() => User)
   declare author: BelongsTo<typeof User>

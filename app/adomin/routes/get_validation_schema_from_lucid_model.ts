@@ -84,18 +84,16 @@ const getValidationSchemaFromFieldConfig = (
 }
 
 const getType = (config: AdominFieldConfig) => {
-  if (config.type === 'foreignKey') return config.fkType ?? 'number'
-  if (config.type === 'belongsToRelation') return config.fkType ?? 'number'
-
-  if (config.type === 'hasManyRelation') {
-    throw new Error('hasManyRelation update/create not yet supported')
+  switch (config.type) {
+    case 'foreignKey':
+    case 'belongsToRelation':
+    case 'hasOneRelation':
+      return config.fkType ?? 'number'
+    case 'hasManyRelation':
+      throw new Error('hasManyRelation update/create not yet supported')
+    default:
+      return config.type
   }
-
-  if (config.type === 'hasOneRelation') {
-    throw new Error('hasOneRelation update/create not yet supported')
-  }
-
-  return config.type
 }
 
 const getBaseSchema = (config: AdominFieldConfig) => {
