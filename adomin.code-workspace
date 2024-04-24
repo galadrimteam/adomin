@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "name": "✨ root",
+      "path": ".",
+    },
+    {
+      "name": "📚 Documentation",
+      "path": "./docs",
+    },
+  ],
+  "settings": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit",
+    },
+  },
+}

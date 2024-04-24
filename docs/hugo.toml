@@ -1,0 +1,4 @@
+baseURL = 'https://galadrimteam.github.io/adomin/'
+languageCode = 'fr-FR'
+title = 'Adomin - Docs'
+theme = 'hugo-book'
