@@ -1,6 +1,6 @@
 # Adomin
 
-Adomin is a backoffice generator for Adonis it is composed of:
+Adomin is a starting point for creating a custom backoffice for your Adonis application it is composed of:
 
 - backend files that will be imported on your adonis backend
 - a react/vite frontend repository to clone
@@ -80,4 +80,4 @@ VITE_API_URL=http://localhost:3333
 
 - :tada:
 
-![Adomin frontend](./readme-images/frontend.png)
+![Adomin frontend](./docs/assets/images/frontend.png)
