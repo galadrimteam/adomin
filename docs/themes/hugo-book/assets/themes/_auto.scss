@@ -2,8 +2,44 @@
   @include theme-light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    @include theme-dark;
-  }
+// @media (prefers-color-scheme: dark) {
+//   :root {
+//     @include theme-dark;
+//   }
+// }
+
+[data-theme="dark"] {
+  @include theme-dark;
+}
+
+/* Visually hide the label text and Inject Light/Dark Mode Icon (based on checkbox value) */
+#toggle-darkmode {
+  display: none;
+
+}
+
+#toggle-darkmode+label>span {
+  position: absolute;
+  overflow: hidden;
+  clip    : rect(0 0 0 0);
+  height  : 1px;
+  width   : 1px;
+  margin  : -1px;
+  padding : 0;
+  border  : 0;
+
+}
+
+#toggle-darkmode+label:after {
+  font-size: 1.8em;
+  content  : "🔆";
+  cursor   : pointer;
+
+  position: absolute;
+  top     : 10px;
+  right   : 10px;
+}
+
+[data-theme="dark"] #toggle-darkmode+label:after {
+  content: "🌙";
 }
