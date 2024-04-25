@@ -17,3 +17,8 @@ Then you will have to install a few packages :
 ```bash
 yarn add xlsx @adonisjs/validator
 ```
+
+Adomin use imports starting with `#adomin` so you will have to configure this:
+
+- edit `package.json` and add `"#adomin/_": "./app/adomin/_.js"` inside the `"imports"` object
+- edit `tsconfig.json` and add `"#adomin/_": ["./app/adomin/_.js"]` inside the `"paths"` object

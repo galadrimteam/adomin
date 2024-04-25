@@ -1,0 +1,34 @@
+<br />
+<br />
+
+<style>
+  #galadrim-footer {
+    position: fixed;
+    bottom: 0px;
+    text-align: center;
+    font-size: large;
+    width: 100%;
+  }
+
+  .footer-link {
+    text-decoration: underline;
+    color: #0081ff;
+    text-underline-offset: 4px;
+  }
+</style>
+
+<div id="galadrim-footer">
+  <p>
+    Built by
+    <a href="https://galadrim.fr" target="_blank" rel="noreferrer" class="footer-link">Galadrim</a>.
+  </p>
+</div>
+
+<script>
+  const galadrimFooter = document.getElementById('galadrim-footer')
+  // remove from dom
+  galadrimFooter.remove()
+
+  // append to body
+  document.body.appendChild(galadrimFooter)
+</script>
