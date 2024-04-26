@@ -1,12 +1,16 @@
 ---
-weight: 1
+weight: 2
 title: 'Installation'
 ---
 
 # Installation
 
+{{< br >}}
+
 To install Adomin, you will need to copy the folder `./app/adomin` into your backend code,
 to do so, git clone this project and copy the `./app/adomin` into your project
+
+{{< br >}}
 
 Then you will have to install a few packages :
 
@@ -14,9 +18,11 @@ Then you will have to install a few packages :
   needed for excel import if you don't need excel export and you don't want to import xlsx, remove the excel export related code
 - @adonisjs/validator this is the adonis v5 way of dealing with validation, I plan to use vine later but in the meantime you will need it
 
-```bash
+```fish
 yarn add xlsx @adonisjs/validator
 ```
+
+{{< br >}}
 
 Adomin use imports starting with `#adomin` so you will have to configure this:
 
@@ -28,6 +34,8 @@ Adomin use imports starting with `#adomin` so you will have to configure this:
 
 inside the `"imports"` object
 
+{{< br >}}
+
 - edit `tsconfig.json` and add
 
 ```ts
@@ -35,6 +43,8 @@ inside the `"imports"` object
 ```
 
 inside the `"paths"` object
+
+{{< br >}}
 
 - edit `start/routes.ts` : add this import statement to enable all of Adomin routes
 
