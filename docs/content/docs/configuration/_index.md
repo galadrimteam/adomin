@@ -5,4 +5,4 @@ title: 'Configuration'
 
 # Configuration
 
-Ceci est la configuration
+**this page will land soon™**

@@ -22,9 +22,9 @@ You can think of it like **Shadcn** but for Adonis backoffice.
 
 {{< br >}}
 
-Adomin is for developers that are ready to **OWN** the code that they will download.
+Adomin is meant to be used as a base for a quick and solid backoffice with the ability to add infinite customisations.
 
-It is meant to be used as a base for a quick and solid backoffice with the ability to add infinite customisations.
+It is for developers that are ready to **own** the code that they will copy paste.
 
 We won't be able to provide support for every bug or new feature that you might want.
 

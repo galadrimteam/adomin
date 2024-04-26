@@ -20,5 +20,24 @@ yarn add xlsx @adonisjs/validator
 
 Adomin use imports starting with `#adomin` so you will have to configure this:
 
-- edit `package.json` and add `"#adomin/_": "./app/adomin/_.js"` inside the `"imports"` object
-- edit `tsconfig.json` and add `"#adomin/_": ["./app/adomin/_.js"]` inside the `"paths"` object
+- edit `package.json` and add
+
+```ts
+"#adomin/*": "./app/adomin/*.js"
+```
+
+inside the `"imports"` object
+
+- edit `tsconfig.json` and add
+
+```ts
+"#adomin/*": ["./app/adomin/*.js"]
+```
+
+inside the `"paths"` object
+
+- edit `start/routes.ts` : add this import statement to enable all of Adomin routes
+
+```ts
+import '#adomin/routes/adomin_router'
+```
