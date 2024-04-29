@@ -1,5 +1,5 @@
 ---
-weight: 2
+weight: 1
 title: 'Installation'
 ---
 
@@ -51,3 +51,12 @@ inside the `"paths"` object
 ```ts
 import '#adomin/routes/adomin_router'
 ```
+
+⚠️ You should check the content of `app/adomin/routes/adomin_router.ts` this is where all the backend routes of Adomin are defined.
+By default only the `middleware.auth()` is used.
+I recommend that you can change this to restrict route access to only admins of your app.
+
+{{< br >}}
+
+Adomin is now installed and ready.
+To add some configuration, [go this way](/adomin/docs/backend/configuration)

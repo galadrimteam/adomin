@@ -1,4 +1,4 @@
 ---
 bookFlatSection: true
-weight: 10
+weight: 1
 ---
