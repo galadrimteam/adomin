@@ -51,10 +51,10 @@ export const ADOMIN_CONFIG: AdominConfig = {
 }
 ```
 
-:bulb: Fields configurated inside the `columns` field will be shown on the admin frontend, additionnaly, the primary key field will be shown
+💡 Fields configurated inside the `columns` field will be shown on the admin frontend, additionnaly, the primary key field will be shown
 (Adomin uses Lucid model primaryKey field to know which is the primary key)
 
-:bulb: To show the primary key on the frontend, Adomin applies a default config to your primary key field:
+💡 To show the primary key on the frontend, Adomin applies a default config to your primary key field:
 
 ```ts
 const PRIMARY_KEY_DEFAULT_CONFIG: AdominNumberFieldConfig = {
