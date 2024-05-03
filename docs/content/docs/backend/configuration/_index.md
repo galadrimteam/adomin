@@ -7,7 +7,9 @@ title: 'Configuration'
 
 {{< br >}}
 
-Now That Adomin is installed and ready (if not go [here](/adomin/docs/backend/installation)), let's add some basic configuration:
+## Basic configuration
+
+Now That Adomin is installed and ready (if not, start [here](/adomin/docs/backend/installation)), let's add some basic configuration:
 
 - open `app/adomin/adomin_config.ts`
 
@@ -24,7 +26,7 @@ const USER_CONFIG = createModelViewConfig(() => User, {
 
 export const ADOMIN_CONFIG: AdominConfig = {
   title: 'Adomin',
-  models: [USER_CONFIG],
+  views: [USER_CONFIG],
 }
 ```
 
@@ -44,3 +46,7 @@ const PRIMARY_KEY_DEFAULT_CONFIG: AdominNumberFieldConfig = {
 ```
 
 You can overwrite this config as you please, e.g. if the primary key is a string
+
+## Real world configuration
+
+In a real application, your backoffice might have many pages with complex configurations, to learn what you can do with Adomin see [models views](/adomin/docs/backend/views/models)

@@ -34,6 +34,7 @@ export const PASSWORD_SERIALIZED_FORM = '***'
 
 export interface ModelConfigStaticOptions {
   type: 'model'
+  /** Name of the page that will be shown on the frontend @default Model.name */
   label: string
   labelPluralized: string
   /** Use this if you want to add more checks to the default adomin validation

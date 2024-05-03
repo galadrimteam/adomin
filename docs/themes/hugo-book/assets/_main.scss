@@ -1,21 +1,22 @@
 html {
-  font-size: $font-size-base;
+  font-size      : $font-size-base;
   scroll-behavior: smooth;
-  touch-action: manipulation;
+  touch-action   : manipulation;
 }
 
 body {
-  min-width: $body-min-width;
-  color: var(--body-font-color);
+  min-width : $body-min-width;
+  color     : var(--body-font-color);
   background: var(--body-background);
 
-  letter-spacing: 0.33px;
-  font-weight: $body-font-weight;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+  letter-spacing         : 0.33px;
+  font-weight            : $body-font-weight;
+  text-rendering         : optimizeLegibility;
+  -webkit-font-smoothing : antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   box-sizing: border-box;
+
   * {
     box-sizing: inherit;
   }
@@ -31,7 +32,7 @@ h5 {
 
 a {
   text-decoration: none;
-  color: var(--color-link);
+  color          : var(--color-link);
 }
 
 img {
@@ -43,12 +44,12 @@ img {
 }
 
 aside nav ul {
-  padding: 0;
-  margin: 0;
+  padding   : 0;
+  margin    : 0;
   list-style: none;
 
   li {
-    margin: 1em 0;
+    margin  : 1em 0;
     position: relative;
   }
 
@@ -66,9 +67,9 @@ aside nav ul {
 }
 
 ul.pagination {
-  display: flex;
-  justify-content: center;
-  list-style-type: none;
+  display             : flex;
+  justify-content     : center;
+  list-style-type     : none;
   padding-inline-start: 0px;
 
   .page-item a {
@@ -78,7 +79,7 @@ ul.pagination {
 
 .container {
   max-width: $container-max-width;
-  margin: 0 auto;
+  margin   : 0 auto;
 }
 
 .book-icon {
@@ -86,23 +87,23 @@ ul.pagination {
 }
 
 .book-brand {
-  margin-top: 0;
+  margin-top   : 0;
   margin-bottom: $padding-16;
 
   img {
-    height: 1.5em;
-    width: 1.5em;
+    height           : 1.5em;
+    width            : 1.5em;
     margin-inline-end: $padding-8;
   }
 }
 
 .book-menu {
-  flex: 0 0 $menu-width;
+  flex     : 0 0 $menu-width;
   font-size: $font-size-14;
 
   .book-menu-content {
-    width: $menu-width;
-    padding: $padding-16;
+    width     : $menu-width;
+    padding   : $padding-16;
     background: var(--body-background);
 
     @include fixed;
@@ -110,8 +111,8 @@ ul.pagination {
 
   a,
   label {
-    color: inherit;
-    cursor: pointer;
+    color    : inherit;
+    cursor   : pointer;
     word-wrap: break-word;
   }
 
@@ -119,30 +120,32 @@ ul.pagination {
     color: var(--color-link);
   }
 
-  input.toggle + label + ul {
+  input.toggle+label+ul {
     display: none;
   }
 
-  input.toggle:checked + label + ul {
+  input.toggle:checked+label+ul {
     display: block;
   }
 
-  input.toggle + label::after {
-    content: "▸";
+  input.toggle+label::after {
+    content : "▸";
+    position: relative;
+    right   : 50%;
   }
 
-  input.toggle:checked + label::after {
+  input.toggle:checked+label::after {
     content: "▾";
   }
 }
 
 // for RTL support
 body[dir="rtl"] .book-menu {
-  input.toggle + label::after {
+  input.toggle+label::after {
     content: "◂";
   }
 
-  input.toggle:checked + label::after {
+  input.toggle:checked+label::after {
     content: "▾";
   }
 }
@@ -150,13 +153,13 @@ body[dir="rtl"] .book-menu {
 .book-section-flat {
   margin: $padding-16 * 2 0;
 
-  > a,
-  > span,
-  > label {
+  >a,
+  >span,
+  >label {
     font-weight: bolder;
   }
 
-  > ul {
+  >ul {
     padding-inline-start: 0;
   }
 }
@@ -164,7 +167,7 @@ body[dir="rtl"] .book-menu {
 .book-page {
   min-width: $body-min-width;
   flex-grow: 1;
-  padding: $padding-16;
+  padding  : $padding-16;
 }
 
 .book-post {
@@ -172,7 +175,7 @@ body[dir="rtl"] .book-menu {
 }
 
 .book-header {
-  display: none;
+  display      : none;
   margin-bottom: $padding-16;
 
   label {
@@ -181,42 +184,42 @@ body[dir="rtl"] .book-menu {
 
   img.book-icon {
     height: 1.5em;
-    width: 1.5em;
+    width : 1.5em;
   }
 }
 
 .book-search {
-  position: relative;
-  margin: $padding-16 0;
+  position     : relative;
+  margin       : $padding-16 0;
   border-bottom: 1px solid transparent;
 
   input {
-    width: 100%;
+    width  : 100%;
     padding: $padding-8;
 
-    border: 0;
+    border       : 0;
     border-radius: $border-radius;
 
     background: var(--gray-100);
-    color: var(--body-font-color);
+    color     : var(--body-font-color);
 
-    &:required + .book-search-spinner {
+    &:required+.book-search-spinner {
       display: block;
     }
   }
 
   .book-search-spinner {
-    position: absolute;
-    top: 0;
-    margin: $padding-8;
+    position           : absolute;
+    top                : 0;
+    margin             : $padding-8;
     margin-inline-start: calc(100% - #{$padding-16 + $padding-8});
 
-    width: $padding-16;
+    width : $padding-16;
     height: $padding-16;
 
-    border: $padding-1 solid transparent;
+    border          : $padding-1 solid transparent;
     border-top-color: var(--body-font-color);
-    border-radius: 50%;
+    border-radius   : 50%;
 
     @include spin(1s);
   }
@@ -227,11 +230,11 @@ body[dir="rtl"] .book-menu {
 }
 
 .book-toc {
-  flex: 0 0 $toc-width;
+  flex     : 0 0 $toc-width;
   font-size: $font-size-12;
 
   .book-toc-content {
-    width: $toc-width;
+    width  : $toc-width;
     padding: $padding-16;
 
     @include fixed;
@@ -239,21 +242,21 @@ body[dir="rtl"] .book-menu {
 
   img {
     height: 1em;
-    width: 1em;
+    width : 1em;
   }
 
-  nav > ul > li:first-child {
+  nav>ul>li:first-child {
     margin-top: 0;
   }
 }
 
 .book-footer {
   padding-top: $padding-16;
-  font-size: $font-size-14;
+  font-size  : $font-size-14;
 
   img {
-    height: 1em;
-    width: 1em;
+    height           : 1em;
+    width            : 1em;
     margin-inline-end: $padding-8;
   }
 }
@@ -266,8 +269,8 @@ body[dir="rtl"] .book-menu {
   margin-block-end: $padding-16 * 2;
 
   .book-icon {
-    height: 1em;
-    width: 1em;
+    height           : 1em;
+    width            : 1em;
     margin-inline-end: .5em;
   }
 
@@ -282,22 +285,23 @@ body[dir="rtl"] .book-menu {
 .book-page,
 .book-header aside,
 .markdown {
-  transition: 0.2s ease-in-out;
+  transition         : 0.2s ease-in-out;
   transition-property: transform, margin, opacity, visibility;
-  will-change: transform, margin, opacity;
+  will-change        : transform, margin, opacity;
 }
 
 @media screen and (max-width: $mobile-breakpoint) {
+
   #menu-control,
   #toc-control {
     display: inline;
   }
 
   .book-menu {
-    visibility: hidden;
+    visibility         : hidden;
     margin-inline-start: -$menu-width;
-    font-size: $font-size-base;
-    z-index: 1;
+    font-size          : $font-size-base;
+    z-index            : 1;
   }
 
   .book-toc {
@@ -308,17 +312,17 @@ body[dir="rtl"] .book-menu {
     display: block;
   }
 
-  #menu-control:focus ~ main label[for="menu-control"] {
+  #menu-control:focus~main label[for="menu-control"] {
     @include outline;
   }
 
-  #menu-control:checked ~ main {
+  #menu-control:checked~main {
     .book-menu {
       visibility: initial;
     }
 
     .book-menu .book-menu-content {
-      transform: translateX($menu-width);
+      transform : translateX($menu-width);
       box-shadow: 0 0 $padding-8 rgba(0, 0, 0, 0.1);
     }
 
@@ -327,27 +331,27 @@ body[dir="rtl"] .book-menu {
     }
 
     .book-menu-overlay {
-      display: block;
+      display : block;
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      top     : 0;
+      bottom  : 0;
+      left    : 0;
+      right   : 0;
     }
   }
 
-  #toc-control:focus ~ main label[for="toc-control"] {
+  #toc-control:focus~main label[for="toc-control"] {
     @include outline;
   }
 
-  #toc-control:checked ~ main {
+  #toc-control:checked~main {
     .book-header aside {
       display: block;
     }
   }
 
   // for RTL support
-  body[dir="rtl"] #menu-control:checked ~ main {
+  body[dir="rtl"] #menu-control:checked~main {
     .book-menu .book-menu-content {
       transform: translateX(-$menu-width);
     }
@@ -356,6 +360,7 @@ body[dir="rtl"] .book-menu {
 
 // Extra space for big screens
 @media screen and (min-width: $container-max-width) {
+
   .book-page,
   .book-menu .book-menu-content,
   .book-toc .book-toc-content {
