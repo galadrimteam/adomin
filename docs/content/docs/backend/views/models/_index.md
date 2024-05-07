@@ -144,7 +144,7 @@ queryBuilderCallback: (q) => {
 
 ### [Bitset field](/adomin/docs/backend/views/models/number/bitset/)
 
-### Boolean field
+### [Boolean field](/adomin/docs/backend/views/models/boolean/)
 
 ### Date field
 

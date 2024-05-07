@@ -18,8 +18,6 @@ yarn add xlsx @adonisjs/validator
 
 💡 If you don't need excel export and you don't want to import xlsx, remove the excel export related code
 
-After running the command, see the [post install instructions](#post-install)
-
 ### Automatic install
 
 Run the following command at the root of your adonis backend folder, it will:
@@ -32,6 +30,8 @@ Run the following command at the root of your adonis backend folder, it will:
 ```fish
 npx @galadrim/adomin@latest
 ```
+
+After running the command, see the [post install instructions](#post-install)
 
 ### Manual install
 

@@ -18,7 +18,7 @@ It is composed of two main parts:
 
 Adomin is **NOT** a library. It's a backoffice system that you can copy and paste into your Adonis apps.
 
-You can think of it like **Shadcn** but for Adonis backoffice.
+You can think of it like [Shadcn](https://ui.shadcn.com/docs) but for Adonis backoffice.
 
 {{< br >}}
 

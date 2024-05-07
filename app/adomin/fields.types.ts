@@ -116,6 +116,7 @@ export interface AdominBooleanFieldConfig extends AdominBaseFieldConfig {
 
   /**
    * component to use on create/update forms
+   * @default 'checkbox'
    */
   variant?: 'switch' | 'checkbox'
   /**
