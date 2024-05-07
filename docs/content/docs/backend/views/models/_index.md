@@ -31,7 +31,7 @@ export const MY_MODEL_CONFIG = createModelViewConfig(() => MyModel, {
 })
 ```
 
-You need to pass a function returning your Adonis model, and an object with the adomin configuration for this model.
+The `createModelViewConfig` allows you to pass a function returning your Adonis model and an object with the adomin configuration for this model.
 
 You can pass the following options inside the config object:
 

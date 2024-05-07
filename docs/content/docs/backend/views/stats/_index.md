@@ -11,6 +11,28 @@ With Adomin, you can also easily show graphs, pie charts and other KPI visualiza
 
 For this, you will need to write some backend configuration, and then the adomin frontend will render your charts with [Chartkick](https://chartkick.com/react), a js chart lib that uses chart.js under the hood.
 
+## Types of charts available
+
+### Pie chart
+
+![Pie chart](/adomin/images/stats/pie.png)
+
+### Bar chart
+
+![Bar chart](/adomin/images/stats/bar.png)
+
+### Column chart
+
+![Column chart](/adomin/images/stats/column.png)
+
+### Line chart
+
+![Line chart](/adomin/images/stats/line.png)
+
+### Area chart
+
+![Area chart](/adomin/images/stats/area.png)
+
 ## Config
 
 To declare a stat view page, you will need to add a `StatViewConfig` object inside the `views` array of the `app/adomin/config/adomin_config.ts` file.
@@ -22,18 +44,285 @@ export const ADOMIN_CONFIG: AdominConfig = {
 }
 ```
 
-## Types of charts
+Use the `createStatsViewConfig` function to create your `StatViewConfig` object:
 
-### Pie chart
+```ts
+export const MY_STAT_VIEW_CONFIG = createStatsViewConfig({
+  path: 'kpis',
+  label: 'Some stats',
+  stats: [
+    {
+      type: 'column',
+      label: 'Users creation per day of week',
+      name: 'uniqueName',
+      dataFetcher: () => groupByDayOfWeek('users', 'created_at'),
+    },
+  ],
+})
+```
 
-### Bar chart
+The `createStatsViewConfig` allows you to pass an object with the stat view configuration.
 
-### Column chart
+You can pass the following options inside the config object:
 
-### Line chart
+### path
 
-### Area chart
+Path in the frontend
+
+e.g. if path = 'kpis', full path on the frontend will be /adomin/stats/kpis
+
+### label
+
+Title of the view, displayed in the sidebar
+
+### stats
+
+An array of `AdominStat` objects, each `AdominStat` represent a chart
+
+The `AdominStat` object has the following properties
+
+#### type
+
+Type of the chart to display, can be one of:
+
+- pie
+- bar
+- column
+- line
+- area
+
+#### label
+
+Label of the stat, displayed in the frontend
+
+#### name
+
+Name of the stat must be unique on the page, it is not shown to the user but used in things like react `key` prop
+
+#### dataFetcher
+
+Function to fetch the data to displayed in the chart, must return a `Promise<ChartRowData>`
+
+```ts
+type ChartDataRow = [string, number]
+
+type ChartMultipleSeriesDataRow = { name: string; data: ChartDataRow[]; color?: string }
+
+type ChartRowData = ChartMultipleSeriesDataRow[] | ChartDataRow[]
+```
+
+In practice it will look like this:
+
+- data of the [column chart example](#column-chart)
+
+```ts
+const data = [
+  ['Jan', 2332],
+  ['Fév', 2501],
+  ['Mar', 2407],
+  ['Avr', 2434],
+  ['Mai', 1613],
+  ['Juin', 1644],
+  ['Juil', 1610],
+  ['Août', 1186],
+  ['Sep', 1838],
+  ['Oct', 1775],
+  ['Nov', 1871],
+  ['Déc', 1539],
+]
+```
+
+- data of the [line chart example](#line-chart)
+
+```ts
+const data = [
+  ['00', 22],
+  ['01', 9],
+  ['02', 3],
+  ['03', 1],
+  ['04', 1],
+  ['05', 0],
+  ['06', 1],
+  ['07', 49],
+  ['08', 359],
+  ['09', 3812],
+  ['10', 4273],
+  ['11', 1923],
+  ['12', 400],
+  ['13', 1361],
+  ['14', 3148],
+  ['15', 2282],
+  ['16', 2265],
+  ['17', 1711],
+  ['18', 770],
+  ['19', 164],
+  ['20', 53],
+  ['21', 63],
+  ['22', 46],
+  ['23', 34],
+  ['24', 22],
+]
+```
+
+For basic charts, your `dataFetcher` can use the built in [data fetcher helpers](#data-fetcher-helpers)
+
+#### options
+
+Chartkick options for the chart
+
+```ts
+interface ChartKickOptions {
+  /** Title of x axis */
+  xtitle?: string
+  /** Title of y axis */
+  ytitle?: string
+  /** Width of the chart */
+  width?: string | number
+  /** Height of the chart */
+  height?: string | number
+  /** Show a download button, if this is a string, specify the name of downloaded file */
+  download?: boolean | string
+  /**
+   * Adds a suffix to your data
+   *
+   * e.g. for the data [["Z", 4]] and suffix "%", the chart will display "4%"
+   */
+  suffix?: string
+  /**
+   * Adds a prefix to your data
+   *
+   * e.g. for the data [["Z", 4]] and prefix "$", the chart will display "$4"
+   */
+  prefix?: string
+  /** Discrete axis for line and column charts */
+  discrete?: boolean
+  /** Only for type 'pie' */
+  donut?: boolean
+  /** Straight lines between points instead of a curve */
+  curve?: boolean
+  /** Colors array in hexadecimal or CSS Color keywords */
+  colors?: string[]
+  /** Minimum value (for y axis in most charts) */
+  min?: number
+  /** Maximum value (for y axis in most charts) */
+  max?: number
+  /** Stacked column / bar charts (usefull with multiple series) */
+  stacked?: boolean
+  /** Set a thousands separator
+   *
+   * e.g. for the data [["Z", 4000]] and thousands="," the chart will display "4,000"
+   */
+  thousands?: string
+  /** Set a decimal separator
+   *
+   * e.g. for the data [["Z", 4.5]] and decimal="," the chart will display "4,5"
+   */
+  decimal?: string
+  /** Set significant digits */
+  precision?: number
+  /** Set rounding */
+  round?: number
+  /** Show insignificant zeros, useful for currency */
+  zeros?: boolean
+  /** Specify the message when data is empty */
+  empty?: string
+}
+```
+
+### visibilityCheck
+
+Access check function to verify if logged in user can see this stat view
+
+### isHidden
+
+Use this if you want to hide this model on the frontend.
+Frontend routes for create/update/list will still be created and available, but the navbar won't show it.
+
+⚠️ Do not see this as a protection, but rather a cosmetic feature.
+
+If you want to protect things, use [visibilityCheck](#visibilitycheck)
+
+## Data fetcher helpers
+
+For basic charts, you can use these functions in your `dataFetcher` function:
+
+- groupByDayOfWeek
+- groupByDate
+- groupByYear
+- groupByMonth
+- groupByHour
+
+The signature of these functions is
+
+```ts
+type HelperFunction = (table: string, column: string) => Promise<ChartRowData>
+```
+
+only groupByHour differs slightly with an optionnal 3rd parameter:
+
+```ts
+type HourFunction = (
+  /** the sql table name */
+  table: string,
+  /** the sql column name */
+  column: string,
+  options: GroupByHourOptions = {}
+): Promise<ChartRowData>
+
+interface GroupByHourOptions {
+  /**
+   * If true display all the range of hours (00 -> 24) instead of just the hours defined in the data
+   * @default false
+   */
+  allHours?: boolean
+}
+```
+
+In practice, you can use the data fetcher helper like this:
+
+```ts
+{
+  type: 'column',
+  label: "Users creation per day of week",
+  name: 'testColumnChart2',
+  dataFetcher: () => groupByDayOfWeek('users', 'created_at'),
+}
+```
+
+With multiple data series:
+
+```ts
+{
+  type: 'line',
+  label: "Users creation vs ideas creation per hour",
+  name: 'users-vs-ideas-by-hour',
+  options: {
+    download: true,
+    xtitle: 'Hour of day',
+    ytitle: 'Quantity',
+  },
+  dataFetcher: async () => {
+    const users = await groupByHour('users', 'created_at', { allHours: true })
+    const ideas = await groupByHour('ideas', 'created_at', { allHours: true })
+
+    return [
+      {
+        name: 'Users',
+        data: users,
+        color: '#fff000',
+      },
+      {
+        name: 'Ideas',
+        data: ideas,
+        color: '#00ffff',
+      },
+    ]
+  }
+}
+```
 
 ## See the source code
 
 [create_stats_view_config.ts](https://github.com/galadrimteam/adomin/blob/main/app/adomin/create_stats_view_config.ts)
+
+[group_by_helpers.ts](https://github.com/galadrimteam/adomin/blob/main/app/adomin/routes/stats/group_by_helpers.ts)

@@ -94,6 +94,10 @@ const getHourSql = (column: string) => {
 }
 
 interface GroupByHourOptions {
+  /**
+   * If true display all the range of hours (00 -> 24) instead of just the hours defined in the data
+   * @default false
+   */
   allHours?: boolean
 }
 
