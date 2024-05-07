@@ -7,7 +7,7 @@ import Test from '#models/test'
 import User from '#models/user'
 import app from '@adonisjs/core/services/app'
 import db from '@adonisjs/lucid/services/db'
-import { copyFileSync, rmSync } from 'node:fs'
+import { copyFileSync, mkdirSync, rmSync } from 'node:fs'
 import { RIGHTS, RIGHTS_LABELS } from './rights.js'
 
 export const USER_CONFIG = createModelViewConfig(() => User, {
@@ -88,7 +88,9 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
           throw new Error('No file path')
         }
 
-        const uploadPath = app.makePath(`public/uploads/${fileName}`)
+        mkdirSync(app.tmpPath('uploads'), { recursive: true })
+
+        const uploadPath = app.tmpPath(`uploads/${fileName}`)
 
         copyFileSync(path, uploadPath)
         rmSync(path)

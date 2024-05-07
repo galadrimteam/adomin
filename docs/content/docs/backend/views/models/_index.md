@@ -39,7 +39,45 @@ You can pass the following options inside the config object:
 
 An object listing all the model properties you want to see on the frontend
 
-See [types of fields](#types-of-fields)
+All fields share some basic config properties `AdominBaseFieldConfig` + specific properties for the field type
+
+```ts
+export interface AdominBaseFieldConfig {
+  /**
+   * If true, validation will allow null values for this field
+   * @default false
+   */
+  nullable?: boolean
+  /**
+   * If true, validation will allow undefined values for this field
+   * @default false
+   */
+  optional?: boolean
+  /**
+   * Label shown on the frontend
+   */
+  label?: string
+  /**
+   * If false, user cannot edit this field
+   */
+  editable?: boolean
+  /**
+   * If false, user cannot create this field
+   */
+  creatable?: boolean
+  /**
+   * Size of the field on the frontend
+   * @default 120
+   */
+  size?: number
+  /**
+   * If this field is a \@computed() field in your model you must set this to true
+   */
+  computed?: boolean
+}
+```
+
+To know what specific properties are available for each field type, see [types of fields](#types-of-fields)
 
 ### label
 
@@ -84,9 +122,21 @@ Frontend routes for create/update/list will still be created and available, but 
 
 If you want to protect things, use [staticRights](#staticrights), [visibilityCheck](#visibilitycheck) and [crudlRights](#crudlrights)
 
+### queryBuilderCallback
+
+You can use this callback to customize the query built for this model in order to do custom things on the frontend
+
+e.g. for preloading a relation:
+
+```ts
+queryBuilderCallback: (q) => {
+  q.preload('ideas')
+},
+```
+
 ## Types of fields
 
-### String field
+### [String field](/adomin/docs/backend/views/models/string/)
 
 ### Number field
 

@@ -2,7 +2,15 @@ import { MultipartFile } from '@adonisjs/core/bodyparser'
 import { LucidRow } from '@adonisjs/lucid/types/model'
 
 export interface AdominBaseFieldConfig {
+  /**
+   * If true, validation will allow null values for this field
+   * @default false
+   */
   nullable?: boolean
+  /**
+   * If true, validation will allow undefined values for this field
+   * @default false
+   */
   optional?: boolean
   /**
    * Label shown on the frontend
