@@ -1,7 +1,6 @@
 {
-  "name": "adomin",
-  "version": "6.1.0",
-  "private": true,
+  "name": "@galadrim/adomin",
+  "version": "6.1.1",
   "type": "module",
   "license": "UNLICENSED",
   "scripts": {
@@ -68,5 +67,11 @@
   "eslintConfig": {
     "extends": "@adonisjs/eslint-config/app"
   },
+  "bin": "./configure_adomin.js",
+  "files": [
+    "configure_adomin.js",
+    "LICENSE",
+    "README.md"
+  ],
   "prettier": "@adonisjs/prettier-config"
 }
