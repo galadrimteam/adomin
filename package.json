@@ -1,6 +1,6 @@
 {
   "name": "@galadrim/adomin",
-  "version": "6.1.1",
+  "version": "6.1.2",
   "type": "module",
   "license": "UNLICENSED",
   "scripts": {
@@ -47,9 +47,7 @@
     "pino-pretty": "^10.3.1",
     "prettier": "^3.2.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
-  },
-  "dependencies": {
+    "typescript": "^5.3.3",
     "@adonisjs/auth": "^9.1.1",
     "@adonisjs/core": "^6.2.2",
     "@adonisjs/cors": "^2.2.1",
