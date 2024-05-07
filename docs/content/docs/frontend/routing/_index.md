@@ -7,6 +7,11 @@ title: 'Routing'
 
 {{< br >}}
 
+You might have some questions:
+
+- how does the frontend routing work ?
+- how to add custom routes ?
+
 It all begins with the **react-router-dom** router, you can find it [here](https://github.com/galadrimteam/adomin-frontend/blob/main/src/router.tsx)
 
 Inside this file is all the routing
