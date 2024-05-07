@@ -39,15 +39,17 @@ export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
   type: 'number'
 
   /**
-   * passed in number input component in the frontend
+   * Minimum value for the number
    */
   min?: number
   /**
-   * passed in number input component in the frontend
+   * Maximum value for the number
    */
   max?: number
   /**
    * passed in number input component in the frontend
+   * e.g. 0.01 if you want to allow 2 decimals
+   * @default 1
    */
   step?: number
   /**
@@ -86,11 +88,15 @@ export interface AdominStringFieldConfig extends AdominBaseFieldConfig {
   type: 'string'
 
   /**
-   * If true, returns *** to the frontend, on create/update hash the password, etc...
+   * If true, in order to not leak the password hash, returns '***' to the frontend
+   * on create/update, will work as expected (run beforeSave hooks)
+   * e.g. will hash the password if your model uses the `withAuthFinder` mixin
+   * @default false
    */
   isPassword?: boolean
   /**
    * If true, add basic email validation on the backend
+   * @default false
    */
   isEmail?: boolean
   /**

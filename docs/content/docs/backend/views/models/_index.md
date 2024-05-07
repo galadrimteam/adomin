@@ -9,6 +9,8 @@ title: 'Model views'
 
 Model views allows to see, filter, download extractions, create and update adonis models.
 
+![Model view](/adomin/images/models/model_view.png)
+
 ## Config
 
 To declare a model view page, you will need to add a `ModelConfig` object inside the `views` array of the `app/adomin/config/adomin_config.ts` file.
@@ -138,7 +140,9 @@ queryBuilderCallback: (q) => {
 
 ### [String field](/adomin/docs/backend/views/models/string/)
 
-### Number field
+### [Number field](/adomin/docs/backend/views/models/number/)
+
+### [Bitset field](/adomin/docs/backend/views/models/number/bitset/)
 
 ### Boolean field
 
