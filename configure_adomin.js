@@ -8,8 +8,8 @@ const COMMAND = `
 cd ${tmpDir}
 git clone -n --depth=1 --filter=tree:0 https://github.com/galadrimteam/adomin.git adomin-sparse -q
 cd adomin-sparse
-git sparse-checkout set --no-cone app/adomin -q
-git checkout -q
+git sparse-checkout set --no-cone app/adomin
+git checkout > /dev/null 2> /dev/null
 cd ../..
 mkdir -p app
 cp -r ${tmpDir}/adomin-sparse/app/adomin app/adomin && echo "Adomin files copied into ./app/adomin"
