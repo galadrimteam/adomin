@@ -75,13 +75,32 @@ e.g. if path = 'kpis', full path on the frontend will be /adomin/stats/kpis
 
 Title of the view, displayed in the sidebar
 
+### visibilityCheck
+
+Access check function to verify if logged in user can see this stat view
+
+### isHidden
+
+Use this if you want to hide this model on the frontend.
+Frontend routes for create/update/list will still be created and available, but the navbar won't show it.
+
+⚠️ Do not see this as a protection, but rather a cosmetic feature.
+
+If you want to protect things, use [visibilityCheck](#visibilitycheck)
+
 ### stats
 
 An array of `AdominStat` objects, each `AdominStat` represent a chart
 
+See [AdominStat config](#adominstat-config)
+
+## AdominStat config
+
+{{< br >}}
+
 The `AdominStat` object has the following properties
 
-#### type
+### type
 
 Type of the chart to display, can be one of:
 
@@ -91,15 +110,15 @@ Type of the chart to display, can be one of:
 - line
 - area
 
-#### label
+### label
 
 Label of the stat, displayed in the frontend
 
-#### name
+### name
 
 Name of the stat must be unique on the page, it is not shown to the user but used in things like react `key` prop
 
-#### dataFetcher
+### dataFetcher
 
 Function to fetch the data to displayed in the chart, must return a `Promise<ChartRowData>`
 
@@ -166,7 +185,7 @@ const data = [
 
 For basic charts, your `dataFetcher` can use the built in [data fetcher helpers](#data-fetcher-helpers)
 
-#### options
+### options
 
 Chartkick options for the chart
 
@@ -228,19 +247,6 @@ interface ChartKickOptions {
   empty?: string
 }
 ```
-
-### visibilityCheck
-
-Access check function to verify if logged in user can see this stat view
-
-### isHidden
-
-Use this if you want to hide this model on the frontend.
-Frontend routes for create/update/list will still be created and available, but the navbar won't show it.
-
-⚠️ Do not see this as a protection, but rather a cosmetic feature.
-
-If you want to protect things, use [visibilityCheck](#visibilitycheck)
 
 ## Data fetcher helpers
 
