@@ -18,7 +18,7 @@ export default class extends BaseSchema {
       table.string('file_url')
 
       // specific to postgresql
-      // table.specificType('string_array_test', 'text[]').defaultTo('{}')
+      table.specificType('string_array_test', 'text[]').defaultTo('{}')
 
       table.integer('user_id').unsigned().references('users.id').onDelete('CASCADE')
 

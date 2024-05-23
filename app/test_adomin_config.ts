@@ -57,18 +57,18 @@ export const PROFILE_CONFIG = createModelViewConfig(() => Profile, {
 export const TEST_CONFIG = createModelViewConfig(() => Test, {
   label: 'Test',
   columns: {
-    // stringArrayTest: { type: 'array' },
-    // freeText: { type: 'string', label: 'Texte libre' },
-    // stringTest: {
-    //   nullable: true,
-    //   type: 'enum',
-    //   label: 'Test select',
-    //   options: [
-    //     { label: '(Non renseigné)', value: null },
-    //     { label: 'Salut', value: 'hello' },
-    //     { label: 'Au revoir', value: 'bye' },
-    //   ],
-    // },
+    stringArrayTest: { type: 'array' },
+    freeText: { type: 'string', label: 'Texte libre' },
+    stringTest: {
+      nullable: true,
+      type: 'enum',
+      label: 'Test enum',
+      options: [
+        { label: '(Non renseigné)', value: null },
+        { label: 'Salut', value: 'hello' },
+        { label: 'Au revoir', value: 'bye' },
+      ],
+    },
     dateTest: { type: 'date', subType: 'date', defaultValue: { mode: 'now', plusDays: 2 } },
     datetimeTest: { type: 'date', subType: 'datetime', defaultValue: { mode: 'now', plusDays: 2 } },
     numberTest: { type: 'number' },

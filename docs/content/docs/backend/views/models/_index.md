@@ -148,7 +148,7 @@ queryBuilderCallback: (q) => {
 
 ### [Date field](/adomin/docs/backend/views/models/date/)
 
-### Enum field
+### [Enum field](/adomin/docs/backend/views/models/enum/)
 
 ### File field
 

@@ -102,5 +102,5 @@ export const adominRoutes = createBrowserRouter([
 	  <CustomPage currentView="User">
 	    <MyOverridePage />
 	  </CustomPage>,
-};
+}
 ```

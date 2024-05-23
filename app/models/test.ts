@@ -7,8 +7,8 @@ export default class Test extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  // @column()
-  // declare stringArrayTest: string[]
+  @column()
+  declare stringArrayTest: string[]
 
   @column()
   declare freeText: string
