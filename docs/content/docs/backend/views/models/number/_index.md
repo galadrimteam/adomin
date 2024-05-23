@@ -9,11 +9,11 @@ title: 'Number field'
 
 In the table page, a number field will look like this
 
-![field image](/adomin/images/models/table_number.png)
+![field image](/adomin/images/models/number/table_number.png)
 
 In the create / edit page
 
-![edit field image](/adomin/images/models/number.png)
+![edit field image](/adomin/images/models/number/number.png)
 
 ## Config
 

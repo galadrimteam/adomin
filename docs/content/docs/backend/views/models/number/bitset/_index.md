@@ -9,11 +9,11 @@ title: 'Bitset field'
 
 In the table page, a bitset number field will look like this
 
-![field image](/adomin/images/models/table_bitset.png)
+![field image](/adomin/images/models/number/table_bitset.png)
 
 In the create / edit page
 
-![edit field image](/adomin/images/models/bitset.png)
+![edit field image](/adomin/images/models/number/bitset.png)
 
 ## Config
 

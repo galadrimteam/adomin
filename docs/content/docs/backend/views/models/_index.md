@@ -146,7 +146,7 @@ queryBuilderCallback: (q) => {
 
 ### [Boolean field](/adomin/docs/backend/views/models/boolean/)
 
-### Date field
+### [Date field](/adomin/docs/backend/views/models/date/)
 
 ### Enum field
 

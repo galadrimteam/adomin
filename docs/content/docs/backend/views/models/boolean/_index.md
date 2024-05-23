@@ -9,12 +9,12 @@ title: 'Boolean field'
 
 In the table page, a boolean field will look like this
 
-![field image](/adomin/images/models/table_boolean.png)
+![field image](/adomin/images/models/boolean/table_boolean.png)
 
 In the create / edit page, depending on `variant` option
 
-![edit field image](/adomin/images/models/boolean_check.png)
-![edit field image](/adomin/images/models/boolean.png)
+![edit field image](/adomin/images/models/boolean/boolean_check.png)
+![edit field image](/adomin/images/models/boolean/boolean.png)
 
 ## Config
 

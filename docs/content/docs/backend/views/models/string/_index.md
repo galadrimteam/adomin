@@ -9,11 +9,11 @@ title: 'String field'
 
 In the table page, a string field will look like this
 
-![field image](/adomin/images/models/table_email.png)
+![field image](/adomin/images/models/string/table_email.png)
 
 In the create / edit page
 
-![edit field image](/adomin/images/models/email.png)
+![edit field image](/adomin/images/models/string/email.png)
 
 ## Config
 
