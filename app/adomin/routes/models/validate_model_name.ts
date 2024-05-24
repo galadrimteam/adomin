@@ -1,11 +1,11 @@
+import { getFlatViews } from '#adomin/get_flat_views'
 import { HttpContext } from '@adonisjs/core/http'
 import vine from '@vinejs/vine'
-import { ADOMIN_CONFIG } from '../../config/adomin_config.js'
 import { getModelConfig } from './get_model_config.js'
 
 const isNotNull = <T>(value: T | null): value is T => value !== null
 
-const modelsEnum = ADOMIN_CONFIG.views
+const modelsEnum = getFlatViews()
   .map((conf) => {
     if (conf.type !== 'model') return null
     return conf.model().name

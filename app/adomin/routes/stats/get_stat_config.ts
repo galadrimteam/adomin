@@ -1,6 +1,6 @@
+import { getFlatViews } from '#adomin/get_flat_views'
 import { HttpContext } from '@adonisjs/core/http'
 import type { AdominViewConfig } from '../../adomin_config.types.js'
-import { ADOMIN_CONFIG } from '../../config/adomin_config.js'
 import type { StatsViewConfig } from '../../create_stats_view_config.js'
 import { computeRightsCheck } from '../adomin_routes_overrides_and_rights.js'
 
@@ -9,7 +9,9 @@ export const isStatConfig = (config: AdominViewConfig): config is StatsViewConfi
 }
 
 export const getStatConfig = (viewName: string) => {
-  const foundConfig = ADOMIN_CONFIG.views.filter(isStatConfig).find(({ name }) => name === viewName)
+  const foundConfig = getFlatViews()
+    .filter(isStatConfig)
+    .find(({ name }) => name === viewName)
 
   if (!foundConfig) throw new Error(`No ADOMIN config found for view ${viewName}`)
 
@@ -36,7 +38,7 @@ export const getStatConfigRoute = async (ctx: HttpContext) => {
   const { params, response } = ctx
   const viewString = params.view
 
-  const statConfig = ADOMIN_CONFIG.views
+  const statConfig = getFlatViews()
     .filter(isStatConfig)
     .find(({ name }) => name === viewString)
 
