@@ -65,11 +65,11 @@ The `createStatsViewConfig` allows you to pass an object with the stat view conf
 
 You can pass the following options inside the config object:
 
-### path
+### name
 
 Path in the frontend
 
-e.g. if path = 'kpis', full path on the frontend will be /adomin/stats/kpis
+e.g. if name = 'kpis', full path on the frontend will be /adomin/stats/kpis
 
 ### label
 

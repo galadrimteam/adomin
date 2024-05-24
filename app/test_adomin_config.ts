@@ -1,3 +1,5 @@
+import { AdominViewConfig } from '#adomin/adomin_config.types'
+import { createFolderViewConfig } from '#adomin/create_folder_view_config'
 import { createModelViewConfig } from '#adomin/create_model_view_config'
 import { createStatsViewConfig } from '#adomin/create_stats_view_config'
 import { groupByDate, groupByDayOfWeek, groupByHour } from '#adomin/routes/stats/group_by_helpers'
@@ -119,7 +121,7 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
 })
 
 export const STATS_CONFIG = createStatsViewConfig({
-  path: 'kpis',
+  name: 'kpis',
   label: 'Les super KPI',
   stats: [
     {
@@ -190,3 +192,23 @@ export const STATS_CONFIG = createStatsViewConfig({
     },
   ],
 })
+
+const FOLDER_ONE = createFolderViewConfig({
+  label: 'Dossier 1',
+  name: 'folder1',
+  views: [STATS_CONFIG, USER_CONFIG],
+})
+
+const FOLDER_THREE = createFolderViewConfig({
+  label: 'Dossier 3',
+  name: 'folder3',
+  views: [PROFILE_CONFIG],
+})
+
+const FOLDER_TWO = createFolderViewConfig({
+  label: 'Dossier 2',
+  name: 'folder2',
+  views: [TEST_CONFIG, FOLDER_THREE],
+})
+
+export const ADOMIN_TEST_CONFIG: AdominViewConfig[] = [FOLDER_ONE, FOLDER_TWO, IDEA_CONFIG]

@@ -9,7 +9,7 @@ export const isStatConfig = (config: AdominViewConfig): config is StatsViewConfi
 }
 
 export const getStatConfig = (viewName: string) => {
-  const foundConfig = ADOMIN_CONFIG.views.filter(isStatConfig).find(({ path }) => path === viewName)
+  const foundConfig = ADOMIN_CONFIG.views.filter(isStatConfig).find(({ name }) => name === viewName)
 
   if (!foundConfig) throw new Error(`No ADOMIN config found for view ${viewName}`)
 
@@ -38,13 +38,13 @@ export const getStatConfigRoute = async (ctx: HttpContext) => {
 
   const statConfig = ADOMIN_CONFIG.views
     .filter(isStatConfig)
-    .find(({ path }) => path === viewString)
+    .find(({ name }) => name === viewString)
 
   if (!statConfig) {
     return response.notFound({ error: `View '${viewString}' not found` })
   }
 
-  const { label, path, isHidden, visibilityCheck } = statConfig
+  const { label, name, isHidden, visibilityCheck } = statConfig
 
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck)
 
@@ -53,7 +53,7 @@ export const getStatConfigRoute = async (ctx: HttpContext) => {
   const frontendStatConfig = await getFrontendStatConfig(statConfig)
 
   return {
-    path,
+    name,
     label,
     isHidden: isHidden ?? false,
     stats: frontendStatConfig,
