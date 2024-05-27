@@ -1,7 +1,5 @@
-import env from '#start/env'
+import { getDbType } from '#adomin/utils/get_db_type'
 import db from '@adonisjs/lucid/services/db'
-
-const getDbType = () => env.get('DB_TYPE') || env.get('DB_CONNECTION')
 
 const getDayOfWeekSql = (column: string) => {
   const dbType = getDbType()
@@ -9,6 +7,7 @@ const getDayOfWeekSql = (column: string) => {
     case 'mysql':
       return `DAYOFWEEK(${column}) - 1`
     case 'pg':
+    case 'postgres':
       return `EXTRACT(DOW FROM ${column})`
     case 'sqlite':
       return `strftime('%w', ${column})`
@@ -49,6 +48,7 @@ const getDateSql = (column: string) => {
     case 'mysql':
       return `DATE(${column})`
     case 'pg':
+    case 'postgres':
       return `DATE_TRUNC('day', ${column})`
     case 'sqlite':
       return `DATE(${column})`
@@ -83,6 +83,7 @@ const getHourSql = (column: string) => {
     case 'mysql':
       return `HOUR(CONVERT_TZ(${column}, 'UTC', 'Europe/Paris'))`
     case 'pg':
+    case 'postgres':
       return `EXTRACT(HOUR FROM ${column} AT TIME ZONE 'Europe/Paris')`
     case 'sqlite':
       return `STRFTIME('%H', ${column})`
