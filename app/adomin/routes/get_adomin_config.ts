@@ -12,7 +12,7 @@ export const defaultFooterText = 'Made with ❤️ by Galadrim'
 const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<ApiModelView> => {
   const { label, labelPluralized, name, isHidden = false, visibilityCheck, icon } = conf
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
-  const fullPath = `/adomin/${name}`
+  const fullPath = `/adomin/models/${name}`
 
   return {
     type: 'model',
