@@ -1,7 +1,7 @@
+import { getFlatViews } from '#adomin/get_flat_views'
 import string from '@adonisjs/core/helpers/string'
 import { HttpContext } from '@adonisjs/core/http'
 import { AdominViewConfig } from '../../adomin_config.types.js'
-import { ADOMIN_CONFIG } from '../../config/adomin_config.js'
 import { ColumnConfig, ModelConfig } from '../../create_model_view_config.js'
 import {
   AdominStaticRightsConfig,
@@ -38,7 +38,7 @@ export const isModelConfig = (config: AdominViewConfig): config is ModelConfig =
 }
 
 export const getModelConfig = (modelName: string) => {
-  const foundConfig = ADOMIN_CONFIG.views
+  const foundConfig = getFlatViews()
     .filter(isModelConfig)
     .find((config) => config.model().name === modelName)
 
@@ -51,7 +51,7 @@ export const getModelConfigRoute = async (ctx: HttpContext) => {
   const { params, response } = ctx
   const modelString = params.model
 
-  const modelConfig = ADOMIN_CONFIG.views
+  const modelConfig = getFlatViews()
     .filter(isModelConfig)
     .find(({ model }) => model().name === modelString)
 

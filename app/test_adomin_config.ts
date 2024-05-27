@@ -1,3 +1,5 @@
+import { AdominViewConfig } from '#adomin/adomin_config.types'
+import { createFolderViewConfig } from '#adomin/create_folder_view_config'
 import { createModelViewConfig } from '#adomin/create_model_view_config'
 import { createStatsViewConfig } from '#adomin/create_stats_view_config'
 import { groupByDate, groupByDayOfWeek, groupByHour } from '#adomin/routes/stats/group_by_helpers'
@@ -44,6 +46,7 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
   // queryBuilderCallback: (q) => {
   //   q.preload('ideas')
   // },
+  icon: 'user',
 })
 
 export const PROFILE_CONFIG = createModelViewConfig(() => Profile, {
@@ -52,6 +55,7 @@ export const PROFILE_CONFIG = createModelViewConfig(() => Profile, {
     name: { type: 'string' },
     age: { type: 'number' },
   },
+  icon: 'id-badge-2',
 })
 
 export const TEST_CONFIG = createModelViewConfig(() => Test, {
@@ -102,6 +106,7 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
       },
     },
   },
+  icon: 'test-pipe',
 })
 
 export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
@@ -116,10 +121,11 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
       nullable: true,
     },
   },
+  icon: 'bulb',
 })
 
 export const STATS_CONFIG = createStatsViewConfig({
-  path: 'kpis',
+  name: 'kpis',
   label: 'Les super KPI',
   stats: [
     {
@@ -189,4 +195,94 @@ export const STATS_CONFIG = createStatsViewConfig({
       },
     },
   ],
+  icon: 'chart-bar',
 })
+
+const FOLDER_ONE = createFolderViewConfig({
+  label: 'Dossier 1',
+  name: 'folder1',
+  views: [STATS_CONFIG, USER_CONFIG],
+  icon: 'folder',
+})
+
+const FOLDER_THREE = createFolderViewConfig({
+  label: 'Dossier 3',
+  name: 'folder3',
+  views: [PROFILE_CONFIG],
+  icon: 'folder',
+})
+
+const FOLDER_TWO = createFolderViewConfig({
+  label: 'Dossier 2',
+  name: 'folder2',
+  views: [TEST_CONFIG, FOLDER_THREE],
+  icon: 'folder',
+})
+
+const FAKE_STATS_CONFIG = createStatsViewConfig({
+  label: 'Fake stats',
+  name: 'fakeStats',
+  stats: [
+    {
+      type: 'line',
+      label: 'Réservations par heure',
+      name: 'reservations-by-hour',
+      dataFetcher: async () => [
+        ['00', 22],
+        ['01', 9],
+        ['02', 3],
+        ['03', 1],
+        ['04', 1],
+        ['05', 0],
+        ['06', 1],
+        ['07', 49],
+        ['08', 359],
+        ['09', 3812],
+        ['10', 4273],
+        ['11', 1923],
+        ['12', 400],
+        ['13', 1361],
+        ['14', 3148],
+        ['15', 2282],
+        ['16', 2265],
+        ['17', 1711],
+        ['18', 770],
+        ['19', 164],
+        ['20', 53],
+        ['21', 63],
+        ['22', 46],
+        ['23', 34],
+        ['24', 22],
+      ],
+    },
+  ],
+  icon: 'chart-bar',
+})
+
+const FOLDER_FOUR = createFolderViewConfig({
+  label: 'Dossier 4',
+  name: 'folder4',
+  views: [
+    createFolderViewConfig({
+      label: 'Dossier5',
+      name: 'folder5',
+      views: [
+        createFolderViewConfig({
+          label: 'Dossier 6',
+          name: 'folder6',
+          views: [FAKE_STATS_CONFIG],
+          icon: 'folder',
+        }),
+      ],
+      icon: 'folder',
+    }),
+  ],
+  icon: 'folder',
+})
+
+export const ADOMIN_TEST_CONFIG: AdominViewConfig[] = [
+  FOLDER_ONE,
+  FOLDER_TWO,
+  IDEA_CONFIG,
+  FOLDER_FOUR,
+]

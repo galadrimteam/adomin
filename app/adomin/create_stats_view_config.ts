@@ -9,9 +9,9 @@ export interface StatsViewConfig {
   /**
    * Path in the frontend
    *
-   * e.g. if path = 'kpis', full path on the frontend will be /adomin/stats/kpis
+   * e.g. if name = 'kpis', full path on the frontend will be /adomin/stats/kpis
    */
-  path: string
+  name: string
   /** Check if logged in user can see this view */
   visibilityCheck?: AdominRightsCheckFunction
   /**
@@ -24,6 +24,13 @@ export interface StatsViewConfig {
    * if you want to restrict access to a view, use the `visibilityCheck` property
    */
   isHidden?: boolean
+  /**
+   * Icon name, by default this uses Tabler icons
+   *
+   * You can browse the list of available icons at:
+   * https://tabler.io/icons
+   */
+  icon?: string
 }
 
 type ChartDataRow = [string, number]
@@ -117,14 +124,15 @@ interface AdominStat {
 export type StatsViewConfigStaticOptions = Omit<StatsViewConfig, 'type'>
 
 export const createStatsViewConfig = (options: StatsViewConfigStaticOptions): StatsViewConfig => {
-  const { path, stats, label, visibilityCheck, isHidden } = options
+  const { name, stats, label, visibilityCheck, isHidden, icon } = options
 
   return {
     type: 'stats',
-    path,
+    name,
     stats,
     label,
     visibilityCheck,
     isHidden,
+    icon,
   }
 }

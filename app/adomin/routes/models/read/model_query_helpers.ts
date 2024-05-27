@@ -1,12 +1,10 @@
-import env from '#start/env'
-import string from '@adonisjs/core/helpers/string'
 import { LucidModel, LucidRow, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
-import { RelationSubQueryBuilderContract } from '@adonisjs/lucid/types/relations'
 import { schema } from '@adonisjs/validator'
 import { ColumnConfig } from '../../../create_model_view_config.js'
 import { AdominFieldConfig } from '../../../fields.types.js'
 import { getSqlColumnToUse } from '../get_model_config.js'
 import { EXPORT_TYPES } from './download_export_file.js'
+import { whereClause } from './where_clause.js'
 
 export const paginationSchema = schema.create({
   pageIndex: schema.number(),
@@ -77,14 +75,26 @@ export const applyGlobalFilters = (
         const labelFields = field.adomin.labelFields
         builder.orWhereHas(field.name as unknown as undefined, (subquery) => {
           for (const labelField of labelFields) {
-            whereClause(subquery, 'or', labelField, globalFilter, false)
+            whereClause(subquery, {
+              type: 'or',
+              column: labelField,
+              value: globalFilter,
+              exact: false,
+              columnType: field.adomin.type,
+            })
           }
         })
         continue
       }
 
       const sqlColumn = getSqlColumnToUse(field)
-      whereClause(builder, 'or', sqlColumn, globalFilter, false)
+      whereClause(builder, {
+        type: 'or',
+        column: sqlColumn,
+        value: globalFilter,
+        exact: false,
+        columnType: field.adomin.type,
+      })
     }
   })
 }
@@ -117,14 +127,26 @@ export const applyColumnFilters = (
         const labelFields = field.adomin.labelFields
         builder.andWhereHas(field.name as unknown as undefined, (subquery) => {
           for (const labelField of labelFields) {
-            whereClause(subquery, 'or', labelField, search, false)
+            whereClause(subquery, {
+              type: 'or',
+              column: labelField,
+              value: search,
+              exact: false,
+              columnType: field.adomin.type,
+            })
           }
         })
         continue
       }
 
       const exact = ADOMIN_EXACT_FIELD_SET.has(field.adomin.type)
-      whereClause(builder, filtersMode ?? 'and', sqlColumn, search, exact)
+      whereClause(builder, {
+        type: filtersMode ?? 'and',
+        column: sqlColumn,
+        value: search,
+        exact,
+        columnType: field.adomin.type,
+      })
     }
   })
 }
@@ -172,42 +194,5 @@ export const loadRelations = (
     ) {
       if (field.adomin.preload !== false) query.preload(field.name as never)
     }
-  }
-}
-
-const whereClause = (
-  builder:
-    | ModelQueryBuilderContract<LucidModel, LucidRow>
-    | RelationSubQueryBuilderContract<LucidModel>,
-  type: 'or' | 'and',
-  column: string,
-  value: string | null,
-  exact: boolean
-) => {
-  if (value === null) {
-    const method = type === 'or' ? 'orWhereNull' : 'andWhereNull'
-    builder[method](column)
-    return
-  }
-
-  const isPostgres = env.get('DB_TYPE') === 'pg'
-
-  if (exact && isPostgres) {
-    const method = type === 'or' ? 'orWhereRaw' : 'andWhereRaw'
-    builder[method](`CAST("${string.snakeCase(column)}" as text) = ?`, [value])
-    return
-  }
-
-  if (exact && !isPostgres) {
-    const method = type === 'or' ? 'orWhere' : 'andWhere'
-    builder[method](column, value)
-  }
-
-  if (isPostgres) {
-    const method = type === 'or' ? 'orWhereRaw' : 'andWhereRaw'
-    builder[method](`CAST("${string.snakeCase(column)}" as text) LIKE ?`, [`%${value}%`])
-  } else {
-    const method = type === 'or' ? 'orWhere' : 'andWhere'
-    builder[method](column, 'LIKE', `%${value}%`)
   }
 }

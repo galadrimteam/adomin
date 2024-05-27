@@ -15,17 +15,17 @@ router
   .group(() => {
     router
       .group(() => {
+        router.get('config', getAdominConfig)
+        router.get('config/models/:model', getModelConfigRoute)
         router.get('config/stats/:view', getStatConfigRoute)
 
-        router.get('config', getAdominConfig)
-        router.get('config/:model', getModelConfigRoute)
+        router.post('models/crud/export/:model', modelList)
+        router.get('models/crud/:model', modelList)
+        router.get('models/crud/:model/:id', showModel)
+        router.put('models/crud/:model/:id', updateModel)
+        router.delete('models/crud/:model/:id', deleteModel)
+        router.post('models/crud/:model', createModel)
 
-        router.post('crud/export/:model', modelList)
-        router.get('crud/:model', modelList)
-        router.get('crud/:model/:id', showModel)
-        router.put('crud/:model/:id', updateModel)
-        router.delete('crud/:model/:id', deleteModel)
-        router.post('crud/:model', createModel)
         router.post('logout', adominLogout)
       })
       .use(middleware.auth())
