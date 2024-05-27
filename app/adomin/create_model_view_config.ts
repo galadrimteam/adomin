@@ -65,6 +65,13 @@ export interface ModelConfigStaticOptions {
    *
    * frontend routes for create/update/list will still be created and available, but the navbar won't show it */
   isHidden?: boolean
+  /**
+   * Icon name, by default this uses Tabler icons
+   *
+   * You can browse the list of available icons at:
+   * https://tabler.io/icons
+   */
+  icon?: string
 }
 
 export interface ModelConfig extends ModelConfigStaticOptions {
@@ -185,5 +192,6 @@ export const createModelViewConfig = <T extends LucidModel>(
     crudlRights: options.crudlRights,
     visibilityCheck: options.visibilityCheck,
     queryBuilderCallback: options.queryBuilderCallback,
+    icon: options.icon,
   }
 }

@@ -25,6 +25,13 @@ export interface FolderViewConfig {
    * if you want to restrict access to a view, use the `visibilityCheck` property
    */
   isHidden?: boolean
+  /**
+   * Icon name, by default this uses Tabler icons
+   *
+   * You can browse the list of available icons at:
+   * https://tabler.io/icons
+   */
+  icon?: string
 }
 
 export type FolderViewConfigStaticOptions = Omit<FolderViewConfig, 'type'>
@@ -32,7 +39,7 @@ export type FolderViewConfigStaticOptions = Omit<FolderViewConfig, 'type'>
 export const createFolderViewConfig = (
   options: FolderViewConfigStaticOptions
 ): FolderViewConfig => {
-  const { name, label, visibilityCheck, views, isHidden } = options
+  const { name, label, visibilityCheck, views, isHidden, icon } = options
 
   return {
     type: 'folder',
@@ -41,5 +48,6 @@ export const createFolderViewConfig = (
     visibilityCheck,
     views,
     isHidden,
+    icon,
   }
 }

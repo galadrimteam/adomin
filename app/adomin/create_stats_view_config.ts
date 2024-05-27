@@ -24,6 +24,13 @@ export interface StatsViewConfig {
    * if you want to restrict access to a view, use the `visibilityCheck` property
    */
   isHidden?: boolean
+  /**
+   * Icon name, by default this uses Tabler icons
+   *
+   * You can browse the list of available icons at:
+   * https://tabler.io/icons
+   */
+  icon?: string
 }
 
 type ChartDataRow = [string, number]
@@ -117,7 +124,7 @@ interface AdominStat {
 export type StatsViewConfigStaticOptions = Omit<StatsViewConfig, 'type'>
 
 export const createStatsViewConfig = (options: StatsViewConfigStaticOptions): StatsViewConfig => {
-  const { name, stats, label, visibilityCheck, isHidden } = options
+  const { name, stats, label, visibilityCheck, isHidden, icon } = options
 
   return {
     type: 'stats',
@@ -126,5 +133,6 @@ export const createStatsViewConfig = (options: StatsViewConfigStaticOptions): St
     label,
     visibilityCheck,
     isHidden,
+    icon,
   }
 }

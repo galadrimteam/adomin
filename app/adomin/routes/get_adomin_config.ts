@@ -10,7 +10,7 @@ import { computeRightsCheck } from './adomin_routes_overrides_and_rights.js'
 export const defaultFooterText = 'Made with ❤️ by Galadrim'
 
 const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<ApiModelView> => {
-  const { label, labelPluralized, name, isHidden, visibilityCheck } = conf
+  const { label, labelPluralized, name, isHidden = false, visibilityCheck, icon } = conf
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
   const fullPath = `/adomin/${name}`
 
@@ -19,14 +19,15 @@ const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<
     label,
     labelPluralized,
     name,
-    isHidden: isHidden ?? false,
+    isHidden,
     visibilityCheckPassed: visibilityCheckResult === 'OK',
     fullPath,
+    icon,
   }
 }
 
 const getStatViewConfig = async (ctx: HttpContext, conf: StatsViewConfig): Promise<ApiStatView> => {
-  const { name, label, visibilityCheck, isHidden } = conf
+  const { name, label, visibilityCheck, isHidden = false, icon } = conf
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
   const fullPath = `/adomin/stats/${name}`
 
@@ -34,22 +35,22 @@ const getStatViewConfig = async (ctx: HttpContext, conf: StatsViewConfig): Promi
     type: 'stats',
     label,
     name,
-    isHidden: isHidden ?? false,
+    isHidden,
     visibilityCheckPassed: visibilityCheckResult === 'OK',
     fullPath,
+    icon,
   }
 }
 
 const getFolderViewConfig = async (
   ctx: HttpContext,
-  conf: FolderViewConfig,
-  parentFolderPath = '/adomin/folders'
+  conf: FolderViewConfig
 ): Promise<ApiFolderView> => {
-  const { name, label, visibilityCheck, views, isHidden = false } = conf
+  const { name, label, visibilityCheck, views, isHidden = false, icon } = conf
 
-  const fullPath = `${parentFolderPath}/${name}`
+  const fullPath = `/adomin/folders/${name}`
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
-  const finalViews = await getViewsConfig(ctx, views, fullPath)
+  const finalViews = await getViewsConfig(ctx, views)
 
   return {
     type: 'folder',
@@ -59,20 +60,20 @@ const getFolderViewConfig = async (
     isHidden,
     fullPath,
     name,
+    icon,
   }
 }
 
 const getViewsConfig = async (
   ctx: HttpContext,
-  views: AdominViewConfig[],
-  parentFolderPath?: string
+  views: AdominViewConfig[]
 ): Promise<ApiAdominView[]> => {
   const viewsPromises = views.map(async (conf) => {
     if (conf.type === 'stats') {
       return getStatViewConfig(ctx, conf)
     }
     if (conf.type === 'folder') {
-      return getFolderViewConfig(ctx, conf, parentFolderPath)
+      return getFolderViewConfig(ctx, conf)
     }
     return getModelViewConfig(ctx, conf)
   })
