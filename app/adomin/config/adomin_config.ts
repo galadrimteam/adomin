@@ -17,6 +17,6 @@ import { AdominConfig } from '#adomin/adomin_config.types'
  */
 
 export const ADOMIN_CONFIG: AdominConfig = {
-  title: 'Adomin (edit this)',
+  title: 'Your Backoffice Title',
   views: [],
 }
