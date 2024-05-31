@@ -12,7 +12,6 @@ export const defaultFooterText = 'Made with ❤️ by Galadrim'
 const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<ApiModelView> => {
   const { label, labelPluralized, name, isHidden = false, visibilityCheck, icon } = conf
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
-  const fullPath = `/adomin/models/${name}`
 
   return {
     type: 'model',
@@ -21,7 +20,6 @@ const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<
     name,
     isHidden,
     visibilityCheckPassed: visibilityCheckResult === 'OK',
-    fullPath,
     icon,
   }
 }
@@ -29,7 +27,6 @@ const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<
 const getStatViewConfig = async (ctx: HttpContext, conf: StatsViewConfig): Promise<ApiStatView> => {
   const { name, label, visibilityCheck, isHidden = false, icon } = conf
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
-  const fullPath = `/adomin/stats/${name}`
 
   return {
     type: 'stats',
@@ -37,7 +34,6 @@ const getStatViewConfig = async (ctx: HttpContext, conf: StatsViewConfig): Promi
     name,
     isHidden,
     visibilityCheckPassed: visibilityCheckResult === 'OK',
-    fullPath,
     icon,
   }
 }
@@ -48,7 +44,6 @@ const getFolderViewConfig = async (
 ): Promise<ApiFolderView> => {
   const { name, label, visibilityCheck, views, isHidden = false, icon } = conf
 
-  const fullPath = `/adomin/folders/${name}`
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
   const finalViews = await getViewsConfig(ctx, views)
 
@@ -58,7 +53,6 @@ const getFolderViewConfig = async (
     visibilityCheckPassed: visibilityCheckResult === 'OK',
     views: finalViews,
     isHidden,
-    fullPath,
     name,
     icon,
   }

@@ -1,7 +1,6 @@
 interface ApiViewBase {
   label: string
   isHidden: boolean
-  fullPath: string
   visibilityCheckPassed: boolean
   name: string
   /**
