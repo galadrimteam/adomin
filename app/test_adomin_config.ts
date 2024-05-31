@@ -9,6 +9,7 @@ import Test from '#models/test'
 import User from '#models/user'
 import app from '@adonisjs/core/services/app'
 import db from '@adonisjs/lucid/services/db'
+import { DateTime } from 'luxon'
 import { copyFileSync, mkdirSync, rmSync } from 'node:fs'
 import { RIGHTS, RIGHTS_LABELS } from './rights.js'
 
@@ -41,6 +42,14 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
       labelFields: ['title'],
       modelName: 'Idea',
       nullable: true,
+    },
+    createdAt: {
+      type: 'date',
+      subType: 'datetime',
+      creatable: false,
+      editable: false,
+      label: 'Date de création',
+      exportDataTransform: (date) => DateTime.fromISO(date).toFormat('dd/MM/yyyy'),
     },
   },
   // queryBuilderCallback: (q) => {

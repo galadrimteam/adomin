@@ -33,6 +33,21 @@ export interface AdominBaseFieldConfig {
    * If this field is a \@computed() field in your model you must set this to true
    */
   computed?: boolean
+  /**
+   * Export data transformation callback to use for this field
+   *
+   * value will be the value of the lucid row field **AFTER** call to `.toJSON()`
+   *
+   * this means that if you have a DateTime field in your model, it will be a string in the value of the callback
+   *
+   * Use this to transform the field value before exporting it
+   *
+   * e.g. to format a date
+   * ```ts
+exportDataTransform: (date) => DateTime.fromISO(date).toFormat('dd/MM/yyyy'),
+```
+   */
+  exportDataTransform?: (value: any) => any
 }
 
 export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {

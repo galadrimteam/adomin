@@ -52,7 +52,7 @@ export const modelList = async (ctx: HttpContext) => {
   const data = await getModelList({ paginationSettings, modelConfig })
 
   if (paginationSettings.exportType) {
-    return downloadExportFile(ctx, data, paginationSettings.exportType)
+    return downloadExportFile({ ctx, data, exportType: paginationSettings.exportType, modelConfig })
   }
 
   await loadFilesForInstances(modelConfig.fields, data)
