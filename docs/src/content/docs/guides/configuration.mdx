@@ -1,0 +1,83 @@
+---
+title: "Configuration"
+description: How to configure Adomin
+sidebar:
+  order: 3
+---
+
+import { FileTree } from '@astrojs/starlight/components';
+
+## Basic configuration
+
+Now That Adomin is installed and ready, if not, start [here](/guides/installation), let's add some basic configuration:
+
+Add the following code, don't forget to import `User` (or any model that you want)
+
+```ts
+// app/adomin/config/adomin_config.ts
+
+const USER_VIEW = createModelViewConfig(() => User, {
+  label: "Adominer",
+  columns: {
+    email: { type: "string", isEmail: true, label: "Super email" },
+    password: { type: "string", isPassword: true, label: "Strong password" },
+  },
+});
+
+export const ADOMIN_CONFIG: AdominConfig = {
+  title: "Your backoffice title",
+  views: [USER_VIEW],
+};
+```
+
+This will add a page in your adomin frontend.
+
+If you did not setup adomin frontend yet, <a href="/guides/installation#frontend-installation">go here</a>
+
+:::tip
+I recommend that you create each view config in a separate file, and import them in the `adomin_config.ts` file.
+
+<FileTree>
+- app
+  - adomin
+    - config
+      - user_view.ts
+      - test_view.ts
+      - stat_view.ts
+      - **adomin_config.ts**
+</FileTree>
+
+```ts
+// app/adomin/config/adomin_config.ts
+
+import { USER_VIEW } from "./user_view";
+import { TEST_VIEW } from "./test_view";
+import { STAT_VIEW } from "./stat_view";
+
+export const ADOMIN_CONFIG: AdominConfig = {
+  title: "Your backoffice title",
+  views: [USER_VIEW, TEST_VIEW, STAT_VIEW],
+};
+```
+:::
+
+:::note
+💡 Fields configurated inside the `columns` field will be shown on the admin frontend, additionnaly the primary key field will be shown
+(Adomin uses Lucid model `primaryKey` field to know which is the primary key)
+
+💡 To show the primary key on the frontend, Adomin applies a default config to your primary key field:
+
+```ts
+const PRIMARY_KEY_DEFAULT_CONFIG: AdominNumberFieldConfig = {
+  type: "number",
+  editable: false,
+  creatable: false,
+};
+```
+
+You can overwrite this config as you please, e.g. if the primary key is a string
+:::
+
+## Real world configuration
+
+In a real application, your Back-office might have many pages with complex configurations, to learn what you can do with Adomin see [the reference pages for models views](/reference/views)

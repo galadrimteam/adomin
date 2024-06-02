@@ -1,0 +1,62 @@
+---
+title: Adomin
+description: Get started on how to build your Adonis Back-office with Adomin
+sidebar:
+  order: 0
+  hidden: true
+hero:
+  tagline: Quickly create a Back-office for your Adonis app
+  # image:
+    # file: ../../assets/houston.webp
+  actions:
+    - text: Get started
+      link: /guides/introduction
+      icon: right-arrow
+      variant: primary
+---
+
+import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+## Features
+
+<CardGrid>
+  <Card title="List view for your models" icon="list-format">
+    - server side filters
+    - server side pagination
+  </Card>
+
+   <Card title="CRUD functionnality" icon="pen">
+    - Delete from list view
+    - Dedicated create and update pages
+  </Card>
+
+  <Card title="Many data types built in" icon="seti:odata">
+    Files, images, bitsets, enums, dates, Lucid model relations, Lucid computed fields...
+  </Card>
+
+  <Card title="Export functionnality" icon="document">
+    - server side filters
+    - support for excel, csv, json
+  </Card>
+
+  <Card title="Sidebar" icon="seti:image">
+    - icons from tabler icons
+    - folders and subfolders (with no limit)
+  </Card>
+
+  <Card title="Good DX" icon="seti:typescript">
+    - Excellent type inference where you need it
+    - JSDoc anotations in every config types to help you find what you need
+  </Card>
+
+  <Card title="Easy to use Charts" icon="gitter">
+    - common chart types supported
+    - dead simple configuration
+    - [helpers to fetch common chart data in 1 LoC](/reference/views/stats/#data-fetcher-helpers)
+  </Card>
+
+  <Card title="Get started" icon="open-book">
+    - [Installation](/guides/installation)
+    - [Configuration](/guides/configuration)
+  </Card>
+</CardGrid>

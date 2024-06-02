@@ -24,7 +24,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
@@ -35,19 +34,19 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v4
         with:
-          hugo-version: '0.123.7'
-          extended: true
+          node-version: '20.x'
+          cache: 'yarn'
+      - name: Dependencies installation
+        run: cd docs && yarn
       - name: Build Documentation
-        run: |
-          cd docs
-          hugo --minify
+        run: cd docs && yarn build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs/public'
+          path: './docs/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
