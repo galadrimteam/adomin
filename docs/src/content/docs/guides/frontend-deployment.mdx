@@ -1,0 +1,132 @@
+---
+title: 'Frontend Deployment'
+description: How to deploy Adomin frontend
+sidebar:
+  order: 4
+---
+
+To deploy the Adomin frontend, you will need to:
+
+- run `yarn build` with correct VITE_API_URL env variable set
+- copy dist folder to your static files service
+- serve those files with a rule for SPAs (e.g. serving the index.html on 404)
+
+## S3 / Cloudfront
+
+```fish
+# copy dist files into your s3 bucket
+aws s3 sync ./dist s3://your-s3-bucket-name/
+
+# invalidate cloudfront distribution to serve the new files
+aws cloudfront create-invalidation --distribution-id YOUR_DISTRIB_ID --paths "/*"
+```
+
+### Github action for S3 / Cloudfront
+
+```yml
+name: Deploy staging ⚙️
+on:
+  push:
+    branches:
+      - does-not-exist # replace by e.g: staging
+
+jobs:
+  back-office:
+    runs-on: ubuntu-latest
+    env:
+      VITE_API_URL: https://api.staging.your-own-domain.fr/ # replace by your API url
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          # you will have to create AWS_ACCESS_KEY and AWS_SECRET_KEY secrets in your repository settings
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: eu-west-3
+      - name: Deploy
+        run: aws s3 sync ./dist s3://your-s3-bucket-name/ # replace by your s3 bucket name
+      - name: Invalidate dashboard cloudfront
+        run: aws cloudfront create-invalidation --distribution-id YOUR_DISTRIB_ID --paths "/*" # replace by your cloudfront distribution id
+```
+
+## Caddy
+
+Example of Caddy config to serve a SPA
+
+```
+example.com {
+		root * /usr/share/caddy/frontend
+		file_server
+		try_files {path} {path}/ /index.html
+}
+```
+
+### Github action for Caddy
+
+:::note
+This github action is taken from a project that uses [Galacrypt](https://github.com/galadrimteam/galacrypt) to encrypt/decrypt the env file
+:::
+
+```yml
+name: Deploy staging ⚙️
+on:
+  push:
+    branches:
+      - does-not-exist # replace by e.g: staging
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    env:
+      VITE_API_URL: https://api.staging.your-own-domain.fr/ # replace by your API url
+      SERVER_IP: 1.2.3.4 # replace by your server IP
+      KEY_PATH: ./ssh_keys/staging/id_ed25519 # do not commit/push this file directly
+      SSH_USER: YOUR_SSH_USER # replace by your ssh user
+      SSH_PARAMS: -i ./ssh_keys/staging/id_ed25519 YOUR_SSH_USER@1.2.3.4 # replace dummy user / ip
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+
+      - name: Dependencies installation
+        run: yarn
+
+      - name: Galacrypt decrypt # used to decrypt ssh key, you will have to create GALACRYPT_KEY in your repository secrets
+        run: yarn galacrypt use ${{ secrets.GALACRYPT_KEY }} && yarn galacrypt decrypt
+
+      - name: Generate build
+        run: yarn build
+
+      - name: Generate frontend zip
+        run: cd dist && zip -r ../frontend.zip .
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan $SERVER_IP 2>/dev/null > ~/.ssh/known_hosts
+          chmod 600 $KEY_PATH
+
+      - name: Copy files
+        run: scp -i $KEY_PATH ./frontend.zip $SSH_USER@$SERVER_IP:/home/$SSH_USER/frontend.zip
+
+      - name: Unzip
+        run: ssh $SSH_PARAMS "cd /home/$SSH_USER/ && rm -rf front-build && mkdir front-build && mv frontend.zip front-build/ && cd front-build && unzip frontend.zip && rm frontend.zip"
+
+      - name: Move website files
+        run: ssh $SSH_PARAMS "cd /home/$SSH_USER/ && (sudo mv /usr/share/caddy/frontend old_frontend || echo 'skipping mv old_frontend') && sudo mv front-build /usr/share/caddy/frontend && sudo rm -rf old_frontend"
+```
+
+## Nginx
+
+I don't want to deal with nginx anymore, but if you want to, you can find inspiration [here](https://sdickinson.com/nginx-config-for-single-page-applications/)

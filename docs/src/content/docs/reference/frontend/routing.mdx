@@ -1,0 +1,134 @@
+---
+title: Frontend Routing
+description: Adomin frontend routing reference
+sidebar:
+  order: 0
+---
+
+You might have some questions:
+
+- how does the frontend routing work ?
+- how to add custom routes ?
+
+## Router file
+
+It all begins with the **react-router-dom** router
+
+import { FileTree } from '@astrojs/starlight/components'
+
+<FileTree>
+  - src
+    - [router.tsx](https://github.com/galadrimteam/adomin-frontend/blob/main/src/router.tsx) Frontend react-router-dom router
+</FileTree>
+
+Inside this file is all the routing
+
+If this documentation is up to date 😳, it will look like this:
+
+```tsx
+export const adominRoutes = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to={ADOMIN_HOME_PATH} />,
+  },
+  {
+    path: ADOMIN_HOME_PATH,
+    element: <Navigate to={ADOMIN_FOLDERS_PATH} />,
+  },
+  {
+    path: ADOMIN_FOLDERS_PATH,
+    children: [
+      {
+        path: ':view',
+        element: <FoldersPage />,
+      },
+    ],
+    element: <HomePage />,
+  },
+  {
+    path: ADOMIN_STATS_PATH,
+    children: [
+      {
+        path: ':view',
+        element: <StatsPage />,
+      },
+    ],
+    element: <HomePage />,
+  },
+  {
+    path: ADOMIN_MODELS_PATH,
+    children: [
+      {
+        path: ':view',
+        children: [
+          { index: true, element: <ModelListPage /> },
+          { path: 'create', element: <CreateModelPage /> },
+          { path: ':primaryKeyValue', element: <EditModelPage /> },
+        ],
+        element: <ModelsPageLayout />,
+      },
+    ],
+    element: <HomePage />,
+  },
+  {
+    path: ADOMIN_LOGIN_PATH,
+    element: <LoginPage />,
+  },
+])
+```
+
+You can see that it is creating dynamic paths, those paths will be determined with your backend adomin config.
+
+To be clear, if you do not change the `ADOMIN_*_PATH` variables, the following paths are created:
+
+```bash
+/ # this path just redirects to /adomin, you can customize/remove this behaviour if you don't like it
+/login
+
+/backoffice/folders/:view # this dynamic path renders a folder view, which will redirect you to the nearest non-folder view
+/backoffice/stats/:view # this dynamic path renders a stat view
+
+/backoffice # this path adds a layout around the children of this route
+/backoffice/:model # this is the list page
+/backoffice/:model/create # this is the create page
+/backoffice/:model/:primaryKeyValue # this is the update page
+```
+
+and here is an example if you configured adomin with the User model
+
+```bash
+/backoffice/User
+/backoffice/User/create
+/backoffice/User/1 # page to update user with id = 1
+```
+
+## Custom routes and overrides
+
+If you want to override some page, let's say the create and the update page for your resource User, you will be able to do so by using the `makeOverridePage` helper, then put it somewhere in the router config, here is an example:
+
+```tsx
+export const adominRoutes = createBrowserRouter([
+  // default adomin config
+  // ...
+
+  // your config
+  makeOverridePage({ model: 'User', type: 'create' }, <MyOverridePage />),
+  makeOverridePage({ model: 'User', type: 'update' }, <MyOverridePage2 />),
+  makeOverridePage({ model: 'User', type: 'list' }, <MyOverridePage3 />),
+])
+```
+
+:::note
+💡 the `makeOverridePage` helper just creates a `RouteObject` wrapping the override component with a `CustomPage`, you can do it manually if you want more control:
+
+```tsx
+{
+	path: "/backoffice/User/create",
+	element:
+	  <CustomPage currentView="User">
+	    <MyOverridePage />
+	  </CustomPage>,
+}
+```
+
+:::

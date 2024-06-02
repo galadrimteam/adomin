@@ -25,6 +25,11 @@ export default defineConfig({
               path: '/reference/views',
               autogenerate: { directory: 'reference/views', collapsed: true },
             },
+            {
+              label: 'Frontend',
+              path: '/reference/frontend',
+              autogenerate: { directory: 'reference/frontend', collapsed: true },
+            },
           ],
         },
       ],
