@@ -15,9 +15,9 @@ To declare a model view page, you will need to add a `ModelConfig` object inside
 
 ```ts
 export const ADOMIN_CONFIG: AdominConfig = {
-  title: "Adomin",
+  title: 'Adomin',
   views: [MY_MODEL_CONFIG],
-};
+}
 ```
 
 Use the `createModelViewConfig` function to create your `ModelConfig` object:
@@ -25,10 +25,10 @@ Use the `createModelViewConfig` function to create your `ModelConfig` object:
 ```ts
 export const MY_MODEL_CONFIG = createModelViewConfig(() => MyModel, {
   columns: {
-    title: { type: "string", label: "Titre" },
-    description: { type: "string", label: "Description" },
+    title: { type: 'string', label: 'Titre' },
+    description: { type: 'string', label: 'Description' },
   },
-});
+})
 ```
 
 The `createModelViewConfig` allows you to pass a function returning your Adonis model and an object with the adomin configuration for this model.
@@ -47,33 +47,33 @@ export interface AdominBaseFieldConfig {
    * If true, validation will allow null values for this field
    * @default false
    */
-  nullable?: boolean;
+  nullable?: boolean
   /**
    * If true, validation will allow undefined values for this field
    * @default false
    */
-  optional?: boolean;
+  optional?: boolean
   /**
    * Label shown on the frontend
    */
-  label?: string;
+  label?: string
   /**
    * If false, user cannot edit this field
    */
-  editable?: boolean;
+  editable?: boolean
   /**
    * If false, user cannot create this field
    */
-  creatable?: boolean;
+  creatable?: boolean
   /**
    * Size of the field on the frontend
    * @default 120
    */
-  size?: number;
+  size?: number
   /**
    * If this field is a \@computed() field in your model you must set this to true
    */
-  computed?: boolean;
+  computed?: boolean
 }
 ```
 
@@ -181,6 +181,18 @@ queryBuilderCallback: (q) => {
 
 ### HasOne field
 
-## See the source code
+<br />
 
-[Type definitions](https://github.com/galadrimteam/adomin/blob/main/app/adomin/fields.types.ts)
+#### Waiting for ~~love~~ docs
+
+As you can see, the documentation is not ready for many field types, while you wait for propper documentation, see the type definitions:
+
+import { FileTree } from '@astrojs/starlight/components'
+
+<FileTree>
+
+- app
+  - adomin
+    - [fields.types.ts](https://github.com/galadrimteam/adomin/blob/main/app/adomin/fields.types.ts) Fields type definitions
+
+</FileTree>

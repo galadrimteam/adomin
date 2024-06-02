@@ -40,7 +40,7 @@ You can put whatever you want in the string as long as you put `{{value}}` somew
 :::note[example]
 
 ```ts
-"{{value}} €";
+'{{value}} €'
 ```
 
 :::
