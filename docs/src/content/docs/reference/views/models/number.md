@@ -57,4 +57,4 @@ You can put whatever you want in the string as long as you put `{{value}}` somew
 
 Optionnal, use a number component variant:
 
-- for now only [bitset](/reference/views/models/bitset/) exists
+- for now only [bitset](/adomin/reference/views/models/bitset/) exists

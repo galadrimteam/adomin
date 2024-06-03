@@ -5,7 +5,7 @@ sidebar:
 description: Adomin bitset field reference
 ---
 
-The bitset field is a variant of the [number field](/reference/views/models/number)
+The bitset field is a variant of the [number field](/adomin/reference/views/models/number)
 
 In the table page, a bitset number field will look like this
 

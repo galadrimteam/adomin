@@ -25,7 +25,7 @@ Run the following command at the root of your adonis backend folder, it will:
 npx @galadrim/adomin@latest
 ```
 
-After running the command, see the [post install instructions](#post-install)
+After running the command, [continue here](#backend-deps)
 
 ### Manual install
 
@@ -53,7 +53,7 @@ inside the `"paths"` object
 - edit `start/routes.ts` : add this import statement to enable all of Adomin routes
 
 ```ts
-import "#adomin/routes/adomin_router";
+import '#adomin/routes/adomin_router'
 ```
 
 ## Backend deps
@@ -112,4 +112,4 @@ The frontend is a react/vite app that you can clone and use right away, you won'
 
 Adomin is now installed and ready.
 
-To add some configuration, [go this way](/guides/configuration)
+To add some configuration, [go this way](/adomin/guides/configuration)
