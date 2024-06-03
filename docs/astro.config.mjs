@@ -12,6 +12,9 @@ export default defineConfig({
       social: {
         github: 'https://github.com/galadrimteam/adomin',
       },
+      editLink: {
+        baseUrl: 'https://github.com/galadrimteam/adomin/edit/main/docs/',
+      },
       sidebar: [
         {
           label: 'Guides',
