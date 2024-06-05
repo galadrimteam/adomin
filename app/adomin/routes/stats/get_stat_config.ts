@@ -46,7 +46,7 @@ export const getStatConfigRoute = async (ctx: HttpContext) => {
     return response.notFound({ error: `View '${viewString}' not found` })
   }
 
-  const { label, name, isHidden, visibilityCheck } = statConfig
+  const { label, name, isHidden, visibilityCheck, type, gridTemplateAreas, icon } = statConfig
 
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck)
 
@@ -59,5 +59,8 @@ export const getStatConfigRoute = async (ctx: HttpContext) => {
     label,
     isHidden: isHidden ?? false,
     stats: frontendStatConfig,
+    type,
+    gridTemplateAreas,
+    icon,
   }
 }

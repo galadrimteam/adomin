@@ -1,8 +1,13 @@
+/* eslint-disable unicorn/no-await-expression-member */
 import { AdominViewConfig } from '#adomin/adomin_config.types'
 import { createFolderViewConfig } from '#adomin/create_folder_view_config'
 import { createModelViewConfig } from '#adomin/create_model_view_config'
 import { createStatsViewConfig } from '#adomin/create_stats_view_config'
-import { groupByDate, groupByDayOfWeek, groupByHour } from '#adomin/routes/stats/group_by_helpers'
+import {
+  groupByDate,
+  groupByDayOfWeek,
+  groupByHour,
+} from '#adomin/routes/stats/helpers/group_by_helpers'
 import Idea from '#models/idea'
 import Profile from '#models/profile'
 import Test from '#models/test'
@@ -268,6 +273,44 @@ const FAKE_STATS_CONFIG = createStatsViewConfig({
   icon: 'chart-bar',
 })
 
+const KPI_STATS_CONFIG = createStatsViewConfig({
+  label: 'KPI stats',
+  name: 'kpiStats',
+  stats: [
+    {
+      type: 'kpi',
+      label: 's1',
+      name: 's1',
+      dataFetcher: async () => '54h',
+    },
+    {
+      type: 'kpi',
+      label: 's2',
+      name: 's2',
+      dataFetcher: async () => 88,
+      options: { isPercentage: true },
+    },
+    {
+      type: 'column',
+      label: 's3',
+      name: 's3',
+      dataFetcher: async () => [
+        ['a', 15],
+        ['b', 20],
+        ['c', 44],
+      ],
+    },
+  ],
+  gridTemplateAreas: {
+    normal: `"s1 s2"
+             "s3 s3"`,
+    sm: `"s1"
+         "s2"
+         "s3"`,
+  },
+  icon: 'chart-bar',
+})
+
 const FOLDER_FOUR = createFolderViewConfig({
   label: 'Dossier 4',
   name: 'folder4',
@@ -279,7 +322,7 @@ const FOLDER_FOUR = createFolderViewConfig({
         createFolderViewConfig({
           label: 'Dossier 6',
           name: 'folder6',
-          views: [FAKE_STATS_CONFIG],
+          views: [FAKE_STATS_CONFIG, KPI_STATS_CONFIG],
           icon: 'folder',
         }),
       ],

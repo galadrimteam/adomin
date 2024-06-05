@@ -22,5 +22,6 @@
       "#config/*": ["./config/*.js"],
       "#adomin/*": ["./app/adomin/*.js"]
     }
-  }
+  },
+  "exclude": ["docs"]
 }

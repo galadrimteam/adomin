@@ -31,6 +31,21 @@ export interface StatsViewConfig {
    * https://tabler.io/icons
    */
   icon?: string
+  /**
+   * How to display the stats
+   * Use the 'name' property of the stats to define where to put the component on the grid, and it's size
+   *
+   * Example:
+   *
+```ts
+const gridTemplateAreas = `
+"stat-name-1 stat-name-2"
+"stat-name-3 stat-name-3"
+`
+```
+   * if you need a different layout for small screens, you can use pass an object with "normal" and "sm" property
+   */
+  gridTemplateAreas?: string | { normal: string; sm: string }
 }
 
 type ChartDataRow = [string, number]
@@ -39,7 +54,7 @@ type ChartMultipleSeriesDataRow = { name: string; data: ChartDataRow[]; color?: 
 
 type ChartRowData = ChartMultipleSeriesDataRow[] | ChartDataRow[]
 
-interface ChartKickOptions {
+interface ChartkickOptions {
   /** Title of x axis */
   xtitle?: string
   /** Title of y axis */
@@ -96,11 +111,22 @@ interface ChartKickOptions {
   empty?: string
 }
 
-interface AdominStat {
+interface ChartkickStat extends AdominStatBase {
   /**
    * Type of the chart to display
    */
   type: 'pie' | 'bar' | 'column' | 'line' | 'area'
+  /**
+   * Options for the chart
+   */
+  options?: ChartkickOptions
+  /**
+   * function to fetch the data to displayed in the chart
+   */
+  dataFetcher: () => Promise<ChartRowData>
+}
+
+interface AdominStatBase {
   /**
    * Label of the stat, displayed in the frontend
    */
@@ -111,20 +137,41 @@ interface AdominStat {
    * (e.g. in the react key prop)
    */
   name: string
+}
+
+export interface KpiStatOptions {
+  /**
+   * If true, the value should be a number between 0-100 and will be displayed as a percentage
+   * @default false
+   */
+  isPercentage?: boolean
+  /**
+   * Color of the mui CircularProgress
+   */
+  color?: string
+}
+
+export interface KpiStat extends AdominStatBase {
+  /**
+   * Type of the chart to display
+   */
+  type: 'kpi'
   /**
    * function to fetch the data to displayed in the chart
    */
-  dataFetcher: () => Promise<ChartRowData>
+  dataFetcher: () => Promise<string | number>
   /**
    * Options for the chart
    */
-  options?: ChartKickOptions
+  options?: KpiStatOptions
 }
+
+export type AdominStat = ChartkickStat | KpiStat
 
 export type StatsViewConfigStaticOptions = Omit<StatsViewConfig, 'type'>
 
 export const createStatsViewConfig = (options: StatsViewConfigStaticOptions): StatsViewConfig => {
-  const { name, stats, label, visibilityCheck, isHidden, icon } = options
+  const { name, stats, label, visibilityCheck, isHidden, icon, gridTemplateAreas } = options
 
   return {
     type: 'stats',
@@ -134,5 +181,6 @@ export const createStatsViewConfig = (options: StatsViewConfigStaticOptions): St
     visibilityCheck,
     isHidden,
     icon,
+    gridTemplateAreas,
   }
 }
