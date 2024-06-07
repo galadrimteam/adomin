@@ -105,5 +105,5 @@ if (!isRoutesConfigured) {
 
 console.log('🎉 Adomin is now ready to be used in your project.')
 console.log(
-  '📚 configuration docs: https://galadrimteam.github.io/adomin/docs/backend/configuration/'
+  '📚 next steps: https://galadrimteam.github.io/adomin/guides/installation/#backend-deps'
 )
