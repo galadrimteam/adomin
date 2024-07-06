@@ -47,6 +47,17 @@ export const PokemonLayout = ({ children, cmsPage, currentTab }: PokemonLayoutPr
 
 const getStyle = () => {
   return `
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+    }
+
     body {
         font-family: Arial, sans-serif;
     }

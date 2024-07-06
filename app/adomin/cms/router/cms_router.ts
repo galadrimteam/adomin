@@ -24,7 +24,9 @@ export const cmsRoutes = () => {
     })
     .prefix('cms')
     .use(middleware.auth())
+}
 
+if (adominHasPlugin('cms')) {
   router.get('content/*', (ctx) => {
     return cmsPageResolver(ctx)
   })
