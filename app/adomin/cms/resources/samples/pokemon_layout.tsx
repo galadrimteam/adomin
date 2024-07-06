@@ -26,13 +26,16 @@ export const PokemonLayout = ({ children, cmsPage, currentTab }: PokemonLayoutPr
       <style>{getStyle()}</style>
       <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <div class="tabs">
-          <a href="/" class={clsx('tab', currentTab === 'diglett' && 'active-tab')}>
+          <a href="/content" class={clsx('tab', currentTab === 'diglett' && 'active-tab')}>
             Diglett
           </a>
-          <a href="/pikachu" class={clsx('tab', currentTab === 'pikachu' && 'active-tab')}>
+          <a href="/content/pikachu" class={clsx('tab', currentTab === 'pikachu' && 'active-tab')}>
             Pikachu
           </a>
-          <a href="/charmander" class={clsx('tab', currentTab === 'charmander' && 'active-tab')}>
+          <a
+            href="/content/charmander"
+            class={clsx('tab', currentTab === 'charmander' && 'active-tab')}
+          >
             Charmander
           </a>
         </div>
