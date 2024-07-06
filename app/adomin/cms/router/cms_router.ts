@@ -9,7 +9,9 @@ import { layoutsIndex } from './routes/layouts/layouts_index.js'
 import { showLayout } from './routes/layouts/show_layout.js'
 const PagesController = () => import('./routes/pages/pages_controller.js')
 
-if (adominHasPlugin('cms')) {
+export const cmsRoutes = () => {
+  if (!adominHasPlugin('cms')) return
+
   router
     .group(() => {
       router.resource('/pages', PagesController).apiOnly()
@@ -20,10 +22,13 @@ if (adominHasPlugin('cms')) {
       router.get('/layouts/:name', showLayout)
       router.get('/config', cmsConfig)
     })
-    .prefix('/cms')
+    .prefix('cms')
     .use(middleware.auth())
 
-  router.get('*', (ctx) => {
+  router.get('content/*', (ctx) => {
+    return cmsPageResolver(ctx)
+  })
+  router.get('content', (ctx) => {
     return cmsPageResolver(ctx)
   })
 }
