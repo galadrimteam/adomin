@@ -11,7 +11,7 @@ export interface BlockParams {
   props: BlockProps<Record<string, any>>
 }
 
-export type LayoutProps<T = {}> = T & { cmsPage: CmsPage; children: JSX.Element }
+export type LayoutProps<T = object> = T & { cmsPage: CmsPage; children: JSX.Element }
 
 export interface LayoutParams {
   name: string

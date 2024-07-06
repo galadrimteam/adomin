@@ -1,6 +1,6 @@
 import { Exception } from '@adonisjs/core/exceptions'
 import { CMS_CONFIG } from '../cms_config.js'
-import { CmsBlocGrid } from '../resources/components/cms_bloc_grid.js'
+import { CmsBlockGrid } from '../resources/components/cms_block_grid.js'
 import { CmsPage } from './cms.types.js'
 
 export const getLayout = (page: CmsPage, blocks: JSX.Element[]) => {
@@ -11,7 +11,7 @@ export const getLayout = (page: CmsPage, blocks: JSX.Element[]) => {
     throw new Exception(`Layout '${params.name}' not found`)
   }
 
-  const cmsGrid = CmsBlocGrid({
+  const cmsGrid = CmsBlockGrid({
     cmsPage: page,
     children: blocks,
   })

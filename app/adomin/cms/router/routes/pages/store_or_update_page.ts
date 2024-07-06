@@ -108,13 +108,13 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
   const objectConfig = JSON.parse(validated.config)
   const secondValidation = await configValidationSchema.validate(objectConfig, { messagesProvider })
 
-  let blocNotFound: string | null = null
+  let blockNotFound: string | null = null
 
   const blocksSchemas = secondValidation.blocks.map((block) => {
     const found = CMS_CONFIG.blocks.find(({ name }) => name === block.name)
 
     if (!found) {
-      blocNotFound = block.name
+      blockNotFound = block.name
       return null
     }
 
@@ -126,9 +126,9 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
     }
   })
 
-  if (blocNotFound !== null) {
+  if (blockNotFound !== null) {
     return ctx.response.notFound({
-      error: `Le bloc '${blocNotFound}' n'existe pas`,
+      error: `Le bloc '${blockNotFound}' n'existe pas`,
     })
   }
 

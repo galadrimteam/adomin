@@ -69,8 +69,8 @@ export const getGridCss = (gridLayout: GridLayout, containerId: string) => {
 
 type CmsBlocGridProps = PropsWithChildren<{ cmsPage: CmsPage }>
 
-export const CmsBlocGrid = ({ children, cmsPage }: CmsBlocGridProps) => {
-  const gridId = 'cms-bloc-grid'
+export const CmsBlockGrid = ({ children, cmsPage }: CmsBlocGridProps) => {
+  const gridId = 'cms-block-grid'
   const css = getGridCss(cmsPage.config.gridLayout, gridId)
 
   return (

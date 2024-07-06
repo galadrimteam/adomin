@@ -1,7 +1,7 @@
 import { Exception } from '@adonisjs/core/exceptions'
 import { Html } from '@kitajs/html'
 import { CMS_CONFIG } from '../cms_config.js'
-import { BLOCK_ID_PREFIX } from '../resources/components/cms_bloc_grid.js'
+import { BLOCK_ID_PREFIX } from '../resources/components/cms_block_grid.js'
 import { BlockParams } from './cms.types.js'
 
 export const getBlock = async (params: BlockParams) => {
