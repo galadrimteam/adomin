@@ -1,4 +1,4 @@
-import '../cms/router/cms_routes.js'
+import '../cms/router/cms_router.js'
 
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
