@@ -4,6 +4,8 @@ import type { StatsViewConfig } from './create_stats_view_config.js'
 
 export type AdominViewConfig = ModelConfig | StatsViewConfig | FolderViewConfig
 
+export type AdominPlugin = 'cms'
+
 export interface AdominConfig {
   title: string
   /** The key of the user property to show to logged in administrators
@@ -12,4 +14,5 @@ export interface AdominConfig {
   userDisplayKey?: string
   footerText?: string
   views: AdominViewConfig[]
+  plugins?: AdominPlugin[]
 }

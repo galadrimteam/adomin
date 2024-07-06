@@ -1,3 +1,5 @@
+import '../cms/router/cms_routes.js'
+
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { adominLogin } from './adomin_login.js'
