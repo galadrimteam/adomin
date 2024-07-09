@@ -21,6 +21,7 @@ const configValidationSchema = vine.compile(
       vine.object({
         name: vine.string().trim(),
         props: vine.any(),
+        id: vine.string().trim(),
       })
     ),
     layout: vine.object({

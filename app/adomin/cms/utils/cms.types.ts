@@ -9,6 +9,7 @@ export type BlockProps<T = {}> = T & { gridIdentifier: string }
 export interface BlockParams {
   name: string
   props: BlockProps<Record<string, any>>
+  id: string
 }
 
 export type LayoutProps<T = object> = T & { cmsPage: CmsPage; children: JSX.Element }
