@@ -5,35 +5,33 @@ import { filterNullValues } from '../../../utils/array.js'
 import { DEFAULT_MESSAGE_PROVIDER_CONFIG } from '../../../utils/validation.js'
 import { createPage, findPage, updatePage } from './pages_service.js'
 
+const configObject = vine.object({
+  blocks: vine.array(
+    vine.object({
+      name: vine.string().trim(),
+      props: vine.any(),
+      id: vine.string().trim(),
+    })
+  ),
+  layout: vine.object({
+    name: vine.string().trim(),
+    props: vine.any(),
+  }),
+  gridLayout: vine.object({
+    sm: vine.array(vine.array(vine.string().trim())),
+    medium: vine.array(vine.array(vine.string().trim())).nullable(),
+    large: vine.array(vine.array(vine.string().trim())).nullable(),
+    xl: vine.array(vine.array(vine.string().trim())).nullable(),
+  }),
+})
+
 const validationSchema = vine.compile(
   vine.object({
     internal_label: vine.string().trim(),
     url: vine.string().trim().startsWith('/'),
     title: vine.string().trim(),
-    config: vine.string(),
+    config: configObject,
     is_published: vine.boolean().optional(),
-  })
-)
-
-const configValidationSchema = vine.compile(
-  vine.object({
-    blocks: vine.array(
-      vine.object({
-        name: vine.string().trim(),
-        props: vine.any(),
-        id: vine.string().trim(),
-      })
-    ),
-    layout: vine.object({
-      name: vine.string().trim(),
-      props: vine.any(),
-    }),
-    gridLayout: vine.object({
-      sm: vine.array(vine.array(vine.string().trim())),
-      medium: vine.array(vine.array(vine.string().trim())).nullable(),
-      large: vine.array(vine.array(vine.string().trim())).nullable(),
-      xl: vine.array(vine.array(vine.string().trim())).nullable(),
-    }),
   })
 )
 
@@ -106,12 +104,10 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
   const mode = pageId ? 'update' : 'create'
 
   const validated = await validationSchema.validate(ctx.request.all(), { messagesProvider })
-  const objectConfig = JSON.parse(validated.config)
-  const secondValidation = await configValidationSchema.validate(objectConfig, { messagesProvider })
 
   let blockNotFound: string | null = null
 
-  const blocksSchemas = secondValidation.blocks.map((block) => {
+  const blocksSchemas = validated.config.blocks.map((block) => {
     const found = CMS_CONFIG.blocks.find(({ name }) => name === block.name)
 
     if (!found) {
@@ -134,12 +130,12 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
   }
 
   const layoutValidation = CMS_CONFIG.layouts.find(
-    ({ name }) => name === secondValidation.layout.name
+    ({ name }) => name === validated.config.layout.name
   )?.propsValidation
 
   if (!layoutValidation) {
     return ctx.response.notFound({
-      error: `Le layout '${secondValidation.layout.name}' n'existe pas`,
+      error: `Le layout '${validated.config.layout.name}' n'existe pas`,
     })
   }
 
@@ -147,9 +143,9 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
 
   await computeLastValidation(
     {
-      props: secondValidation.layout.props,
+      props: validated.config.layout.props,
       validation: layoutValidation,
-      name: secondValidation.layout.name,
+      name: validated.config.layout.name,
     },
     filteredSchemas
   )
@@ -157,7 +153,7 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
   if (mode === 'create') {
     const created = await createPage({
       ...validated,
-      config: secondValidation,
+      config: validated.config,
       is_published: validated.is_published ?? false,
     })
 
@@ -169,7 +165,7 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
 
   const updated = await updatePage({
     ...validated,
-    config: secondValidation,
+    config: validated.config,
     is_published: validated.is_published ?? false,
     id: pageId,
   })

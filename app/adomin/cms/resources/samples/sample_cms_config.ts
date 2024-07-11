@@ -27,7 +27,7 @@ export const SAMPLE_CMS_CONFIG: CmsConfig = {
       name: 'pokemon_image',
       Component: PokemonImage,
       validation: {
-        pokemonId: vine.string().trim(),
+        pokemonId: vine.number(),
       },
       propsExample: {
         pokemonId: 50,
