@@ -90,5 +90,6 @@ export const getAdominConfig = async (ctx: HttpContext) => {
     views,
     userDisplayKey: ADOMIN_CONFIG.userDisplayKey ?? 'email',
     user,
+    plugins: ADOMIN_CONFIG.plugins ?? [],
   }
 }

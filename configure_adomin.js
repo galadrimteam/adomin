@@ -2,7 +2,12 @@
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 
+const cmsPlugin = process.argv.includes('--with-cms')
+const removeCms = cmsPlugin === false
 const tmpDir = fs.mkdtempSync('adomin-clone-')
+
+const REMOVE_CMS_COMMAND = `rm -rf ${tmpDir}/adomin-sparse/app/adomin/cms`
+const CMS_COMMAND = removeCms ? REMOVE_CMS_COMMAND : ''
 
 const COMMAND = `
 cd ${tmpDir}
@@ -12,6 +17,8 @@ git sparse-checkout set --no-cone app/adomin
 git checkout > /dev/null 2> /dev/null
 cd ../..
 mkdir -p app
+
+${CMS_COMMAND}
 cp -r ${tmpDir}/adomin-sparse/app/adomin app/adomin && echo "✅ Adomin files copied into ./app/adomin"
 rm -rf ${tmpDir}`
 
@@ -70,6 +77,23 @@ if (pathsIndex === -1) {
   tsconfigLines.splice(fullPathIndex + 1, 0, FULL_ADOMIN_PATH_OPTION)
 } else {
   tsconfigLines.splice(pathsIndex + 1, 0, ADOMIN_PATH_OPTION)
+}
+
+if (cmsPlugin) {
+  const compilerOptionsIndex = tsconfigLines.findIndex((l) => l.includes(`"compilerOptions":`))
+
+  if (compilerOptionsIndex === -1) {
+    console.error('❌ Could not find the compilerOptions section in the tsconfig.json')
+    process.exit(1)
+  }
+
+  const CMS_TSCONFIG_OPTIONS = [
+    `    "jsx": "react",`,
+    `    "jsxFactory": "Html.createElement",`,
+    `    "jsxFragmentFactory": "Html.Fragment",`,
+  ]
+
+  tsconfigLines.splice(compilerOptionsIndex + 1, 0, ...CMS_TSCONFIG_OPTIONS)
 }
 
 const newTsconfigJson = tsconfigLines.join('\n')

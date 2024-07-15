@@ -519,6 +519,13 @@
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
 
+"@kitajs/html@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@kitajs/html/-/html-4.1.0.tgz#4194c440422220dd8ca124a60d00aba5bf730980"
+  integrity sha512-uB2HnIR7SYgLkIYdtEyTLc08MzukKh9BXRW6Qs3U9vRHG/LMeTpzuPHrkssfPjFAXHAoM4TukxV+rggJ57l5+A==
+  dependencies:
+    csstype "^3.1.3"
+
 "@lukeed/ms@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@lukeed/ms/-/ms-2.0.2.tgz#07f09e59a74c52f4d88c6db5c1054e819538e2a8"
@@ -1666,6 +1673,11 @@ crypt@~0.0.1:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
   integrity sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==
+
+csstype@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.3.tgz#d80ff294d114fb0e6ac500fbf85b60137d7eff81"
+  integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
 
 dag-map@~1.0.0:
   version "1.0.2"

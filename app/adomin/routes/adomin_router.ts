@@ -1,5 +1,8 @@
+import '../cms/router/cms_router.js'
+
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
+import { cmsRoutes } from '../cms/router/cms_router.js'
 import { adominLogin } from './adomin_login.js'
 import { adominLogout } from './adomin_logout.js'
 import { getAdominConfig } from './get_adomin_config.js'
@@ -27,6 +30,8 @@ router
         router.post('models/crud/:model', createModel)
 
         router.post('logout', adominLogout)
+
+        cmsRoutes()
       })
       .use(middleware.auth())
     // ! please restrict this route group for only admins of your app
