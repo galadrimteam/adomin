@@ -2,7 +2,11 @@
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 
+const removeCms = process.argv.includes('--with-cms') === false
 const tmpDir = fs.mkdtempSync('adomin-clone-')
+
+const REMOVE_CMS_COMMAND = `rm -rf ${tmpDir}/adomin-sparse/app/adomin/cms`
+const CMS_COMMAND = removeCms ? REMOVE_CMS_COMMAND : ''
 
 const COMMAND = `
 cd ${tmpDir}
@@ -12,6 +16,8 @@ git sparse-checkout set --no-cone app/adomin
 git checkout > /dev/null 2> /dev/null
 cd ../..
 mkdir -p app
+
+${CMS_COMMAND}
 cp -r ${tmpDir}/adomin-sparse/app/adomin app/adomin && echo "✅ Adomin files copied into ./app/adomin"
 rm -rf ${tmpDir}`
 
