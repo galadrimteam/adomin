@@ -2,7 +2,8 @@
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 
-const removeCms = process.argv.includes('--with-cms') === false
+const cmsPlugin = process.argv.includes('--with-cms')
+const removeCms = cmsPlugin === false
 const tmpDir = fs.mkdtempSync('adomin-clone-')
 
 const REMOVE_CMS_COMMAND = `rm -rf ${tmpDir}/adomin-sparse/app/adomin/cms`
@@ -76,6 +77,23 @@ if (pathsIndex === -1) {
   tsconfigLines.splice(fullPathIndex + 1, 0, FULL_ADOMIN_PATH_OPTION)
 } else {
   tsconfigLines.splice(pathsIndex + 1, 0, ADOMIN_PATH_OPTION)
+}
+
+if (cmsPlugin) {
+  const compilerOptionsIndex = tsconfigLines.findIndex((l) => l.includes(`"compilerOptions":`))
+
+  if (compilerOptionsIndex === -1) {
+    console.error('❌ Could not find the compilerOptions section in the tsconfig.json')
+    process.exit(1)
+  }
+
+  const CMS_TSCONFIG_OPTIONS = [
+    `    "jsx": "react",`,
+    `    "jsxFactory": "Html.createElement",`,
+    `    "jsxFragmentFactory": "Html.Fragment",`,
+  ]
+
+  tsconfigLines.splice(compilerOptionsIndex + 1, 0, ...CMS_TSCONFIG_OPTIONS)
 }
 
 const newTsconfigJson = tsconfigLines.join('\n')
