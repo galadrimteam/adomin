@@ -9,7 +9,15 @@ export type PokemonBlockProps = BlockProps<{
 
 export const PokemonBlock = ({ pokemonName, description, pokemonId }: PokemonBlockProps) => {
   return (
-    <div class="tab-content">
+    <div
+      class="tab-content"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <h2>{pokemonName}</h2>
       <img
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}

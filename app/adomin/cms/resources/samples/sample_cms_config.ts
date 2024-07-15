@@ -2,6 +2,7 @@ import type { CmsConfig } from '#adomin/cms/utils/cms.types'
 import { createBlockConfig } from '#adomin/cms/utils/create_block_config'
 import { createLayoutConfig } from '#adomin/cms/utils/create_layout_config'
 import vine from '@vinejs/vine'
+import { FillerComponent } from './filler.js'
 import { PokemonBlock } from './pokemon_block.js'
 import { PokemonImage } from './pokemon_image.js'
 import { PokemonLayout } from './pokemon_layout.js'
@@ -9,7 +10,7 @@ import { PokemonLayout } from './pokemon_layout.js'
 export const SAMPLE_CMS_CONFIG: CmsConfig = {
   blocks: [
     createBlockConfig({
-      name: 'sample_block',
+      name: 'content',
       Component: PokemonBlock,
       validation: {
         pokemonName: vine.string().trim(),
@@ -33,10 +34,16 @@ export const SAMPLE_CMS_CONFIG: CmsConfig = {
         pokemonId: 50,
       },
     }),
+    createBlockConfig({
+      name: 'filler',
+      Component: FillerComponent,
+      validation: {},
+      propsExample: {},
+    }),
   ],
   layouts: [
     createLayoutConfig({
-      name: 'sample_layout',
+      name: 'pokemon_layout',
       Component: PokemonLayout,
       validation: {
         currentTab: vine.enum(['diglett', 'pikachu', 'charmander']),
