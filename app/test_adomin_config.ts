@@ -44,6 +44,8 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
         return `email = 'damien@galadrim.fr'`
       },
       sqlSort: (ascDesc) => `email = 'damien@galadrim.fr' ${ascDesc}`,
+      sortable: true,
+      filterable: true,
     },
     ideas: {
       type: 'hasManyRelation',
