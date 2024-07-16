@@ -1,5 +1,5 @@
 import type { ModelConfig } from '../../../create_model_view_config.js'
-import { getModelFieldStrs } from '../get_model_config.js'
+import { computeColumnConfigFields, getModelFieldStrs } from '../get_model_config.js'
 import {
   PaginationSettings,
   applyColumnFilters,
@@ -15,7 +15,8 @@ interface GetModelListOptions {
 
 export const getModelList = async ({ paginationSettings, modelConfig }: GetModelListOptions) => {
   const Model = modelConfig.model()
-  const { fields, primaryKey, queryBuilderCallback } = modelConfig
+  const { fields: rawFields, primaryKey, queryBuilderCallback } = modelConfig
+  const fields = computeColumnConfigFields(rawFields)
 
   const fieldsStrs = getModelFieldStrs(fields)
   const { pageIndex, pageSize } = paginationSettings

@@ -2,15 +2,17 @@ import { rules, schema } from '@adonisjs/validator'
 import { ModelConfig } from '../create_model_view_config.js'
 import { AdominFieldConfig } from '../fields.types.js'
 import { AdominValidationMode } from '../validation/adomin_validation_helpers.js'
+import { computeColumnConfigFields } from './models/get_model_config.js'
 
 export const getValidationSchemaFromConfig = (
   modelConfig: ModelConfig,
   validationMode: AdominValidationMode
 ) => {
   const foundConfig = modelConfig
-  const results = foundConfig.fields.map(({ adomin, name: columnName }) => {
-    const notCreatable = adomin.creatable === false || adomin.computed === true
-    const notEditable = adomin.editable === false || adomin.computed === true
+  const fields = computeColumnConfigFields(foundConfig.fields)
+  const results = fields.map(({ adomin, name: columnName }) => {
+    const notCreatable = adomin.creatable === false
+    const notEditable = adomin.editable === false
 
     if (validationMode === 'create' && notCreatable) return null
     if (validationMode === 'update' && notEditable) return null

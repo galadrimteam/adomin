@@ -32,7 +32,19 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
         bitsetLabels: RIGHTS_LABELS,
       },
     },
-    isBeautifull: { type: 'boolean', label: 'Beau', computed: true },
+    isBeautifull: {
+      type: 'boolean',
+      label: 'Beau',
+      computed: true,
+      sqlFilter: (input) => {
+        if (input === null) return 'false'
+
+        if (+input === 0) return `email != 'damien@galadrim.fr'`
+
+        return `email = 'damien@galadrim.fr'`
+      },
+      sqlSort: (ascDesc) => `email = 'damien@galadrim.fr' ${ascDesc}`,
+    },
     ideas: {
       type: 'hasManyRelation',
       label: 'Idées',
@@ -57,9 +69,9 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
       exportDataTransform: (date) => DateTime.fromISO(date).toFormat('dd/MM/yyyy'),
     },
   },
-  // queryBuilderCallback: (q) => {
-  //   q.preload('ideas')
-  // },
+  queryBuilderCallback: (q) => {
+    q.preload('ideas')
+  },
   icon: 'user',
 })
 
@@ -87,8 +99,16 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
         { label: 'Au revoir', value: 'bye' },
       ],
     },
-    dateTest: { type: 'date', subType: 'date', defaultValue: { mode: 'now', plusDays: 2 } },
-    datetimeTest: { type: 'date', subType: 'datetime', defaultValue: { mode: 'now', plusDays: 2 } },
+    dateTest: {
+      type: 'date',
+      subType: 'date',
+      defaultValue: { mode: 'now', plusDays: 2 },
+    },
+    datetimeTest: {
+      type: 'date',
+      subType: 'datetime',
+      defaultValue: { mode: 'now', plusDays: 2 },
+    },
     numberTest: { type: 'number' },
     booleanTest: { type: 'boolean', variant: 'switch' },
     fileUrl: {

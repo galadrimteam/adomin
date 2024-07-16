@@ -1,5 +1,6 @@
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import { LucidRow } from '@adonisjs/lucid/types/model'
+import { RawQuery } from '@adonisjs/lucid/types/querybuilder'
 
 export interface AdominBaseFieldConfig {
   /**
@@ -24,6 +25,10 @@ export interface AdominBaseFieldConfig {
    * If false, user cannot create this field
    */
   creatable?: boolean
+  /** If false, user cannot sort by this field */
+  sortable?: boolean
+  /** If false, user cannot filter by this field */
+  filterable?: boolean
   /**
    * Size of the field on the frontend
    * @default 120
@@ -33,6 +38,10 @@ export interface AdominBaseFieldConfig {
    * If this field is a \@computed() field in your model you must set this to true
    */
   computed?: boolean
+  /** Sql filter override, usefull for computed fields */
+  sqlFilter?: (input: string | null) => string | RawQuery
+  /** Sql order by override, usefull for computed fields */
+  sqlSort?: (ascDesc: 'asc' | 'desc') => string | RawQuery
   /**
    * Export data transformation callback to use for this field
    *
@@ -355,14 +364,6 @@ export interface AdominHasManyRelationFieldConfig extends AdominBaseFieldConfig 
    * @default false
    */
   allowGlobalFilterSearch?: boolean
-  /**
-   * Creation of related models on the fly is not possible yet
-   */
-  creatable: false
-  /**
-   * Edition of related models on the fly is not possible yet
-   */
-  editable: false
 }
 
 export interface AdominBelongsToRelationFieldConfig extends AdominBaseFieldConfig {
