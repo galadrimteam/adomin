@@ -1,7 +1,6 @@
 import { HttpContext } from '@adonisjs/core/http'
 import { validator } from '@adonisjs/validator'
 import { computeRightsCheck } from '../../adomin_routes_overrides_and_rights.js'
-import { loadFilesForInstances } from '../../handle_files.js'
 import { getValidatedModelConfig } from '../validate_model_name.js'
 import { downloadExportFile } from './download_export_file.js'
 import { getModelList } from './get_data_list.js'
@@ -49,13 +48,19 @@ export const modelList = async (ctx: HttpContext) => {
     },
   })
 
-  const data = await getModelList({ paginationSettings, modelConfig })
+  const paginatedData = await getModelList({ paginationSettings, modelConfig })
 
   if (paginationSettings.exportType) {
-    return downloadExportFile({ ctx, data, exportType: paginationSettings.exportType, modelConfig })
+    return downloadExportFile({
+      ctx,
+      jsonData: paginatedData.data,
+      exportType: paginationSettings.exportType,
+      modelConfig,
+    })
   }
 
-  await loadFilesForInstances(modelConfig.fields, data)
+  // ? until attchmentLite ships to v6, we can't use it yet
+  // await loadFilesForInstances(modelConfig.fields, data)
 
-  return data
+  return paginatedData
 }

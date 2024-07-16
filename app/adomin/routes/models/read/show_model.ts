@@ -4,6 +4,7 @@ import { loadFilesForInstances } from '../../handle_files.js'
 import { validateResourceId } from '../../validate_resource_id.js'
 import { getModelData } from '../get_model_data.js'
 import { getValidatedModelConfig } from '../validate_model_name.js'
+import { computeVirtualColumns } from './compute_virtual_columns.js'
 
 export const showModel = async (ctx: HttpContext) => {
   const { params, response } = ctx
@@ -27,5 +28,8 @@ export const showModel = async (ctx: HttpContext) => {
 
   await loadFilesForInstances(modelConfig.fields, [modelInstance])
 
-  return modelInstance
+  const virtualFields = modelConfig.fields.filter(({ isVirtual }) => isVirtual)
+  const dataWithComputedVirtualColumns = await computeVirtualColumns(modelInstance, virtualFields)
+
+  return dataWithComputedVirtualColumns
 }

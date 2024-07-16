@@ -57,6 +57,16 @@ exportDataTransform: (date) => DateTime.fromISO(date).toFormat('dd/MM/yyyy'),
 ```
    */
   exportDataTransform?: (value: any) => any
+  /** Relevant only for virtual columns */
+  getter?: (model: LucidRow) => Promise<any>
+  /**
+   * Setter function to update the value of the computed or virtual column
+   *
+   * It will be called after every non-virtual column change
+   *
+   * In most cases, it will not make sense to use this because the field will be computed from other fields
+   */
+  setter?: (model: LucidRow, value: any) => Promise<void>
 }
 
 export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {

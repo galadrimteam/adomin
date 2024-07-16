@@ -25,7 +25,8 @@ export const getSqlColumnToUse = (field: ColumnConfig) => {
 export const getModelFieldStrs = (fields: ColumnConfig[]) => {
   return fields
     .filter(
-      ({ adomin }) =>
+      ({ adomin, isVirtual }) =>
+        isVirtual === false &&
         adomin.computed !== true &&
         adomin.type !== 'hasManyRelation' &&
         adomin.type !== 'hasOneRelation'
@@ -86,11 +87,16 @@ export function computeColumnConfigFields(input: ColumnConfig[]): ColumnConfig[]
   const res: ColumnConfig[] = input.map((field) => {
     let { editable, creatable, sortable, filterable } = field.adomin
 
-    if (field.adomin.computed) {
-      editable = false
-      creatable = false
-      if (filterable === undefined) filterable = false
-      if (sortable === undefined) sortable = false
+    const noCustomFilter = field.adomin.sqlFilter === undefined
+    const noCustomSort = field.adomin.sqlSort === undefined
+
+    if (field.isVirtual || field.adomin.computed) {
+      if (field.adomin.setter === undefined) {
+        creatable = false
+        editable = false
+      }
+      if (filterable === undefined && noCustomFilter) filterable = false
+      if (sortable === undefined && noCustomSort) sortable = false
     }
 
     if (field.name === 'createdAt' || field.name === 'updatedAt') {
@@ -110,16 +116,17 @@ export function computeColumnConfigFields(input: ColumnConfig[]): ColumnConfig[]
     }
 
     if (field.adomin.type === 'foreignKey') {
-      if (sortable === undefined) sortable = false
-      if (filterable === undefined) filterable = false
+      if (sortable === undefined && noCustomSort) sortable = false
+      if (filterable === undefined && noCustomFilter) filterable = false
     }
 
     if (field.adomin.type === 'belongsToRelation' || field.adomin.type === 'hasOneRelation') {
-      if (sortable === undefined) sortable = false
+      if (sortable === undefined && noCustomSort) sortable = false
     }
 
     const computedConfig: ColumnConfig = {
       name: field.name,
+      isVirtual: field.isVirtual,
       adomin: {
         ...field.adomin,
         editable: editable ?? true,

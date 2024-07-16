@@ -28,6 +28,8 @@ import type { AdominValidation } from './validation/adomin_validation_helpers.js
 export interface ColumnConfig {
   name: string
   adomin: AdominFieldConfig
+  /** Virtual columns are columns that are not stored directly in this model, but are computed from whatever you want */
+  isVirtual: boolean
 }
 
 export const PASSWORD_SERIALIZED_FORM = '***'
@@ -82,6 +84,31 @@ export interface ModelConfig extends ModelConfigStaticOptions {
   queryBuilderCallback?: (q: ModelQueryBuilderContract<any>) => void
 }
 
+export interface VirtualColumnConfig<T extends LucidModel> {
+  /** Name of the virtual column, must be unique for the model */
+  name: string
+  adomin: Omit<AdominFieldConfig, 'getter' | 'setter'>
+  /** Index of the column in the final columns array, if not provided, the column will be appended at the end */
+  columnOrderIndex?: number
+  /**
+   * Fetcher function to compute the value of the virtual column
+   *
+   * Beware that this will be called for every row returned by the query
+   *
+   * If you need to optimize the query, you can use the `queryBuilderCallback` option to make your joins / preloads
+   * and then in this getter function you can just access you data with model.$extras
+   */
+  getter: (model: InstanceType<T>) => Promise<any>
+  /**
+   * Setter function to update the value of the virtual column
+   *
+   * It will be called after every non-virtual column change
+   *
+   * In most cases, it will not make sense to use this because the field will be computed from other fields
+   */
+  setter?: (model: InstanceType<T>, value: any) => Promise<void>
+}
+
 type GetAdominTypeFromModelFieldType<T> = T extends number
   ? AdominNumberFieldConfig | AdominForeignKeyFieldConfig
   : T extends string
@@ -124,6 +151,8 @@ interface ModelConfigDynamicOptions<T extends LucidModel> {
    * ```
    */
   queryBuilderCallback?: (q: ModelQueryBuilderContract<T>) => void
+  /** Virtual columns are columns that are not stored directly in this model, but are computed from whatever you want */
+  virtualColumns?: VirtualColumnConfig<T>[]
 }
 
 // Type helper pour exclure les clés commençant par un certain caractère
@@ -177,11 +206,31 @@ export const createModelViewConfig = <T extends LucidModel>(
     })
   }
 
+  const finalColumnsConfig = columnsConfig.map(({ name, adomin }) => ({
+    name,
+    adomin,
+    isVirtual: false,
+  }))
+
+  for (const { columnOrderIndex, name, adomin, getter, setter } of options.virtualColumns ?? []) {
+    const virtualColumnAdominConfig = {
+      ...adomin,
+      getter,
+      setter,
+    } as AdominFieldConfig
+
+    finalColumnsConfig.splice(columnOrderIndex ?? finalColumnsConfig.length, 0, {
+      name,
+      adomin: virtualColumnAdominConfig,
+      isVirtual: true,
+    })
+  }
+
   return {
     type: 'model',
     name: modelString,
     model: Model,
-    fields: columnsConfig,
+    fields: finalColumnsConfig,
     label,
     labelPluralized,
     primaryKey,
