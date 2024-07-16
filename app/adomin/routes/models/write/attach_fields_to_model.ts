@@ -25,6 +25,7 @@ export const attachFieldsToModel = async (
 
     const field = fieldsMap.get(key)
     if (!field || value === undefined) continue
+    if (field.isVirtual) continue
 
     if (field.adomin.type === 'string' && field.adomin.isPassword) {
       // don't update password if it's not changed
@@ -89,4 +90,26 @@ export const attachForeignFields = async (
       continue
     }
   }
+}
+
+export const updateVirtualColumns = async (
+  instance: LucidRow,
+  fields: ColumnConfig[],
+  data: any
+) => {
+  const virtualFieldsWithSetter = fields.filter(
+    ({ isVirtual, adomin }) => isVirtual && adomin.setter
+  )
+
+  const promises = virtualFieldsWithSetter.map(async ({ name, adomin }) => {
+    const setter = adomin.setter
+
+    if (!setter) throw new Error(`No setter found for virtual column ${name}`)
+
+    const value = data[name]
+
+    await setter(instance, value)
+  })
+
+  await Promise.all(promises)
 }

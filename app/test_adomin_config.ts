@@ -80,8 +80,6 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
       adomin: {
         type: 'string',
         label: 'Virtual column',
-        // creatable: false,
-        // editable: false,
       },
       getter: async (model) => {
         return model.email

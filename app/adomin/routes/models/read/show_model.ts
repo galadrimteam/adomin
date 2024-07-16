@@ -1,6 +1,5 @@
 import { HttpContext } from '@adonisjs/core/http'
 import { computeRightsCheck } from '../../adomin_routes_overrides_and_rights.js'
-import { loadFilesForInstances } from '../../handle_files.js'
 import { validateResourceId } from '../../validate_resource_id.js'
 import { getModelData } from '../get_model_data.js'
 import { getValidatedModelConfig } from '../validate_model_name.js'
@@ -26,10 +25,13 @@ export const showModel = async (ctx: HttpContext) => {
   const Model = modelConfig.model()
   const modelInstance = await getModelData(Model, id)
 
-  await loadFilesForInstances(modelConfig.fields, [modelInstance])
+  // ? until attchmentLite ships to v6, we can't use it yet
+  // await loadFilesForInstances(modelConfig.fields, [modelInstance])
 
-  const virtualFields = modelConfig.fields.filter(({ isVirtual }) => isVirtual)
-  const dataWithComputedVirtualColumns = await computeVirtualColumns(modelInstance, virtualFields)
+  const dataWithComputedVirtualColumns = await computeVirtualColumns(
+    modelInstance,
+    modelConfig.fields
+  )
 
   return dataWithComputedVirtualColumns
 }

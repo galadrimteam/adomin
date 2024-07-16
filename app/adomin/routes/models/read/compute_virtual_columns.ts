@@ -4,8 +4,9 @@ import type { PaginatedData } from './get_data_list.js'
 
 export const computeVirtualColumns = async (
   model: LucidRow,
-  virtualFields: ColumnConfig[]
+  fields: ColumnConfig[]
 ): Promise<ModelObject> => {
+  const virtualFields = fields.filter(({ isVirtual }) => isVirtual)
   const promises = virtualFields.map(async ({ name, adomin }) => {
     const getter = adomin.getter
 
@@ -28,9 +29,9 @@ export const computeVirtualColumns = async (
 
 export const computeVirtualFields = async (
   paginatedData: ModelPaginatorContract<LucidRow>,
-  virtualFields: ColumnConfig[]
+  fields: ColumnConfig[]
 ): Promise<PaginatedData> => {
-  const promises = paginatedData.map(async (model) => computeVirtualColumns(model, virtualFields))
+  const promises = paginatedData.map(async (model) => computeVirtualColumns(model, fields))
   const dataWithComputedVirtualColumns = await Promise.all(promises)
 
   const { meta } = paginatedData.toJSON()

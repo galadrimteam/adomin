@@ -3,10 +3,14 @@ import { validateOrThrow } from '../../../validation/adomin_validation_helpers.j
 import { getGenericMessages } from '../../../validation/validation_messages.js'
 import { computeRightsCheck } from '../../adomin_routes_overrides_and_rights.js'
 import { getValidationSchemaFromConfig } from '../../get_validation_schema_from_lucid_model.js'
-import { loadFilesForInstances } from '../../handle_files.js'
 import { getModelData } from '../get_model_data.js'
+import { computeVirtualColumns } from '../read/compute_virtual_columns.js'
 import { getValidatedModelConfig } from '../validate_model_name.js'
-import { attachFieldsToModel, attachForeignFields } from './attach_fields_to_model.js'
+import {
+  attachFieldsToModel,
+  attachForeignFields,
+  updateVirtualColumns,
+} from './attach_fields_to_model.js'
 
 export const createModel = async (ctx: HttpContext) => {
   const { params, response, request } = ctx
@@ -34,20 +38,25 @@ export const createModel = async (ctx: HttpContext) => {
   const fields = modelConfig.fields
 
   const schema = getValidationSchemaFromConfig(modelConfig, 'create')
-  const data = await request.validate({ schema, messages: getGenericMessages(Model) })
+  const parsedData = await request.validate({ schema, messages: getGenericMessages(Model) })
 
   const createdInstance = new Model()
 
-  const foreignFields = await attachFieldsToModel(createdInstance, fields, data)
+  const foreignFields = await attachFieldsToModel(createdInstance, fields, parsedData)
 
   await createdInstance.save()
 
   // @ts-expect-error
   const modelInstance = await getModelData(Model, createdInstance[Model.primaryKey])
 
-  await attachForeignFields(modelInstance, foreignFields, data, Model)
+  await attachForeignFields(modelInstance, foreignFields, parsedData, Model)
 
-  await loadFilesForInstances(fields, [modelInstance])
+  await updateVirtualColumns(modelInstance, fields, parsedData)
 
-  return { message: 'Success', model: modelInstance }
+  // ? until attchmentLite ships to v6, we can't use it yet
+  // await loadFilesForInstances(fields, [modelInstance])
+
+  const dataWithComputedVirtualColumns = await computeVirtualColumns(modelInstance, fields)
+
+  return { message: 'Success', model: dataWithComputedVirtualColumns }
 }

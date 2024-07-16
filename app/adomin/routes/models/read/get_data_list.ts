@@ -54,9 +54,7 @@ export const getModelList = async ({
   }
 
   const data = await query.paginate(pageIndex, pageSize)
-
-  const virtualFields = fields.filter(({ isVirtual }) => isVirtual)
-  const finalData = await computeVirtualFields(data, virtualFields)
+  const finalData = await computeVirtualFields(data, fields)
 
   return finalData
 }
