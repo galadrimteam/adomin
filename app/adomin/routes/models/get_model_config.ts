@@ -110,9 +110,7 @@ export function computeColumnConfigFields(input: ColumnConfig[]): ColumnConfig[]
     }
 
     if (field.adomin.type === 'hasManyRelation') {
-      creatable = false
-      editable = false
-      if (sortable === undefined) sortable = false
+      if (sortable === undefined && noCustomSort) sortable = false
     }
 
     if (field.adomin.type === 'foreignKey') {

@@ -17,7 +17,7 @@ export const handleHasOneUpdate = async ({
   value,
   instance,
 }: Params) => {
-  const { default: HasOneModel } = await import(
+  const { default: HasOneModel }: { default: LucidModel } = await import(
     `#models/${stringHelpers.snakeCase(fieldConfig.modelName)}`
   )
   const localKeyName = stringHelpers.camelCase(fieldConfig.localKeyName ?? 'id')

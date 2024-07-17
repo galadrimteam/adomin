@@ -2,6 +2,7 @@ import { LucidModel, LucidRow } from '@adonisjs/lucid/types/model'
 import { ColumnConfig, PASSWORD_SERIALIZED_FORM } from '../../../create_model_view_config.js'
 import { getSqlColumnToUse } from '../get_model_config.js'
 import { handleFilePersist } from './handle_file_persist.js'
+import { handleHasManyUpdate } from './handle_has_many_update.js'
 import { handleHasOneUpdate } from './handle_has_one_update.js'
 
 /** Attach all fields that need to be applied directly on this model instance */
@@ -52,6 +53,11 @@ export const attachFieldsToModel = async (
       continue
     }
 
+    if (field.adomin.type === 'hasManyRelation') {
+      foreignFields.push(field)
+      continue
+    }
+
     // @ts-expect-error
     instance[key] = value
   }
@@ -84,6 +90,18 @@ export const attachForeignFields = async (
         Model,
         oldHasOneInstance: oldValue,
         value,
+        instance,
+      })
+
+      continue
+    }
+
+    if (field.adomin.type === 'hasManyRelation') {
+      await handleHasManyUpdate({
+        fieldConfig: field.adomin,
+        Model,
+        oldHasManyInstances: oldValue,
+        value: value && Array.isArray(value) ? value : [],
         instance,
       })
 
