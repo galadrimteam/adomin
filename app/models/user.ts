@@ -36,7 +36,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @computed()
   get isBeautifull() {
-    return this.fullName === 'Damien'
+    return this.email === 'damien@galadrim.fr'
   }
 
   @column.dateTime({ autoCreate: true })

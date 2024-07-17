@@ -32,22 +32,35 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
         bitsetLabels: RIGHTS_LABELS,
       },
     },
-    isBeautifull: { type: 'boolean', label: 'Beau', computed: true },
+    isBeautifull: {
+      type: 'boolean',
+      label: 'Beau',
+      computed: true,
+      sqlFilter: (input) => {
+        if (input === null) return 'false'
+
+        if (+input === 0) return `email != 'damien@galadrim.fr'`
+
+        return `email = 'damien@galadrim.fr'`
+      },
+      sqlSort: (ascDesc) => `email = 'damien@galadrim.fr' ${ascDesc}`,
+      sortable: true,
+      filterable: true,
+    },
     ideas: {
       type: 'hasManyRelation',
       label: 'Idées',
       modelName: 'Idea',
       labelFields: ['title'],
-      creatable: false,
-      editable: false,
+      allowRemove: true,
     },
-    idea: {
-      type: 'hasOneRelation',
-      label: 'Idée',
-      labelFields: ['title'],
-      modelName: 'Idea',
-      nullable: true,
-    },
+    // idea: {
+    //   type: 'hasOneRelation',
+    //   label: 'Idée',
+    //   labelFields: ['title'],
+    //   modelName: 'Idea',
+    //   nullable: true,
+    // },
     createdAt: {
       type: 'date',
       subType: 'datetime',
@@ -57,9 +70,24 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
       exportDataTransform: (date) => DateTime.fromISO(date).toFormat('dd/MM/yyyy'),
     },
   },
-  // queryBuilderCallback: (q) => {
-  //   q.preload('ideas')
-  // },
+  queryBuilderCallback: (q) => {
+    q.preload('ideas')
+  },
+  // virtualColumns: [
+  //   {
+  //     name: 'virtualColumn',
+  //     adomin: {
+  //       type: 'string',
+  //       label: 'Virtual column',
+  //     },
+  //     getter: async (model) => {
+  //       return model.email
+  //     },
+  //     setter: async (model, value) => {
+  //       console.log('Setter called for virtual column', model.id, value)
+  //     },
+  //   },
+  // ],
   icon: 'user',
 })
 
@@ -87,8 +115,16 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
         { label: 'Au revoir', value: 'bye' },
       ],
     },
-    dateTest: { type: 'date', subType: 'date', defaultValue: { mode: 'now', plusDays: 2 } },
-    datetimeTest: { type: 'date', subType: 'datetime', defaultValue: { mode: 'now', plusDays: 2 } },
+    dateTest: {
+      type: 'date',
+      subType: 'date',
+      defaultValue: { mode: 'now', plusDays: 2 },
+    },
+    datetimeTest: {
+      type: 'date',
+      subType: 'datetime',
+      defaultValue: { mode: 'now', plusDays: 2 },
+    },
     numberTest: { type: 'number' },
     booleanTest: { type: 'boolean', variant: 'switch' },
     fileUrl: {

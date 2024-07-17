@@ -46,8 +46,8 @@ const shouldIgnoreFieldFilters = ({
   field: ColumnConfig
   isGlobal: boolean
 }) => {
-  if (field.adomin.computed) return true
-  if (field.adomin.type === 'string' && field.adomin.isPassword) return true
+  if (field.adomin.filterable === false) return true
+
   if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'hasOneRelation') {
     const isGlobalSearchable = field.adomin.allowGlobalFilterSearch ?? false
 
@@ -70,6 +70,12 @@ export const applyGlobalFilters = (
     for (const field of fields) {
       if (shouldIgnoreFieldFilters({ field, isGlobal: true })) continue
       if (!globalFilter) continue
+
+      if (field.adomin.sqlFilter !== undefined) {
+        const sqlFilter = field.adomin.sqlFilter(globalFilter)
+        builder.andWhereRaw(sqlFilter)
+        continue
+      }
 
       if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'hasOneRelation') {
         const labelFields = field.adomin.labelFields
@@ -114,6 +120,12 @@ export const applyColumnFilters = (
 
       if (search === undefined) continue
 
+      if (field.adomin.sqlFilter !== undefined) {
+        const sqlFilter = field.adomin.sqlFilter(search)
+        builder.andWhereRaw(sqlFilter)
+        continue
+      }
+
       if (
         field.adomin.type === 'number' &&
         field.adomin.variant?.type === 'bitset' &&
@@ -152,11 +164,7 @@ export const applyColumnFilters = (
 }
 
 const shouldIgnoreSorting = (field: ColumnConfig) => {
-  if (field.adomin.computed) return true
-  if (field.adomin.type === 'hasManyRelation') return true
-  if (field.adomin.type === 'belongsToRelation') return true
-  if (field.adomin.type === 'foreignKey') return true
-  if (field.adomin.type === 'string' && field.adomin.isPassword) return true
+  if (field.adomin.sortable === false) return true
 
   return false
 }
@@ -175,6 +183,11 @@ export const applySorting = (
   for (const { id, desc } of sorting) {
     const field = fieldsMap.get(id)
     if (!field || shouldIgnoreSorting(field)) {
+      continue
+    }
+    if (field.adomin.sqlSort !== undefined) {
+      const sqlSort = field.adomin.sqlSort(desc ? 'desc' : 'asc')
+      query.orderByRaw(sqlSort)
       continue
     }
     const sqlColumn = getSqlColumnToUse(field)

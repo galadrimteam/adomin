@@ -1,5 +1,7 @@
+import { ModelObject } from '@adonisjs/lucid/types/model'
 import type { ModelConfig } from '../../../create_model_view_config.js'
-import { getModelFieldStrs } from '../get_model_config.js'
+import { computeColumnConfigFields, getModelFieldStrs } from '../get_model_config.js'
+import { computeVirtualFields } from './compute_virtual_columns.js'
 import {
   PaginationSettings,
   applyColumnFilters,
@@ -13,9 +15,18 @@ interface GetModelListOptions {
   modelConfig: ModelConfig
 }
 
-export const getModelList = async ({ paginationSettings, modelConfig }: GetModelListOptions) => {
+export interface PaginatedData {
+  data: ModelObject[]
+  meta: any
+}
+
+export const getModelList = async ({
+  paginationSettings,
+  modelConfig,
+}: GetModelListOptions): Promise<PaginatedData> => {
   const Model = modelConfig.model()
-  const { fields, primaryKey, queryBuilderCallback } = modelConfig
+  const { fields: rawFields, primaryKey, queryBuilderCallback } = modelConfig
+  const fields = computeColumnConfigFields(rawFields)
 
   const fieldsStrs = getModelFieldStrs(fields)
   const { pageIndex, pageSize } = paginationSettings
@@ -33,7 +44,7 @@ export const getModelList = async ({ paginationSettings, modelConfig }: GetModel
   if (paginationSettings.exportType) {
     const dataWithoutPagination = await query.exec()
 
-    return dataWithoutPagination
+    return { data: dataWithoutPagination, meta: {} }
   }
 
   loadRelations(query, fields)
@@ -43,6 +54,7 @@ export const getModelList = async ({ paginationSettings, modelConfig }: GetModel
   }
 
   const data = await query.paginate(pageIndex, pageSize)
+  const finalData = await computeVirtualFields(data, fields)
 
-  return data
+  return finalData
 }

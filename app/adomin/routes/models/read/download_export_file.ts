@@ -1,6 +1,6 @@
 import type { ColumnConfig, ModelConfig } from '#adomin/create_model_view_config'
 import { HttpContext } from '@adonisjs/core/http'
-import { LucidRow, ModelObject } from '@adonisjs/lucid/types/model'
+import { ModelObject } from '@adonisjs/lucid/types/model'
 import { toCSVString } from '../../../utils/csv_utils.js'
 
 export const EXPORT_TYPES = ['csv', 'xlsx', 'json'] as const
@@ -9,20 +9,19 @@ export type ExportType = (typeof EXPORT_TYPES)[number]
 
 interface DownloadExportFileParams {
   ctx: HttpContext
-  data: LucidRow[]
+  jsonData: ModelObject[]
   exportType: ExportType
   modelConfig: ModelConfig
 }
 
 export const downloadExportFile = async ({
   ctx,
-  data,
+  jsonData,
   exportType,
   modelConfig,
 }: DownloadExportFileParams) => {
   const { response } = ctx
-
-  const json = data.map((row) => row.toJSON())
+  const json = jsonData
   const modelConfigMap = getModelConfigMap(modelConfig)
   const transformedJson = json.map((row) => transformData(row, modelConfigMap))
 

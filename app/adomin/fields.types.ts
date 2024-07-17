@@ -1,5 +1,6 @@
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import { LucidRow } from '@adonisjs/lucid/types/model'
+import { RawQuery } from '@adonisjs/lucid/types/querybuilder'
 
 export interface AdominBaseFieldConfig {
   /**
@@ -24,6 +25,10 @@ export interface AdominBaseFieldConfig {
    * If false, user cannot create this field
    */
   creatable?: boolean
+  /** If false, user cannot sort by this field */
+  sortable?: boolean
+  /** If false, user cannot filter by this field */
+  filterable?: boolean
   /**
    * Size of the field on the frontend
    * @default 120
@@ -33,6 +38,10 @@ export interface AdominBaseFieldConfig {
    * If this field is a \@computed() field in your model you must set this to true
    */
   computed?: boolean
+  /** Sql filter override, usefull for computed fields */
+  sqlFilter?: (input: string | null) => string | RawQuery
+  /** Sql order by override, usefull for computed fields */
+  sqlSort?: (ascDesc: 'asc' | 'desc') => string | RawQuery
   /**
    * Export data transformation callback to use for this field
    *
@@ -48,6 +57,16 @@ exportDataTransform: (date) => DateTime.fromISO(date).toFormat('dd/MM/yyyy'),
 ```
    */
   exportDataTransform?: (value: any) => any
+  /** Relevant only for virtual columns */
+  getter?: (model: LucidRow) => Promise<any>
+  /**
+   * Setter function to update the value of the computed or virtual column
+   *
+   * It will be called after every non-virtual column change
+   *
+   * In most cases, it will not make sense to use this because the field will be computed from other fields
+   */
+  setter?: (model: LucidRow, value: any) => Promise<void>
 }
 
 export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
@@ -333,6 +352,11 @@ export interface AdominHasManyRelationFieldConfig extends AdominBaseFieldConfig 
    * @default ', '
    */
   labelFieldsSeparator?: string
+  /** Name of the foreign key for the referenced model
+   *
+   * e.g. if you have User that hasMany Idea, the default value will be 'userId'
+   */
+  fkName?: string
   /**
    * type of the foreign key
    * @default 'number'
@@ -340,9 +364,16 @@ export interface AdominHasManyRelationFieldConfig extends AdominBaseFieldConfig 
   fkType?: 'string' | 'number'
   /**
    * Name of the local key in the referenced model
+   *
+   * e.g. if you have User that hasMany Idea, the value should be the primary key of the Idea model
    * @default 'id'
    */
   localKeyName?: string
+  /**
+   * Local key type
+   * @default 'number'
+   */
+  localKeyType?: 'string' | 'number'
   /**
    * If true, adomin will preload the relation
    *
@@ -356,13 +387,12 @@ export interface AdominHasManyRelationFieldConfig extends AdominBaseFieldConfig 
    */
   allowGlobalFilterSearch?: boolean
   /**
-   * Creation of related models on the fly is not possible yet
+   * If true, adomin will allow to set the relation to null
+   *
+   * e.g. if you have User that hasMany Idea, with allowRemove = true, you allow to set Idea.userId to null
+   * @default false
    */
-  creatable: false
-  /**
-   * Edition of related models on the fly is not possible yet
-   */
-  editable: false
+  allowRemove?: boolean
 }
 
 export interface AdominBelongsToRelationFieldConfig extends AdominBaseFieldConfig {
