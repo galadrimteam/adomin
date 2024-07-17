@@ -73,21 +73,21 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
   queryBuilderCallback: (q) => {
     q.preload('ideas')
   },
-  virtualColumns: [
-    {
-      name: 'virtualColumn',
-      adomin: {
-        type: 'string',
-        label: 'Virtual column',
-      },
-      getter: async (model) => {
-        return model.email
-      },
-      setter: async (model, value) => {
-        console.log('Setter called for virtual column', model.id, value)
-      },
-    },
-  ],
+  // virtualColumns: [
+  //   {
+  //     name: 'virtualColumn',
+  //     adomin: {
+  //       type: 'string',
+  //       label: 'Virtual column',
+  //     },
+  //     getter: async (model) => {
+  //       return model.email
+  //     },
+  //     setter: async (model, value) => {
+  //       console.log('Setter called for virtual column', model.id, value)
+  //     },
+  //   },
+  // ],
   icon: 'user',
 })
 
