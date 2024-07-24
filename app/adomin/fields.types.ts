@@ -494,6 +494,87 @@ export interface AdominHasOneRelationFieldConfig extends AdominBaseFieldConfig {
   editable?: boolean
 }
 
+export interface AdominManyToManyRelationFieldConfig extends AdominBaseFieldConfig {
+  type: 'manyToManyRelation'
+  /**
+   * Model referenced
+   *
+   * e.g. if you have User that has many Groups via UserGroups, the value should be "Group"
+   */
+  modelName: string
+  /**
+   * Fields to use for label
+   */
+  labelFields: string[]
+  /**
+   * Separator between label fields
+   * @default ', '
+   */
+  labelFieldsSeparator?: string
+  /** Name of the pivot foreign key for the referenced model
+   *
+   * e.g. if you have User that has many Groups via UserGroups, the value should be "user_id"
+   */
+  pivotFkName?: string
+  /**
+   * type of the pivot foreign key
+   * @default 'number'
+   */
+  pivotFkType?: 'string' | 'number'
+  /** Name of the pivot related foreign key for the related model
+   *
+   * e.g. if you have User that has many Groups via UserGroups, the value should be "group_id"
+   */
+  pivotRelatedFkName?: string
+  /**
+   * type of the pivot related foreign key
+   * @default 'number'
+   */
+  pivotRelatedFkType?: 'string' | 'number'
+  /**
+   * Name of the local key in the parent model
+   *
+   * e.g. if you have User that has many Groups via UserGroups, the value should be the primary key of the User model
+   * @default 'id'
+   */
+  localKeyName?: string
+  /**
+   * Local key type
+   * @default 'number'
+   */
+  localKeyType?: 'string' | 'number'
+  /**
+   * Name of the local key in the related model
+   *
+   * e.g. if you have User that has many Groups via UserGroups, the value should be the primary key of the Group model
+   * @default 'id'
+   */
+  relatedKeyName?: string
+  /**
+   * Related key type
+   * @default 'number'
+   */
+  relatedKeyType?: 'string' | 'number'
+  /**
+   * If true, adomin will preload the relation
+   *
+   * Setting to false can be usefull if you need to customize the query with queryBuilderCallback
+   * @default true
+   */
+  preload?: boolean
+  /**
+   * Name of the pivot table
+   *
+   * e.g. if you have User that has many Groups via UserGroups, the value should be "user_groups"
+   */
+  pivotTable?: string
+  /**
+   * If true, adomin will allow to search in the related models through the global filter
+   * @default false
+   */
+  allowGlobalFilterSearch?: boolean
+}
+
 export type AdominFieldConfig =
   | AdominStringFieldConfig
   | AdominNumberFieldConfig
@@ -506,4 +587,5 @@ export type AdominFieldConfig =
   | AdominHasManyRelationFieldConfig
   | AdominBelongsToRelationFieldConfig
   | AdominHasOneRelationFieldConfig
+  | AdominManyToManyRelationFieldConfig
 // | AdominObjectFieldConfig

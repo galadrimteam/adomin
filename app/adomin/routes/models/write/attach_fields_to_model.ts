@@ -4,6 +4,7 @@ import { getSqlColumnToUse } from '../get_model_config.js'
 import { handleFilePersist } from './handle_file_persist.js'
 import { handleHasManyUpdate } from './handle_has_many_update.js'
 import { handleHasOneUpdate } from './handle_has_one_update.js'
+import { handleManyToManyUpdate } from './handle_many_to_many_update.js'
 
 /** Attach all fields that need to be applied directly on this model instance */
 export const attachFieldsToModel = async (
@@ -48,12 +49,11 @@ export const attachFieldsToModel = async (
       continue
     }
 
-    if (field.adomin.type === 'hasOneRelation') {
-      foreignFields.push(field)
-      continue
-    }
-
-    if (field.adomin.type === 'hasManyRelation') {
+    if (
+      field.adomin.type === 'hasOneRelation' ||
+      field.adomin.type === 'manyToManyRelation' ||
+      field.adomin.type === 'hasManyRelation'
+    ) {
       foreignFields.push(field)
       continue
     }
@@ -101,6 +101,18 @@ export const attachForeignFields = async (
         fieldConfig: field.adomin,
         Model,
         oldHasManyInstances: oldValue,
+        value: value && Array.isArray(value) ? value : [],
+        instance,
+      })
+
+      continue
+    }
+
+    if (field.adomin.type === 'manyToManyRelation') {
+      await handleManyToManyUpdate({
+        fieldConfig: field.adomin,
+        Model,
+        oldManyToManyInstances: oldValue,
         value: value && Array.isArray(value) ? value : [],
         instance,
       })

@@ -48,7 +48,11 @@ const shouldIgnoreFieldFilters = ({
 }) => {
   if (field.adomin.filterable === false) return true
 
-  if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'hasOneRelation') {
+  if (
+    field.adomin.type === 'hasManyRelation' ||
+    field.adomin.type === 'hasOneRelation' ||
+    field.adomin.type === 'manyToManyRelation'
+  ) {
     const isGlobalSearchable = field.adomin.allowGlobalFilterSearch ?? false
 
     if (isGlobalSearchable) return false
@@ -77,7 +81,11 @@ export const applyGlobalFilters = (
         continue
       }
 
-      if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'hasOneRelation') {
+      if (
+        field.adomin.type === 'hasManyRelation' ||
+        field.adomin.type === 'hasOneRelation' ||
+        field.adomin.type === 'manyToManyRelation'
+      ) {
         const labelFields = field.adomin.labelFields
         builder.orWhereHas(field.name as unknown as undefined, (subquery) => {
           for (const labelField of labelFields) {
@@ -135,7 +143,11 @@ export const applyColumnFilters = (
         continue
       }
 
-      if (field.adomin.type === 'hasManyRelation' || field.adomin.type === 'hasOneRelation') {
+      if (
+        field.adomin.type === 'hasManyRelation' ||
+        field.adomin.type === 'hasOneRelation' ||
+        field.adomin.type === 'manyToManyRelation'
+      ) {
         const labelFields = field.adomin.labelFields
         builder.andWhereHas(field.name as unknown as undefined, (subquery) => {
           for (const labelField of labelFields) {
@@ -203,7 +215,8 @@ export const loadRelations = (
     if (
       field.adomin.type === 'hasManyRelation' ||
       field.adomin.type === 'belongsToRelation' ||
-      field.adomin.type === 'hasOneRelation'
+      field.adomin.type === 'hasOneRelation' ||
+      field.adomin.type === 'manyToManyRelation'
     ) {
       if (field.adomin.preload !== false) query.preload(field.name as never)
     }

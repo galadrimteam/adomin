@@ -29,7 +29,8 @@ export const getModelFieldStrs = (fields: ColumnConfig[]) => {
         isVirtual === false &&
         adomin.computed !== true &&
         adomin.type !== 'hasManyRelation' &&
-        adomin.type !== 'hasOneRelation'
+        adomin.type !== 'hasOneRelation' &&
+        adomin.type !== 'manyToManyRelation'
     )
     .map((f) => getSqlColumnToUse(f))
 }
@@ -110,6 +111,10 @@ export function computeColumnConfigFields(input: ColumnConfig[]): ColumnConfig[]
     }
 
     if (field.adomin.type === 'hasManyRelation') {
+      if (sortable === undefined && noCustomSort) sortable = false
+    }
+
+    if (field.adomin.type === 'manyToManyRelation') {
       if (sortable === undefined && noCustomSort) sortable = false
     }
 
