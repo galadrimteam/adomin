@@ -103,7 +103,14 @@ export const PROFILE_CONFIG = createModelViewConfig(() => Profile, {
 export const TEST_CONFIG = createModelViewConfig(() => Test, {
   label: 'Test',
   columns: {
-    stringArrayTest: { type: 'array' },
+    stringArrayTest: {
+      type: 'array',
+      label: 'Test array',
+      options: [
+        { value: 'sun', label: 'Soleil' },
+        { value: 'moon', label: 'Lune' },
+      ],
+    },
     freeText: { type: 'string', label: 'Texte libre' },
     stringTest: {
       nullable: true,

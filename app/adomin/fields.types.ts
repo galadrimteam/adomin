@@ -243,6 +243,10 @@ export type AdominEnumFieldConfig = AdominBaseFieldConfig & {
 
 export interface AdominArrayFieldConfig extends AdominBaseFieldConfig {
   type: 'array'
+  /**
+   * options for the select component
+   */
+  options?: AdominSelectOption<string | number>[]
 }
 
 export type AdominFileFieldConfig = AdominBaseFieldConfig & {
