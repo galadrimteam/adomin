@@ -162,7 +162,7 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
 export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
   columns: {
     title: { type: 'string', label: 'Titre' },
-    description: { type: 'string', label: 'Description' },
+    description: { type: 'string', label: 'Description', multiline: true },
     author: {
       type: 'belongsToRelation',
       modelName: 'User',
