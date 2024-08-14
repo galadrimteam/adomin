@@ -96,6 +96,17 @@ if (cmsPlugin) {
   tsconfigLines.splice(compilerOptionsIndex + 1, 0, ...CMS_TSCONFIG_OPTIONS)
 }
 
+if (removeCms) {
+  const adominRouterPath = 'app/adomin/routes/adomin_router.ts'
+  const adominRouterContent = fs.readFileSync(adominRouterPath, {
+    encoding: 'utf-8',
+  })
+  const newContent = adominRouterContent
+    .replace(`import { cmsRoutes } from '../cms/router/cms_router.js'\n`, '')
+    .replace(`        cmsRoutes()\n`, '')
+  fs.writeFileSync(adominRouterPath, newContent)
+}
+
 const newTsconfigJson = tsconfigLines.join('\n')
 
 const isTsconfigConfigured = tsconfigJson.includes(`"#adomin/*":`)
