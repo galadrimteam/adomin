@@ -1,0 +1,67 @@
+---
+title: Folder views
+sidebar:
+  order: 1001
+description: Adomin folder views reference
+---
+
+Folder views allows to organize your other views in a tree structure.
+
+![Folder view](~/assets/images/reference/folders/folder_view.png)
+
+## Config
+
+To declare a folder view, you will need to add a `FolderViewConfig` object inside the `views` array of the `app/adomin/config/adomin_config.ts` file.
+
+```ts
+export const ADOMIN_CONFIG: AdominConfig = {
+	title: 'Adomin',
+	views: [MY_FOLDER_CONFIG],
+}
+```
+
+Use the `createFolderViewConfig` function to create your `FolderViewConfig` object:
+
+```ts
+export const MY_FOLDER_CONFIG = createFolderViewConfig({
+  label: 'My folder',
+  name: 'my-folder',
+  views: [STATS_CONFIG, USER_CONFIG],
+  icon: 'folder',
+})
+```
+
+You can pass the following options inside the config object:
+
+### label
+
+Title of the folder, displayed in the sidebar
+
+### name
+Used to determine the path in the frontend
+
+e.g. if name = 'test', full path on the frontend will be `/adomin/folders/test`
+
+### views
+
+The folder children views, each object should be a `ModelConfig`, `StatsViewConfig` or `FolderViewConfig`
+
+### visibilityCheck
+
+Check if logged in user can see this folder
+
+### isHidden
+
+Use this if you want to hide this folder on the frontend.
+Frontend routes will still be created and available, but the navbar won't show them.
+
+:::caution
+Do not see this as a protection, but rather a cosmetic feature.
+
+If you want to protect things, use [visibilityCheck](#visibilityCheck)
+:::
+
+### icon
+
+Icon name, by default this uses Tabler icons
+You can browse the list of available icons at: https://tabler.io/icons

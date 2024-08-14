@@ -1,7 +1,7 @@
 ---
 title: Stat views
 sidebar:
-  order: 1002
+  order: 1003
 description: Adomin stats views reference
 ---
 
@@ -30,6 +30,10 @@ For this, you will need to write some backend configuration, and then the adomin
 ### Area chart
 
 ![Area chart](~/assets/images/reference/stats/area.png)
+
+### Kpi chart
+
+![Kpi chart](~/assets/images/reference/stats/kpi.png)
 
 ## Config
 
@@ -94,6 +98,11 @@ Do not see this as a protection, but rather a cosmetic feature.
 If you want to protect things, use [visibilityCheck](#visibilitycheck)
 :::
 
+### icon
+
+Icon name, by default this uses Tabler icons
+You can browse the list of available icons at: https://tabler.io/icons
+
 ### stats
 
 An array of `AdominStat` objects, each `AdominStat` represent a chart
@@ -113,6 +122,7 @@ Type of the chart to display, can be one of:
 - column
 - line
 - area
+- kpi
 
 ### label
 

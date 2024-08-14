@@ -17,5 +17,8 @@
       "source.organizeImports": "explicit",
       "source.fixAll": "explicit",
     },
+    "files.associations": {
+      "*.mdx": "markdown"
+    }
   },
 }
