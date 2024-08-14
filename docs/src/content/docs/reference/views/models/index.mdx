@@ -37,9 +37,17 @@ You can pass the following options inside the config object:
 
 ### columns
 
-An object listing all the model properties you want to see on the frontend
+An object listing all the model properties you want to see on the frontend.
 
-All fields share some basic config properties `AdominBaseFieldConfig` + specific properties for the field type
+This will look like this:
+```ts
+columns: {
+    email: { type: 'string', isEmail: true, label: 'Super email' },
+    password: { type: 'string', isPassword: true, label: 'Mot de passe' },
+}
+```
+
+All fields defined in the `columns` object share some basic config properties from `AdominBaseFieldConfig` + specific properties for the field type
 
 ```ts
 export interface AdominBaseFieldConfig {
@@ -65,13 +73,43 @@ export interface AdominBaseFieldConfig {
    * If false, user cannot create this field
    */
   creatable?: boolean
+  /** If false, user cannot sort by this field */
+  sortable?: boolean
+  /** If false, user cannot filter by this field */
+  filterable?: boolean
+  /**
+   * Sql filter override, usefull for computed fields
+   *
+   * e.g.
+   * ```ts
+   * const isBeautifullFilter = (input: string | null) => {
+   *   if (input === null) return 'false'
+   *
+   *   if (+input === 0) return `email != 'damien@galadrim.fr'`
+   *
+   *   return `email = 'damien@galadrim.fr'`
+   * }
+   * ```
+   */
+  sqlFilter?: (input: string | null) => string | RawQuery
+  /**
+   * Sql orderBy override, usefull for computed fields
+   *
+   * e.g.
+   * ```ts
+   * const isBeautifullSort = (ascDesc: 'asc' | 'desc') => {
+   *   return `email = 'damien@galadrim.fr' ${ascDesc}`
+   * }
+   * ```
+   */
+  sqlSort?: (ascDesc: 'asc' | 'desc') => string | RawQuery
   /**
    * Size of the field on the frontend
    * @default 120
    */
   size?: number
   /**
-   * If this field is a \@computed() field in your model you must set this to true
+   * If this field is a @computed() field in your model you must set this to true
    */
   computed?: boolean
 }

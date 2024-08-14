@@ -209,7 +209,7 @@ For basic charts, your `dataFetcher` can use the built in [data fetcher helpers]
 
 ### options
 
-Chartkick options for the chart
+When stat type is `pie`, `bar`, `column`, `line` or `area` you can pass the following options inside the config object:
 
 ```ts
 interface ChartKickOptions {
@@ -267,6 +267,21 @@ interface ChartKickOptions {
   zeros?: boolean;
   /** Specify the message when data is empty */
   empty?: string;
+}
+```
+
+When stat type is `kpi` you can pass the following options inside the config object:
+```ts
+export interface KpiStatOptions {
+  /**
+   * If true, the value should be a number between 0-100 and will be displayed as a percentage
+   * @default false
+   */
+  isPercentage?: boolean
+  /**
+   * Color of the mui CircularProgress
+   */
+  color?: string
 }
 ```
 

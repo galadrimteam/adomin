@@ -38,9 +38,31 @@ export interface AdominBaseFieldConfig {
    * If this field is a \@computed() field in your model you must set this to true
    */
   computed?: boolean
-  /** Sql filter override, usefull for computed fields */
+  /**
+   * Sql filter override, usefull for computed fields
+   *
+   * e.g.
+   * ```ts
+   * const isBeautifullFilter = (input: string | null) => {
+   *   if (input === null) return 'false'
+   *
+   *   if (+input === 0) return `email != 'damien@galadrim.fr'`
+   *
+   *   return `email = 'damien@galadrim.fr'`
+   * }
+   * ```
+   */
   sqlFilter?: (input: string | null) => string | RawQuery
-  /** Sql order by override, usefull for computed fields */
+  /**
+   * Sql orderBy override, usefull for computed fields
+   *
+   * e.g.
+   * ```ts
+   * const isBeautifullSort = (ascDesc: 'asc' | 'desc') => {
+   *   return `email = 'damien@galadrim.fr' ${ascDesc}`
+   * }
+   * ```
+   */
   sqlSort?: (ascDesc: 'asc' | 'desc') => string | RawQuery
   /**
    * Export data transformation callback to use for this field
