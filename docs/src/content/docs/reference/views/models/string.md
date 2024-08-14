@@ -44,3 +44,7 @@ You can put whatever you want in the string as long as you put `{{value}}` somew
 ```
 
 :::
+
+### multiline
+
+Optionnal, if `true`, a `textarea` element is rendered instead of a basic text input.

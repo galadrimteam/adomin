@@ -166,7 +166,7 @@ export interface AdominStringFieldConfig extends AdominBaseFieldConfig {
    */
   valueDisplayTemplate?: string
   /**
-   * If `true`, a `textarea` element is rendered instead of an input.
+   * If `true`, a `textarea` element is rendered instead of a basic text input
    * @default false
    */
   multiline?: boolean
