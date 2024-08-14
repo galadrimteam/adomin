@@ -198,6 +198,41 @@ queryBuilderCallback: (q) => {
 
 :::
 
+### virtualColumns
+
+Virtual columns are columns that are not stored directly in this model, but are computed from whatever you want
+
+Options for the virtual columns:
+
+- name (required): name of the virtual column, must be unique for the model
+- adomin (required): adomin config for the virtual column (column type, label, etc)
+- getter (required): a function to fetch the value of the virtual column (or derive it from other fields in the model)
+- setter (optional): a function to update the value of the virtual column
+It will be called after every non-virtual column change
+In most cases, it will not make sense to use this because the field will be computed from other fields
+- columnOrderIndex (optional): index of the column in the final columns array sent to the frontend. If not provided, the column will be appended at the end of the other fields (so it will appear at the end of the table in the frontend)
+
+e.g.
+```ts
+{
+  virtualColumns: [
+    {
+      name: 'upperCaseEmail',
+      adomin: {
+        type: 'string',
+        label: 'Upper case email',
+      },
+      getter: async (model) => {
+        return model.email.toUpperCase()
+      },
+      setter: async (model, value) => {
+        console.log('Setter called for virtual column', model.id, value)
+      },
+    },
+  ],
+}
+```
+
 ## Types of fields
 
 ### [String field](/adomin/reference/views/models/string/)
