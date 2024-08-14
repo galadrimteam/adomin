@@ -214,23 +214,21 @@ In most cases, it will not make sense to use this because the field will be comp
 
 e.g.
 ```ts
-{
-  virtualColumns: [
-    {
-      name: 'upperCaseEmail',
-      adomin: {
-        type: 'string',
-        label: 'Upper case email',
-      },
-      getter: async (model) => {
-        return model.email.toUpperCase()
-      },
-      setter: async (model, value) => {
-        console.log('Setter called for virtual column', model.id, value)
-      },
+virtualColumns: [
+  {
+    name: 'upperCaseEmail',
+    adomin: {
+      type: 'string',
+      label: 'Upper case email',
     },
-  ],
-}
+    getter: async (model) => {
+      return model.email.toUpperCase()
+    },
+    setter: async (model, value) => {
+      console.log('Setter called for virtual column', model.id, value)
+    },
+  },
+],
 ```
 
 ## Types of fields
@@ -258,6 +256,8 @@ e.g.
 ### HasMany field
 
 ### HasOne field
+
+### ManyToMany field
 
 <br />
 
