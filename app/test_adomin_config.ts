@@ -109,6 +109,9 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
       options: [
         { value: 'sun', label: 'Soleil' },
         { value: 'moon', label: 'Lune' },
+        { value: 'mars', label: 'Mars' },
+        { value: 'jupiter', label: 'Jupiter' },
+        { value: 'saturn', label: 'Saturne' },
       ],
     },
     freeText: { type: 'string', label: 'Texte libre' },
