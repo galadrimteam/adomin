@@ -1,5 +1,4 @@
 import { AdominConfig } from '#adomin/adomin_config.types'
-import { ADOMIN_TEST_CONFIG } from '../../test_adomin_config.js'
 
 /**
  * This file will contain your Adomin Config
@@ -19,6 +18,5 @@ import { ADOMIN_TEST_CONFIG } from '../../test_adomin_config.js'
 
 export const ADOMIN_CONFIG: AdominConfig = {
   title: 'Your Backoffice Title',
-  views: [...ADOMIN_TEST_CONFIG],
-  // plugins: ['cms'],
+  views: [],
 }
