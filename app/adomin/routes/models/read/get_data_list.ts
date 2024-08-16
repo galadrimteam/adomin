@@ -26,7 +26,7 @@ export const getModelList = async ({
 }: GetModelListOptions): Promise<PaginatedData> => {
   const Model = modelConfig.model()
   const { fields: rawFields, primaryKey, queryBuilderCallback } = modelConfig
-  const fields = computeColumnConfigFields(rawFields)
+  const fields = await computeColumnConfigFields(rawFields)
 
   const fieldsStrs = getModelFieldStrs(fields)
   const { pageIndex, pageSize } = paginationSettings

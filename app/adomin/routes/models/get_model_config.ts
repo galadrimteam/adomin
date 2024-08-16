@@ -77,15 +77,17 @@ export const getModelConfigRoute = async (ctx: HttpContext) => {
     name,
     label,
     labelPluralized,
-    fields: computeColumnConfigFields(fields),
+    fields: await computeColumnConfigFields(fields),
     primaryKey,
     isHidden: isHidden ?? false,
     staticRights,
   }
 }
 
-export function computeColumnConfigFields(input: ColumnConfig[]): ColumnConfig[] {
-  const res: ColumnConfig[] = input.map((field) => {
+export async function computeColumnConfigFields(input: ColumnConfig[]): Promise<ColumnConfig[]> {
+  const res: ColumnConfig[] = []
+
+  for (const field of input) {
     let { editable, creatable, sortable, filterable } = field.adomin
 
     const noCustomFilter = field.adomin.sqlFilter === undefined
@@ -127,6 +129,11 @@ export function computeColumnConfigFields(input: ColumnConfig[]): ColumnConfig[]
       if (sortable === undefined && noCustomSort) sortable = false
     }
 
+    // load options for array field
+    if (field.adomin.type === 'array' && typeof field.adomin.options === 'function') {
+      field.adomin.options = await field.adomin.options()
+    }
+
     const computedConfig: ColumnConfig = {
       name: field.name,
       isVirtual: field.isVirtual,
@@ -139,8 +146,8 @@ export function computeColumnConfigFields(input: ColumnConfig[]): ColumnConfig[]
       },
     }
 
-    return computedConfig
-  })
+    res.push(computedConfig)
+  }
 
   return res
 }

@@ -4,12 +4,12 @@ import { AdominFieldConfig } from '../fields.types.js'
 import { AdominValidationMode } from '../validation/adomin_validation_helpers.js'
 import { computeColumnConfigFields } from './models/get_model_config.js'
 
-export const getValidationSchemaFromConfig = (
+export const getValidationSchemaFromConfig = async (
   modelConfig: ModelConfig,
   validationMode: AdominValidationMode
 ) => {
   const foundConfig = modelConfig
-  const fields = computeColumnConfigFields(foundConfig.fields)
+  const fields = await computeColumnConfigFields(foundConfig.fields)
   const results = fields.map(({ adomin, name: columnName }) => {
     const notCreatable = adomin.creatable === false
     const notEditable = adomin.editable === false

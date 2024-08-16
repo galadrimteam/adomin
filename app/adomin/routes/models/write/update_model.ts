@@ -37,7 +37,7 @@ export const updateModel = async (ctx: HttpContext) => {
     if (res !== true) return
   }
 
-  const schema = getValidationSchemaFromConfig(modelConfig, 'update')
+  const schema = await getValidationSchemaFromConfig(modelConfig, 'update')
   const parsedData = await request.validate({ schema, messages: getGenericMessages(Model) })
   const fields = modelConfig.fields
 

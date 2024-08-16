@@ -267,8 +267,12 @@ export interface AdominArrayFieldConfig extends AdominBaseFieldConfig {
   type: 'array'
   /**
    * options for the select component
+   *
+   * Can be a function that returns the options
    */
-  options?: AdominSelectOption<string | number>[]
+  options?:
+    | AdominSelectOption<string | number>[]
+    | (() => Promise<AdominSelectOption<string | number>[]>)
 }
 
 export type AdominFileFieldConfig = AdominBaseFieldConfig & {

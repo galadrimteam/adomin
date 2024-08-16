@@ -106,7 +106,7 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
     stringArrayTest: {
       type: 'array',
       label: 'Test array',
-      options: [
+      options: async () => [
         { value: 'sun', label: 'Soleil' },
         { value: 'moon', label: 'Lune' },
         { value: 'mars', label: 'Mars' },

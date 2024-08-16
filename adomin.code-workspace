@@ -19,6 +19,9 @@
     },
     "files.associations": {
       "*.mdx": "markdown"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
   },
 }

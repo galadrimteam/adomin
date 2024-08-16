@@ -20,10 +20,14 @@ Use the Array field when you have an array of values contained in one column in 
 ### options
 
 An optionnal array of options for the form select component.
+
+Can be an async function that returns the options
+
 e.g.
+
 ```ts
 const options = [
-	{ value: 'sun', label: 'Soleil' },
-	{ value: 'moon', label: 'Lune' },
+  { value: 'sun', label: 'Soleil' },
+  { value: 'moon', label: 'Lune' },
 ]
 ```

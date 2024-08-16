@@ -37,7 +37,7 @@ export const createModel = async (ctx: HttpContext) => {
 
   const fields = modelConfig.fields
 
-  const schema = getValidationSchemaFromConfig(modelConfig, 'create')
+  const schema = await getValidationSchemaFromConfig(modelConfig, 'create')
   const parsedData = await request.validate({ schema, messages: getGenericMessages(Model) })
 
   const createdInstance = new Model()
