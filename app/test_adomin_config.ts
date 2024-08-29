@@ -195,7 +195,7 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
           description: faker.lorem.sentence(),
         })
 
-        return { mesfsage: 'Création effectuée' }
+        return { message: 'Création effectuée' }
       },
     },
     {
