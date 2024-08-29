@@ -1,7 +1,8 @@
 ---
-title: Model Global Actions
+title: Global Actions
 sidebar:
   order: 1030
+  badge: New
 description: Adomin model global actions reference
 ---
 

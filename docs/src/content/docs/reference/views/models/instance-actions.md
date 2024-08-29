@@ -1,7 +1,8 @@
 ---
-title: Model Instance Actions
+title: Instance Actions
 sidebar:
   order: 1031
+  badge: New
 description: Adomin model instance actions reference
 ---
 
