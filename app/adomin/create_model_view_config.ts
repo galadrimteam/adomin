@@ -18,6 +18,7 @@ import type {
   AdominStringFieldConfig,
 } from './fields.types.js'
 import type {
+  AdominActionConfig,
   AdominRightsCheckConfig,
   AdominRightsCheckFunction,
   AdominRouteOverrides,
@@ -75,6 +76,21 @@ export interface ModelConfigStaticOptions {
    * https://tabler.io/icons
    */
   icon?: string
+  /**
+   * Actions related to this model config
+   * Will be displayed near the refresh/export buttons
+   */
+  globalActions?: AdominActionConfig[]
+  /**
+   * Actions related to a specific model instance
+   *
+   * Your action function will receive the model instance primary key inside the `params` object
+   * e.g. you will be able to get your model instance with
+   * ```ts
+   * await YourModel.findOrFail(ctx.params.id)
+   * ````
+   */
+  instanceActions?: AdominActionConfig[]
 }
 
 export interface ModelConfig extends ModelConfigStaticOptions {
@@ -245,5 +261,7 @@ export const createModelViewConfig = <T extends LucidModel>(
     visibilityCheck: options.visibilityCheck,
     queryBuilderCallback: options.queryBuilderCallback,
     icon: options.icon,
+    globalActions: options.globalActions ?? [],
+    instanceActions: options.instanceActions ?? [],
   }
 }

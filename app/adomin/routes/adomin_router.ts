@@ -3,6 +3,8 @@ import '../cms/router/cms_router.js'
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { cmsRoutes } from '../cms/router/cms_router.js'
+import { modelGlobalActionRoute } from './actions/model_global_action_route.js'
+import { modelInstanceActionRoute } from './actions/model_instance_action_route.js'
 import { adominLogin } from './adomin_login.js'
 import { adominLogout } from './adomin_logout.js'
 import { getAdominConfig } from './get_adomin_config.js'
@@ -21,6 +23,9 @@ router
         router.get('config', getAdominConfig)
         router.get('config/models/:model', getModelConfigRoute)
         router.get('config/stats/:view', getStatConfigRoute)
+
+        router.post('actions/:model/:action', modelGlobalActionRoute)
+        router.post('actions/:model/:action/:id', modelInstanceActionRoute)
 
         router.post('models/crud/export/:model', modelList)
         router.get('models/crud/:model', modelList)

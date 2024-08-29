@@ -61,8 +61,17 @@ export const getModelConfigRoute = async (ctx: HttpContext) => {
     return response.notFound({ error: `Model '${modelString}' not found` })
   }
 
-  const { fields, primaryKey, label, labelPluralized, name, isHidden, visibilityCheck } =
-    modelConfig
+  const {
+    fields,
+    primaryKey,
+    label,
+    labelPluralized,
+    name,
+    isHidden,
+    visibilityCheck,
+    globalActions,
+    instanceActions,
+  } = modelConfig
 
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck)
 
@@ -81,6 +90,8 @@ export const getModelConfigRoute = async (ctx: HttpContext) => {
     primaryKey,
     isHidden: isHidden ?? false,
     staticRights,
+    globalActions,
+    instanceActions,
   }
 }
 

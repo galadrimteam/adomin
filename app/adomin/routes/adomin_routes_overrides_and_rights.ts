@@ -55,3 +55,23 @@ export interface AdominStaticRightsConfig {
   delete?: boolean
   list?: boolean
 }
+
+export type AdominActionFunction = (ctx: HttpContext) => Promise<unknown>
+
+export type AdominActionConfig = {
+  /** Must be unique for the model */
+  name: string
+  /**
+   * Icon name, by default this uses Tabler icons
+   *
+   * You can browse the list of available icons at:
+   * https://tabler.io/icons
+   */
+  icon: string
+  /** icon color */
+  iconColor?: string
+  /** Tooltip shown on the frontend, when hovering the button */
+  tooltip: string
+  /** Your action function */
+  action: AdominActionFunction
+}

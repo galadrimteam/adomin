@@ -14,6 +14,7 @@ import Test from '#models/test'
 import User from '#models/user'
 import app from '@adonisjs/core/services/app'
 import db from '@adonisjs/lucid/services/db'
+import { faker } from '@faker-js/faker'
 import { DateTime } from 'luxon'
 import { copyFileSync, mkdirSync, rmSync } from 'node:fs'
 import { RIGHTS, RIGHTS_LABELS } from './rights.js'
@@ -182,6 +183,52 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
     },
   },
   icon: 'bulb',
+  globalActions: [
+    {
+      name: 'add-random-idea',
+      tooltip: 'Ajouter une idée random',
+      icon: 'arrows-shuffle',
+      iconColor: 'red',
+      action: async () => {
+        await Idea.create({
+          title: faker.music.songName(),
+          description: faker.lorem.sentence(),
+        })
+
+        return { mesfsage: 'Création effectuée' }
+      },
+    },
+    {
+      name: 'delete-ideas-not-linked-to-user',
+      tooltip: 'Supprimer les idées non liées à un utilisateur',
+      icon: 'trash',
+      iconColor: 'orange',
+      action: async () => {
+        await Idea.query().whereNull('userId').delete()
+
+        return { message: 'Suppression effectuée' }
+      },
+    },
+  ],
+  instanceActions: [
+    {
+      name: 'duplicate-idea',
+      tooltip: "Dupliquer l'idée",
+      icon: 'copy',
+      iconColor: 'brown',
+      action: async (ctx) => {
+        const idea = await Idea.findOrFail(ctx.params.id)
+
+        await Idea.create({
+          title: idea.title,
+          description: idea.description,
+          userId: idea.userId,
+        })
+
+        return { message: 'Duplication effectuée' }
+      },
+    },
+  ],
 })
 
 export const STATS_CONFIG = createStatsViewConfig({

@@ -41,6 +41,7 @@
     "@adonisjs/prettier-config": "^1.2.1",
     "@adonisjs/tsconfig": "^1.2.1",
     "@adonisjs/validator": "^13.0.2-3",
+    "@faker-js/faker": "^8.4.1",
     "@japa/api-client": "^2.0.3",
     "@japa/assert": "^3.0.0",
     "@japa/plugin-adonisjs": "^3.0.0",
