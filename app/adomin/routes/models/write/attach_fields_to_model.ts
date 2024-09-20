@@ -6,12 +6,27 @@ import { handleHasManyUpdate } from './handle_has_many_update.js'
 import { handleHasOneUpdate } from './handle_has_one_update.js'
 import { handleManyToManyUpdate } from './handle_many_to_many_update.js'
 
+const allowArrayClear = (fields: ColumnConfig[], data: any) => {
+  for (const field of fields) {
+    const isArray =
+      field.adomin.type === 'array' ||
+      field.adomin.type === 'hasManyRelation' ||
+      field.adomin.type === 'manyToManyRelation'
+
+    if (!isArray) continue
+
+    const fieldName = field.name
+    data[fieldName] = data[fieldName] ?? []
+  }
+}
+
 /** Attach all fields that need to be applied directly on this model instance */
 export const attachFieldsToModel = async (
   instance: LucidRow,
   fields: ColumnConfig[],
   data: any
 ) => {
+  allowArrayClear(fields, data)
   // fields that need to be applied on other models
   // (and cannot be applied directly on the current model because instance.id is possibly not yet defined)
   // e.g. hasOne / hasMany fields
