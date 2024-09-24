@@ -40,23 +40,6 @@ Here is the code needed to add those two buttons to the user interface
         return { message: 'Suppression effectuée' }
       },
     },
-    {
-      type: 'link',
-      name: 'link-to-filtered-ideas',
-      tooltip: 'Voir les idées filtrées',
-      icon: 'link',
-      iconColor: 'blue',
-      href: '/backoffice/models/Idea?pageIndex=2&pageSize=5',
-    },
-    {
-      type: 'link',
-      name: 'link-to-google',
-      tooltip: 'Voir Google',
-      icon: 'brand-google',
-      iconColor: 'green',
-      href: 'https://www.google.com',
-      openInNewTab: true,
-    },
   ]
 }
 ```
@@ -135,4 +118,16 @@ Whether or not to open the link in a new tab
 
 :::tip
 You can use a `link` action to show pre-filtered Model views
+
+```ts
+{
+  type: 'link',
+  name: 'link-to-filtered-ideas',
+  tooltip: 'Voir les idées filtrées',
+  icon: 'link',
+  iconColor: 'blue',
+  href: '/backoffice/models/Idea?pageIndex=2&pageSize=5',
+}
+```
+
 :::

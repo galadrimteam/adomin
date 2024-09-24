@@ -120,4 +120,16 @@ Whether or not to open the link in a new tab
 
 :::tip
 You can use a `link` action to show pre-filtered Model views
+
+```ts
+{
+  type: 'link',
+  name: 'link-to-filtered-ideas',
+  tooltip: 'Voir les idées filtrées',
+  icon: 'link',
+  iconColor: 'blue',
+  href: '/backoffice/models/Idea?pageIndex=2&pageSize=5',
+}
+```
+
 :::

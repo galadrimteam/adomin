@@ -156,12 +156,54 @@ If you want more granularity, e.g. allows Bob to see all Posts but not edit them
 
 Granular dynamic access checks functions for each CRUDL action
 
-For each function, if you return `hasAccess = false`, with `errorMessage = undefined`, you will have to send the error response yourself
+You access check function must return an object like this:
+```ts
+{
+  hasAccess: true,
+}
+// or
+{
+  hasAccess: false,
+  errorMessage: 'You are not allowed to do this',
+}
+```
+
+If you want to send the HTTP error response yourself, you can return `errorMessage = undefined` along with `hasAccess = false`
 
 :::note[example]
 
+These two examples are equivalent
+
 ```ts
-response.badRequest({ error: 'oups' })`
+// if you want to let the error to be sent by the framework
+const accessCheckFunctionExample = async (ctx) => {
+  const user = ctx.auth.user
+  
+  // some custom logic
+  if (hasAccess(user)) return { hasAccess: true }
+
+  return {
+    hasAccess: false,
+    errorMessage: 'oups',
+  }
+}
+```
+
+```ts
+// or if you want to send the error response yourself
+const accessCheckFunctionExample = async (ctx) => {
+  const user = ctx.auth.user
+  
+  // some custom logic
+  if (hasAccess(user)) return { hasAccess: true }
+
+  ctx.response.badRequest({ error: 'oups' })
+
+  return {
+    hasAccess: false,
+    errorMessage: undefined,
+  }
+}
 ```
 
 :::
