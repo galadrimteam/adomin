@@ -15,7 +15,7 @@ export const modelInstanceActionRoute = async (ctx: HttpContext) => {
   }
   const found = modelConfig.instanceActions?.find(({ name }) => name === params.action)
 
-  if (!found) {
+  if (!found || found.type !== 'backend-action') {
     return response.notFound({ error: `Action '${params.action}' not found` })
   }
 

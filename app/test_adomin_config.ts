@@ -185,6 +185,7 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
   icon: 'bulb',
   globalActions: [
     {
+      type: 'backend-action',
       name: 'add-random-idea',
       tooltip: 'Ajouter une idée random',
       icon: 'arrows-shuffle',
@@ -199,6 +200,7 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
       },
     },
     {
+      type: 'backend-action',
       name: 'delete-ideas-not-linked-to-user',
       tooltip: 'Supprimer les idées non liées à un utilisateur',
       icon: 'trash',
@@ -209,9 +211,27 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
         return { message: 'Suppression effectuée' }
       },
     },
+    {
+      type: 'link',
+      name: 'link-to-filtered-ideas',
+      tooltip: 'Voir les idées filtrées',
+      icon: 'link',
+      iconColor: 'blue',
+      href: '/backoffice/models/Idea?filters=%255B%257B%2522id%2522%253A%2522title%2522%252C%2522value%2522%253A%2522test%2522%257D%255D&sorting=%255B%257B%2522id%2522%253A%2522id%2522%252C%2522desc%2522%253Atrue%257D%255D',
+    },
+    {
+      type: 'link',
+      name: 'link-to-google',
+      tooltip: 'Voir Google',
+      icon: 'brand-google',
+      iconColor: 'green',
+      href: 'https://www.google.com',
+      openInNewTab: true,
+    },
   ],
   instanceActions: [
     {
+      type: 'backend-action',
       name: 'duplicate-idea',
       tooltip: "Dupliquer l'idée",
       icon: 'copy',

@@ -72,6 +72,20 @@ export type AdominActionConfig = {
   iconColor?: string
   /** Tooltip shown on the frontend, when hovering the button */
   tooltip: string
+} & AdominActionTypes
+
+type AdominActionTypes = AdominActionLink | AdominActionBackend
+
+export interface AdominActionBackend {
+  type: 'backend-action'
   /** Your action function */
   action: AdominActionFunction
+}
+
+export interface AdominActionLink {
+  type: 'link'
+  /** Link to open */
+  href: string
+  /** Open the link in a new tab @default false */
+  openInNewTab?: boolean
 }
