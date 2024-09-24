@@ -40,6 +40,23 @@ Here is the code needed to add those two buttons to the user interface
         return { message: 'Suppression effectuée' }
       },
     },
+    {
+      type: 'link',
+      name: 'link-to-filtered-ideas',
+      tooltip: 'Voir les idées filtrées',
+      icon: 'link',
+      iconColor: 'blue',
+      href: '/backoffice/models/Idea?pageIndex=2&pageSize=5',
+    },
+    {
+      type: 'link',
+      name: 'link-to-google',
+      tooltip: 'Voir Google',
+      icon: 'brand-google',
+      iconColor: 'green',
+      href: 'https://www.google.com',
+      openInNewTab: true,
+    },
   ]
 }
 ```
@@ -70,7 +87,13 @@ You can browse the list of available icons at: https://tabler.io/icons
 
 Color of the icon, this will be passed as the css color property, so you can use any valid css color
 
+### type
+
+Must be one of `backend-action` or `link`
+
 ### action
+
+Only when type = `backend-action`
 
 Function to execute when the action is triggered
 
@@ -94,4 +117,22 @@ If you want the frontend to show an error toast message, you can return a >= 400
 return response.badRequest({ error: 'Error message' })
 ```
 
+:::
+
+### href
+
+Only when type = `link`
+
+Link to open, this can be a relative or absolute link
+
+e.g. `/backoffice/models/Idea?pageIndex=2&pageSize=5` and `https://www.google.com` will both work
+
+### openInNewTab
+
+Only when type = `link`
+
+Whether or not to open the link in a new tab
+
+:::tip
+You can use a `link` action to show pre-filtered Model views
 :::
