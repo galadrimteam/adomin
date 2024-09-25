@@ -2,8 +2,8 @@ import { withAuthFinder } from '@adonisjs/auth'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { compose } from '@adonisjs/core/helpers'
 import hash from '@adonisjs/core/services/hash'
-import { BaseModel, column, computed, hasMany, hasOne } from '@adonisjs/lucid/orm'
-import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, computed, hasMany, hasOne, manyToMany } from '@adonisjs/lucid/orm'
+import type { HasMany, HasOne, ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
 import Idea from './idea.js'
 
@@ -33,6 +33,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasOne(() => Idea)
   declare idea: HasOne<typeof Idea> | null
+
+  @manyToMany(() => User, {
+    pivotTable: 'user_friends',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'friend_id',
+  })
+  declare friends: ManyToMany<typeof User>
 
   @computed()
   get isBeautifull() {

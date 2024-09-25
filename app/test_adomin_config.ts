@@ -62,6 +62,15 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
     //   modelName: 'Idea',
     //   nullable: true,
     // },
+    friends: {
+      type: 'manyToManyRelation',
+      label: 'Amis',
+      modelName: 'User',
+      labelFields: ['email'],
+      pivotTable: 'user_friends',
+      pivotFkName: 'user_id',
+      pivotRelatedFkName: 'friend_id',
+    },
     createdAt: {
       type: 'date',
       subType: 'datetime',
