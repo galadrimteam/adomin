@@ -35,7 +35,10 @@ export const handleManyToManyUpdate = async ({ Model, fieldConfig, instance, val
 
   try {
     await trx.from(pivotTable).where(pivotFkName, instancePrimaryKeyValue).delete()
-    await trx.insertQuery().multiInsert(insertValues).table(pivotTable)
+
+    if (insertValues.length > 0) {
+      await trx.insertQuery().multiInsert(insertValues).table(pivotTable)
+    }
 
     await trx.commit()
   } catch (error) {
