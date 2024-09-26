@@ -28,6 +28,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare rights: number
 
+  @column()
+  declare settings: { color: string; isBeautifull: boolean } | null
+
   @hasMany(() => Idea)
   declare ideas: HasMany<typeof Idea>
 

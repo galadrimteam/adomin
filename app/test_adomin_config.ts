@@ -22,6 +22,11 @@ import { RIGHTS, RIGHTS_LABELS } from './rights.js'
 export const USER_CONFIG = createModelViewConfig(() => User, {
   label: 'Utilisateur',
   columns: {
+    settings: {
+      type: 'json',
+      label: 'Paramètres',
+      nullable: true,
+    },
     email: { type: 'string', isEmail: true, label: 'Super email' },
     password: { type: 'string', isPassword: true, label: 'Mot de passe' },
     rights: {

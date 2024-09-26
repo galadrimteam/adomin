@@ -13,6 +13,8 @@ export default class extends BaseSchema {
 
       table.integer('rights').notNullable().defaultTo(0)
 
+      table.jsonb('settings').nullable()
+
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
 
