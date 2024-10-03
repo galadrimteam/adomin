@@ -15,6 +15,7 @@ import User from '#models/user'
 import app from '@adonisjs/core/services/app'
 import db from '@adonisjs/lucid/services/db'
 import { faker } from '@faker-js/faker'
+import vine from '@vinejs/vine'
 import { DateTime } from 'luxon'
 import { copyFileSync, mkdirSync, rmSync } from 'node:fs'
 import { RIGHTS, RIGHTS_LABELS } from './rights.js'
@@ -26,6 +27,22 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
       type: 'json',
       label: 'Paramètres',
       nullable: true,
+      sqlFilter: (input) => {
+        if (!input) return 'true'
+
+        return {
+          sql: `settings->>'color' like '%' || ? || '%'`,
+          bindings: [input],
+        }
+      },
+      sqlSort: (ascDesc) => `settings->>'color' ${ascDesc}`,
+      validation: vine.compile(
+        vine.object({
+          color: vine.string(),
+          isBeautiful: vine.boolean(),
+          age: vine.number().optional(),
+        })
+      ),
     },
     email: { type: 'string', isEmail: true, label: 'Super email' },
     password: { type: 'string', isPassword: true, label: 'Mot de passe' },
