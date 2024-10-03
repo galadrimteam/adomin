@@ -79,6 +79,12 @@ const getValidationSchemaFromFieldConfig = (
     return schema.array.optional().members(schema[config.relatedKeyType ?? 'number']())
   }
 
+  if (config.type === 'json') {
+    if (suffix) return schema.string[suffix]()
+
+    return schema.string()
+  }
+
   if (config.type === 'file') {
     const specialSchema = getFileSchema(validationMode, suffix)
 
@@ -101,7 +107,8 @@ const getType = (config: AdominFieldConfig) => {
       return config.fkType ?? 'number'
     case 'hasManyRelation':
     case 'manyToManyRelation':
-      throw new Error('hasManyRelation should be handled before calling this function')
+    case 'json':
+      throw new Error(`${config.type} should be handled before calling this function`)
     default:
       return config.type
   }

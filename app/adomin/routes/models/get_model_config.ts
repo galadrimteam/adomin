@@ -140,6 +140,11 @@ export async function computeColumnConfigFields(input: ColumnConfig[]): Promise<
       if (sortable === undefined && noCustomSort) sortable = false
     }
 
+    if (field.adomin.type === 'json') {
+      if (sortable === undefined && noCustomSort) sortable = false
+      if (filterable === undefined && noCustomFilter) filterable = false
+    }
+
     // load options for array field
     if (field.adomin.type === 'array' && typeof field.adomin.options === 'function') {
       field.adomin.options = await field.adomin.options()

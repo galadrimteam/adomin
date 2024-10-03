@@ -24,7 +24,6 @@ import type {
   AdominRouteOverrides,
   AdominStaticRightsConfig,
 } from './routes/adomin_routes_overrides_and_rights.js'
-import type { AttachmentContract } from './routes/handle_files.js'
 import type { AdominValidation } from './validation/adomin_validation_helpers.js'
 
 export interface ColumnConfig {
@@ -126,31 +125,44 @@ export interface VirtualColumnConfig<T extends LucidModel> {
   setter?: (model: InstanceType<T>, value: any) => Promise<void>
 }
 
+type LucidRelation =
+  | BelongsTo<LucidModel>
+  | HasOne<LucidModel>
+  | HasMany<LucidModel>
+  | ManyToMany<LucidModel>
+
+type ComputeLucidRelationType<T extends LucidRelation> =
+  T extends BelongsTo<LucidModel>
+    ? AdominBelongsToRelationFieldConfig
+    : T extends HasOne<LucidModel>
+      ? AdominHasOneRelationFieldConfig
+      : T extends HasMany<LucidModel>
+        ? AdominHasManyRelationFieldConfig
+        : T extends ManyToMany<LucidModel>
+          ? AdominManyToManyRelationFieldConfig
+          : never
+
+type AdominFieldTypeForNumber = AdominNumberFieldConfig | AdominForeignKeyFieldConfig
+
+type AdominFieldTypeForString =
+  | AdominStringFieldConfig
+  | AdominEnumFieldConfig
+  | AdominForeignKeyFieldConfig
+  | AdominFileFieldConfig
+
 type GetAdominTypeFromModelFieldType<T> = T extends number
-  ? AdominNumberFieldConfig | AdominForeignKeyFieldConfig
+  ? AdominFieldTypeForNumber
   : T extends string
-    ?
-        | AdominStringFieldConfig
-        | AdominEnumFieldConfig
-        | AdominForeignKeyFieldConfig
-        | AdominFileFieldConfig
-    : T extends BelongsTo<LucidModel>
-      ? AdominBelongsToRelationFieldConfig
-      : T extends HasOne<LucidModel>
-        ? AdominHasOneRelationFieldConfig
-        : T extends HasMany<LucidModel>
-          ? AdominHasManyRelationFieldConfig
-          : T extends ManyToMany<LucidModel>
-            ? AdominManyToManyRelationFieldConfig
-            : T extends DateTime
-              ? AdominDateFieldConfig
-              : T extends boolean
-                ? AdominBooleanFieldConfig
-                : T extends Array<any>
-                  ? AdominArrayFieldConfig
-                  : T extends AttachmentContract
-                    ? AdominFileFieldConfig
-                    : AdominFieldConfig
+    ? AdominFieldTypeForString
+    : T extends LucidRelation
+      ? ComputeLucidRelationType<T>
+      : T extends DateTime
+        ? AdominDateFieldConfig
+        : T extends boolean
+          ? AdominBooleanFieldConfig
+          : T extends Array<any>
+            ? AdominArrayFieldConfig
+            : AdominFieldConfig
 
 interface ModelConfigDynamicOptions<T extends LucidModel> {
   columns: Partial<{

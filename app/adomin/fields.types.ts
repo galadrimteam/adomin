@@ -1,6 +1,7 @@
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import { LucidRow } from '@adonisjs/lucid/types/model'
-import { RawQuery } from '@adonisjs/lucid/types/querybuilder'
+import { RawQueryBindings } from '@adonisjs/lucid/types/querybuilder'
+import { VineObject, VineValidator } from '@vinejs/vine'
 
 export interface AdominBaseFieldConfig {
   /**
@@ -52,7 +53,7 @@ export interface AdominBaseFieldConfig {
    * }
    * ```
    */
-  sqlFilter?: (input: string | null) => string | RawQuery
+  sqlFilter?: (input: string | null) => string | { sql: string; bindings: RawQueryBindings }
   /**
    * Sql orderBy override, usefull for computed fields
    *
@@ -63,7 +64,7 @@ export interface AdominBaseFieldConfig {
    * }
    * ```
    */
-  sqlSort?: (ascDesc: 'asc' | 'desc') => string | RawQuery
+  sqlSort?: (ascDesc: 'asc' | 'desc') => string
   /**
    * Export data transformation callback to use for this field
    *
@@ -339,8 +340,9 @@ type FileSubType =
       deleteFile: (model: LucidRow) => Promise<void>
     }
 
-export interface AdominObjectFieldConfig extends AdominBaseFieldConfig {
-  type: 'object'
+export interface AdominJsonFieldConfig extends AdominBaseFieldConfig {
+  type: 'json'
+  validation?: VineValidator<VineObject<any, any, any>, any>
 }
 
 export interface AdominForeignKeyFieldConfig extends AdominBaseFieldConfig {
@@ -623,4 +625,4 @@ export type AdominFieldConfig =
   | AdominBelongsToRelationFieldConfig
   | AdominHasOneRelationFieldConfig
   | AdominManyToManyRelationFieldConfig
-// | AdominObjectFieldConfig
+  | AdominJsonFieldConfig
