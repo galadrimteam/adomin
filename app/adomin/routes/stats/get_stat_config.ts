@@ -19,15 +19,13 @@ export const getStatConfig = (viewName: string) => {
 }
 
 const getFrontendStatConfig = async (config: StatsViewConfig) => {
-  const promises = config.stats.map(async ({ label, dataFetcher, name, type, options }) => {
-    const data = await dataFetcher()
-
+  const promises = config.stats.map(async ({ label, name, type, options, filters }) => {
     return {
       type,
       name,
       label,
-      data,
       options,
+      filters,
     }
   })
 

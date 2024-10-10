@@ -110,7 +110,7 @@ export interface AdominNumberFieldConfig extends AdominBaseFieldConfig {
    */
   step?: number
   /**
-   * default value for this field on the creation form
+   * default value for this field on the form
    */
   defaultValue?: number
   /**
@@ -157,7 +157,7 @@ export interface AdominStringFieldConfig extends AdominBaseFieldConfig {
    */
   isEmail?: boolean
   /**
-   * default value for this field on the creation form
+   * default value for this field on the form
    */
   defaultValue?: string
   /**
@@ -177,12 +177,12 @@ export interface AdominBooleanFieldConfig extends AdominBaseFieldConfig {
   type: 'boolean'
 
   /**
-   * component to use on create/update forms
+   * component to use on the forms
    * @default 'checkbox'
    */
   variant?: 'switch' | 'checkbox'
   /**
-   * default value for this field on the creation form
+   * default value for this field on the form
    */
   defaultValue?: boolean
 }
@@ -194,14 +194,14 @@ export interface AdominDateFieldConfig extends AdominBaseFieldConfig {
    */
   subType: 'date' | 'datetime'
   /**
-   * default value for this field on the creation form, two options:
+   * default value for this field on the form, two options:
    * - dynamic Date.now() + some time
    * - static date in ISO string format
    */
   defaultValue?: DateValueNow | DateValueIsoString
 }
 
-interface DateValueNow {
+export interface DateValueNow {
   mode: 'now'
   /**
    * Years to add to Date.now()
@@ -233,7 +233,7 @@ interface DateValueNow {
   plusSeconds?: number
 }
 
-interface DateValueIsoString {
+export interface DateValueIsoString {
   mode: 'isoString'
   /**
    * date in ISO string format
@@ -259,7 +259,7 @@ export type AdominEnumFieldConfig = AdominBaseFieldConfig & {
    */
   options: AdominSelectOption<string | null>[]
   /**
-   * default value for this field on the creation form
+   * default value for this field on the form
    */
   defaultValue?: string
 }

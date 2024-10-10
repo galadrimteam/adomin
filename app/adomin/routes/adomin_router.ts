@@ -15,6 +15,7 @@ import { createModel } from './models/write/create_model.js'
 import { deleteModel } from './models/write/delete_model.js'
 import { updateModel } from './models/write/update_model.js'
 import { getStatConfigRoute } from './stats/get_stat_config.js'
+import { getStatDataRoute } from './stats/get_stat_data.js'
 
 router
   .group(() => {
@@ -23,6 +24,7 @@ router
         router.get('config', getAdominConfig)
         router.get('config/models/:model', getModelConfigRoute)
         router.get('config/stats/:view', getStatConfigRoute)
+        router.post('stats/:view/:name', getStatDataRoute)
 
         router.post('actions/:model/:action', modelGlobalActionRoute)
         router.post('actions/:model/:action/:id', modelInstanceActionRoute)

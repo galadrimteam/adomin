@@ -52,7 +52,7 @@ const getFileSchema = (
   return schema.file[suffix]
 }
 
-const getValidationSchemaFromFieldConfig = (
+export const getValidationSchemaFromFieldConfig = (
   config: AdominFieldConfig,
   validationMode: AdominValidationMode
 ) => {

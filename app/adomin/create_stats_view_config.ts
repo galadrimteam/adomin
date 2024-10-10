@@ -1,3 +1,7 @@
+import { MultipartFile } from '@adonisjs/core/bodyparser'
+import { DateTime } from 'luxon'
+import { ApiStatFilters } from './api_stat_filter.types.js'
+import { AdominFieldConfig } from './fields.types.js'
 import type { AdominRightsCheckFunction } from './routes/adomin_routes_overrides_and_rights.js'
 
 export interface StatsViewConfig {
@@ -17,7 +21,7 @@ export interface StatsViewConfig {
   /**
    * Each object in the array represents a chart to display
    */
-  stats: AdominStat[]
+  stats: AdominStat<ApiStatFilters>[]
   /**
    * If true, the view will be hidden on the frontend (but still accessible if you know the path)
    *
@@ -111,7 +115,7 @@ interface ChartkickOptions {
   empty?: string
 }
 
-interface ChartkickStat extends AdominStatBase {
+interface ChartkickStat<T extends ApiStatFilters> extends AdominStatBase<T> {
   /**
    * Type of the chart to display
    */
@@ -123,10 +127,10 @@ interface ChartkickStat extends AdominStatBase {
   /**
    * function to fetch the data to displayed in the chart
    */
-  dataFetcher: () => Promise<ChartRowData>
+  dataFetcher: (filters: GetFilterValueType<T>) => Promise<ChartRowData>
 }
 
-interface AdominStatBase {
+interface AdominStatBase<T extends ApiStatFilters> {
   /**
    * Label of the stat, displayed in the frontend
    */
@@ -137,6 +141,10 @@ interface AdominStatBase {
    * (e.g. in the react key prop)
    */
   name: string
+  /**
+   * Form filters
+   */
+  filters?: T
 }
 
 export interface KpiStatOptions {
@@ -151,7 +159,7 @@ export interface KpiStatOptions {
   color?: string
 }
 
-export interface KpiStat extends AdominStatBase {
+export interface KpiStat<T extends ApiStatFilters> extends AdominStatBase<T> {
   /**
    * Type of the chart to display
    */
@@ -159,18 +167,18 @@ export interface KpiStat extends AdominStatBase {
   /**
    * function to fetch the data to displayed in the chart
    */
-  dataFetcher: () => Promise<string | number>
+  dataFetcher: (filters: GetFilterValueType<T>) => Promise<string | number>
   /**
    * Options for the chart
    */
   options?: KpiStatOptions
 }
 
-export type AdominStat = ChartkickStat | KpiStat
+export type AdominStat<T extends ApiStatFilters> = ChartkickStat<T> | KpiStat<T>
 
-export type StatsViewConfigStaticOptions = Omit<StatsViewConfig, 'type'>
+export type StatsViewConfigOptions = Omit<StatsViewConfig, 'type'>
 
-export const createStatsViewConfig = (options: StatsViewConfigStaticOptions): StatsViewConfig => {
+export const createStatsViewConfig = (options: StatsViewConfigOptions): StatsViewConfig => {
   const { name, stats, label, visibilityCheck, isHidden, icon, gridTemplateAreas } = options
 
   return {
@@ -184,3 +192,43 @@ export const createStatsViewConfig = (options: StatsViewConfigStaticOptions): St
     gridTemplateAreas,
   }
 }
+
+type GetFilterValueType<T extends ApiStatFilters> = {
+  [K in keyof T]: GetIsOptionalOrNullable<
+    GetFilterValueTypeByType<T[K]['type']>,
+    T[K]['optional'],
+    T[K]['nullable']
+  >
+}
+
+type GetFilterValueTypeByType<T extends AdominFieldConfig['type']> = T extends 'string'
+  ? string
+  : T extends 'date'
+    ? DateTime
+    : T extends 'number'
+      ? number
+      : T extends 'boolean'
+        ? boolean
+        : T extends 'enum' | 'array' | 'foreignKey' | 'belongsToRelation' | 'hasOneRelation'
+          ? string | number
+          : T extends 'file'
+            ? MultipartFile
+            : T extends 'json'
+              ? any
+              : T extends 'hasManyRelation' | 'manyToManyRelation'
+                ? (string | number)[]
+                : never
+
+type GetIsOptional<T, Optionnal extends boolean | undefined> = Optionnal extends true
+  ? T | undefined
+  : T
+type GetIsNullable<T, Nullable extends boolean | undefined> = Nullable extends true ? T | null : T
+type GetIsOptionalOrNullable<
+  T,
+  Optional extends boolean | undefined,
+  Nullable extends boolean | undefined,
+> = GetIsNullable<GetIsOptional<T, Optional>, Nullable>
+
+export const addAdominStat = <T extends ApiStatFilters>(
+  stat: AdominStat<T>
+): AdominStat<ApiStatFilters> => stat as AdominStat<ApiStatFilters>

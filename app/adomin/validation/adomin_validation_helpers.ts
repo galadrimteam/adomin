@@ -27,7 +27,7 @@ export type AdominValidationWithSchema = {
 
 export type AdominValidationAtom = AdominValidationWithSchema | AdominCustomFunctionValidation
 
-const ADOMIN_VALIDATION_MODES = ['create', 'update'] as const
+const ADOMIN_VALIDATION_MODES = ['create', 'update', 'stat-filter'] as const
 
 export type AdominValidationMode = (typeof ADOMIN_VALIDATION_MODES)[number]
 
@@ -62,7 +62,8 @@ export const validateOrThrow = async (
   validationParams: AdominValidation,
   mode: AdominValidationMode
 ) => {
-  const validationAtom = validationParams[mode]
+  const finalMode = mode === 'stat-filter' ? 'create' : mode
+  const validationAtom = validationParams[finalMode]
   if (!validationAtom) return true
   return validateAtom(ctx, validationAtom)
 }

@@ -2,7 +2,7 @@
 import { AdominViewConfig } from '#adomin/adomin_config.types'
 import { createFolderViewConfig } from '#adomin/create_folder_view_config'
 import { createModelViewConfig } from '#adomin/create_model_view_config'
-import { createStatsViewConfig } from '#adomin/create_stats_view_config'
+import { addAdominStat, createStatsViewConfig } from '#adomin/create_stats_view_config'
 import {
   groupByDate,
   groupByDayOfWeek,
@@ -19,6 +19,20 @@ import vine from '@vinejs/vine'
 import { DateTime } from 'luxon'
 import { copyFileSync, mkdirSync, rmSync } from 'node:fs'
 import { RIGHTS, RIGHTS_LABELS } from './rights.js'
+
+const TABLE_OPTIONS = [
+  { label: 'Utilisateurs', value: 'users' },
+  { label: 'Idées', value: 'ideas' },
+  { label: 'Profils', value: 'profiles' },
+]
+
+const TABLE_OPTIONS_LABEL_BY_VALUE = TABLE_OPTIONS.reduce(
+  (acc, curr) => {
+    acc[curr.value] = curr.label
+    return acc
+  },
+  {} as Record<string, string>
+)
 
 export const USER_CONFIG = createModelViewConfig(() => User, {
   label: 'Utilisateur',
@@ -286,13 +300,23 @@ export const STATS_CONFIG = createStatsViewConfig({
   name: 'kpis',
   label: 'Les super KPI',
   stats: [
-    {
+    addAdominStat({
       type: 'column',
-      label: "Création d'utilisateurs par jour de la semaine",
+      label: 'Création de ressources par jour de la semaine',
       name: 'testColumnChart2',
-      dataFetcher: () => groupByDayOfWeek('users', 'created_at'),
-    },
-    {
+      options: {
+        download: true,
+      },
+      dataFetcher: ({ tableName }) => groupByDayOfWeek(tableName.toString(), 'created_at'),
+      filters: {
+        tableName: {
+          type: 'enum',
+          label: 'Nom de la ressource',
+          options: TABLE_OPTIONS,
+        },
+      },
+    }),
+    addAdominStat({
       type: 'line',
       label: "Création d'utilisateurs vs idées par heure",
       name: 'users-vs-ideas-by-hour',
@@ -301,24 +325,44 @@ export const STATS_CONFIG = createStatsViewConfig({
         xtitle: 'Heure de la journée',
         ytitle: 'Quantité',
       },
-      dataFetcher: async () => {
-        const users = await groupByHour('users', 'created_at', { allHours: true })
-        const ideas = await groupByHour('ideas', 'created_at', { allHours: true })
+      dataFetcher: async ({ tableName1, tableName2 }) => {
+        const name1 = tableName1.toString()
+        const name2 = tableName2.toString()
+        const dataTable1 = await groupByHour(name1, 'created_at', {
+          allHours: true,
+        })
+        const dataTable2 = await groupByHour(name2, 'created_at', {
+          allHours: true,
+        })
 
         return [
           {
-            name: 'Utilisateurs',
-            data: users,
+            name: TABLE_OPTIONS_LABEL_BY_VALUE[name1],
+            data: dataTable1,
             color: 'goldenrod',
           },
           {
-            name: 'Idées',
-            data: ideas,
+            name: TABLE_OPTIONS_LABEL_BY_VALUE[name2],
+            data: dataTable2,
             color: 'darkcyan',
           },
         ]
       },
-    },
+      filters: {
+        tableName1: {
+          type: 'enum',
+          label: 'Nom de la ressource 1',
+          options: TABLE_OPTIONS,
+          defaultValue: 'users',
+        },
+        tableName2: {
+          type: 'enum',
+          label: 'Nom de la ressource 2',
+          options: TABLE_OPTIONS,
+          defaultValue: 'ideas',
+        },
+      },
+    }),
     {
       type: 'area',
       label: 'Profils par date de création',
