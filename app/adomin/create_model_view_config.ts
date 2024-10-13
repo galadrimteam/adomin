@@ -103,7 +103,7 @@ export interface ModelConfig extends ModelConfigStaticOptions {
 export interface VirtualColumnConfig<T extends LucidModel> {
   /** Name of the virtual column, must be unique for the model */
   name: string
-  adomin: Omit<AdominFieldConfig, 'getter' | 'setter'>
+  adomin: AdominFieldConfig
   /** Index of the column in the final columns array, if not provided, the column will be appended at the end */
   columnOrderIndex?: number
   /**
