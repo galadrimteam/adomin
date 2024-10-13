@@ -220,6 +220,7 @@ export const loadRelations = (
   fields: ColumnConfig[]
 ) => {
   for (const field of fields) {
+    if (field.isVirtual) continue
     if (
       field.adomin.type === 'hasManyRelation' ||
       field.adomin.type === 'belongsToRelation' ||
