@@ -1,6 +1,5 @@
 import { MultipartFile } from '@adonisjs/core/bodyparser'
-import { LucidRow } from '@adonisjs/lucid/types/model'
-import { RawQueryBindings } from '@adonisjs/lucid/types/querybuilder'
+import { LucidRow, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { VineObject, VineValidator } from '@vinejs/vine'
 
 export interface AdominBaseFieldConfig {
@@ -40,20 +39,17 @@ export interface AdominBaseFieldConfig {
    */
   computed?: boolean
   /**
-   * Sql filter override, usefull for computed fields
+   * Sql filter builder override, usefull for computed and virtual fields
    *
    * e.g.
    * ```ts
-   * const isBeautifullFilter = (input: string | null) => {
-   *   if (input === null) return 'false'
-   *
-   *   if (+input === 0) return `email != 'damien@galadrim.fr'`
-   *
-   *   return `email = 'damien@galadrim.fr'`
+   * sqlFilter: (search: string | null, builder) => {
+   *   if (!search) return;
+   *   builder.whereHas("officeFloor", (q) => q.where("office_id", search));
    * }
    * ```
    */
-  sqlFilter?: (input: string | null) => string | { sql: string; bindings: RawQueryBindings }
+  sqlFilter?: (search: string | null, builder: ModelQueryBuilderContract<any>) => unknown
   /**
    * Sql orderBy override, usefull for computed fields
    *

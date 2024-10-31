@@ -76,12 +76,7 @@ export const applyGlobalFilters = (
       if (!globalFilter) continue
 
       if (field.adomin.sqlFilter !== undefined) {
-        const sqlFilter = field.adomin.sqlFilter(globalFilter)
-        if (typeof sqlFilter === 'string') {
-          builder.andWhereRaw(sqlFilter)
-        } else {
-          builder.andWhereRaw(sqlFilter.sql, sqlFilter.bindings)
-        }
+        field.adomin.sqlFilter(globalFilter, builder)
         continue
       }
 
@@ -133,12 +128,7 @@ export const applyColumnFilters = (
       if (search === undefined) continue
 
       if (field.adomin.sqlFilter !== undefined) {
-        const sqlFilter = field.adomin.sqlFilter(search)
-        if (typeof sqlFilter === 'string') {
-          builder.andWhereRaw(sqlFilter)
-        } else {
-          builder.andWhereRaw(sqlFilter.sql, sqlFilter.bindings)
-        }
+        field.adomin.sqlFilter(search, builder)
         continue
       }
 
