@@ -59,5 +59,5 @@ const whereClausePg = (
   }
 
   const method = type === 'or' ? 'orWhereRaw' : 'andWhereRaw'
-  builder[method](`CAST("${string.snakeCase(column)}" as text) LIKE ?`, [`%${value}%`])
+  builder[method](`CAST("${string.snakeCase(column)}" as text) ILIKE ?`, [`%${value}%`])
 }
