@@ -24,5 +24,4 @@ export const ADOMIN_CONFIG: AdominConfig = {
     maxHeight: 36,
     textPosition: 'bottom',
   },
-  footerText: 'Made with ❤️ by Galadrim',
 }
