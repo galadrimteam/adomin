@@ -17,6 +17,12 @@ import { AdominConfig } from '#adomin/adomin_config.types'
  */
 
 export const ADOMIN_CONFIG: AdominConfig = {
-  title: 'Your Backoffice Title',
+  title: 'Adomin',
   views: [],
+  logo: {
+    url: 'https://galadrim.fr/img/favicon.png',
+    maxHeight: 36,
+    textPosition: 'bottom',
+  },
+  footerText: 'Made with ❤️ by Galadrim',
 }

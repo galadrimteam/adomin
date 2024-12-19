@@ -13,6 +13,13 @@ export interface AdominConfig {
    */
   userDisplayKey?: string
   footerText?: string
+  logo?: {
+    url: string
+    maxWidth?: number
+    maxHeight?: number
+    /** where to show backoffice title along with logo, if not set, the title will not be shown */
+    textPosition?: 'bottom' | 'right'
+  }
   views: AdominViewConfig[]
   plugins?: AdominPlugin[]
 }

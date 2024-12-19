@@ -7,8 +7,6 @@ import { ADOMIN_CONFIG } from '../config/adomin_config.js'
 import type { ModelConfig } from '../create_model_view_config.js'
 import { computeRightsCheck } from './adomin_routes_overrides_and_rights.js'
 
-export const defaultFooterText = 'Made with ❤️ by Galadrim'
-
 const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<ApiModelView> => {
   const { label, labelPluralized, name, isHidden = false, visibilityCheck, icon } = conf
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
@@ -82,11 +80,12 @@ export const getAdominConfig = async (ctx: HttpContext) => {
   const { auth } = ctx
   const user = auth.user!
   const views = await getViewsConfig(ctx, ADOMIN_CONFIG.views)
-  const footerText = ADOMIN_CONFIG.footerText ?? defaultFooterText
+  const footerText = ADOMIN_CONFIG.footerText ?? ''
 
   return {
     title: ADOMIN_CONFIG.title,
     footerText,
+    logo: ADOMIN_CONFIG.logo ?? null,
     views,
     userDisplayKey: ADOMIN_CONFIG.userDisplayKey ?? 'email',
     user,
