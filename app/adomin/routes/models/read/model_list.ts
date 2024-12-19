@@ -38,6 +38,7 @@ export const modelList = async (ctx: HttpContext) => {
 
   const filters = prepareQsObject(qs.filters)
   const sorting = prepareQsObject(qs.sorting)
+  const arrayFilters = prepareQsObject(qs.arrayFilters)
 
   const paginationSettings = await validator.validate({
     schema: paginationSchema,
@@ -45,6 +46,7 @@ export const modelList = async (ctx: HttpContext) => {
       ...qs,
       filters,
       sorting,
+      arrayFilters,
     },
   })
 

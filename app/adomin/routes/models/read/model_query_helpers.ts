@@ -17,6 +17,13 @@ export const paginationSchema = schema.create({
     })
   ),
   filtersMode: schema.enum.optional(['and', 'or'] as const),
+  arrayFilters: schema.array.optional().members(
+    schema.object().members({
+      id: schema.string(),
+      value: schema.array().anyMembers(),
+      mode: schema.enum(['IN', 'NOT IN'] as const),
+    })
+  ),
   sorting: schema.array.optional().members(
     schema.object().members({
       id: schema.string(),
@@ -219,5 +226,14 @@ export const loadRelations = (
     ) {
       if (field.adomin.preload !== false) query.preload(field.name as never)
     }
+  }
+}
+
+export const applyArrayFilters = (
+  query: ModelQueryBuilderContract<LucidModel, LucidRow>,
+  arrayFilters: PaginationSettings['arrayFilters'] = []
+) => {
+  for (const filter of arrayFilters) {
+    query.andWhere(filter.id, filter.mode, filter.value)
   }
 }

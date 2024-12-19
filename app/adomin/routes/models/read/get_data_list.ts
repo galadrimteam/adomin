@@ -4,6 +4,7 @@ import { computeColumnConfigFields, getModelFieldStrs } from '../get_model_confi
 import { computeVirtualFields } from './compute_virtual_columns.js'
 import {
   PaginationSettings,
+  applyArrayFilters,
   applyColumnFilters,
   applyGlobalFilters,
   applySorting,
@@ -40,6 +41,8 @@ export const getModelList = async ({
   applyColumnFilters(query, fields, filtersMap, paginationSettings.filtersMode)
 
   applySorting(query, fieldsMap, primaryKey, paginationSettings.sorting)
+
+  applyArrayFilters(query, paginationSettings.arrayFilters)
 
   if (paginationSettings.exportType) {
     const dataWithoutPagination = await query.exec()
