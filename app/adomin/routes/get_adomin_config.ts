@@ -1,4 +1,5 @@
 import type { AdominViewConfig } from '#adomin/adomin_config.types'
+import { ApiStatFilters } from '#adomin/api_stat_filter.types'
 import { ApiAdominView, ApiFolderView, ApiModelView, ApiStatView } from '#adomin/api_views.types'
 import type { FolderViewConfig } from '#adomin/create_folder_view_config'
 import type { StatsViewConfig } from '#adomin/create_stats_view_config'
@@ -22,7 +23,10 @@ const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<
   }
 }
 
-const getStatViewConfig = async (ctx: HttpContext, conf: StatsViewConfig): Promise<ApiStatView> => {
+const getStatViewConfig = async (
+  ctx: HttpContext,
+  conf: StatsViewConfig<ApiStatFilters>
+): Promise<ApiStatView> => {
   const { name, label, visibilityCheck, isHidden = false, icon } = conf
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
 

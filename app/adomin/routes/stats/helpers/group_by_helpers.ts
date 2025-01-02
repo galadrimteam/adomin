@@ -1,5 +1,15 @@
 import { getDbType } from '#adomin/utils/get_db_type'
 import db from '@adonisjs/lucid/services/db'
+import { DatabaseQueryBuilderContract } from '@adonisjs/lucid/types/querybuilder'
+
+interface HelperOptions {
+  /**
+   * Use this to customize the query built for this model
+   *
+   * e.g. for adding a where clause
+   */
+  queryBuilderCallback?: (q: DatabaseQueryBuilderContract) => void
+}
 
 const getDayOfWeekSql = (column: string) => {
   const dbType = getDbType()
@@ -20,12 +30,20 @@ const getDayOfWeekSql = (column: string) => {
 
 const DAY_LABELS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
 
-export async function groupByDayOfWeek(table: string, column: string): Promise<[string, number][]> {
+export async function groupByDayOfWeek(
+  table: string,
+  column: string,
+  options: HelperOptions = {}
+): Promise<[string, number][]> {
   const dayOfWeekSql = getDayOfWeekSql(column)
 
-  const results = await db
-    .from(table)
-    .select(db.raw(`${dayOfWeekSql} as day_of_week`))
+  const query = db.from(table).select(db.raw(`${dayOfWeekSql} as day_of_week`))
+
+  if (options.queryBuilderCallback) {
+    options.queryBuilderCallback(query)
+  }
+
+  const results = await query
     .count('* as count')
     .groupBy('day_of_week')
     .orderBy('day_of_week', 'asc')
@@ -59,14 +77,19 @@ const getDateSql = (column: string) => {
   }
 }
 
-export async function groupByDate(table: string, column: string): Promise<[string, number][]> {
+export async function groupByDate(
+  table: string,
+  column: string,
+  options: HelperOptions = {}
+): Promise<[string, number][]> {
   const dateSql = getDateSql(column)
-  const results = await db
-    .from(table)
-    .select(db.raw(`${dateSql} as date`))
-    .count('* as count')
-    .groupBy('date')
-    .orderBy('date', 'asc')
+  const query = db.from(table).select(db.raw(`${dateSql} as date`))
+
+  if (options.queryBuilderCallback) {
+    options.queryBuilderCallback(query)
+  }
+
+  const results = await query.count('* as count').groupBy('date').orderBy('date', 'asc')
 
   const dateMap = results.map((row) => {
     const res: [string, number] = [row.date, Number(row.count)]
@@ -94,7 +117,7 @@ const getHourSql = (column: string) => {
   }
 }
 
-interface GroupByHourOptions {
+interface GroupByHourOptions extends HelperOptions {
   /**
    * If true display all the range of hours (00 -> 24) instead of just the hours defined in the data
    * @default false
@@ -109,12 +132,13 @@ export async function groupByHour(
 ): Promise<[string, number][]> {
   const hourSql = getHourSql(column)
 
-  const results = await db
-    .from(table)
-    .select(db.raw(`${hourSql} as hour`))
-    .count('* as count')
-    .groupBy('hour')
-    .orderBy('hour', 'asc')
+  const query = db.from(table).select(db.raw(`${hourSql} as hour`))
+
+  if (options.queryBuilderCallback) {
+    options.queryBuilderCallback(query)
+  }
+
+  const results = await query.count('* as count').groupBy('hour').orderBy('hour', 'asc')
 
   if (!options.allHours) {
     return results.map((row) => [row.hour.toString(), Number(row.count)] as [string, number])
@@ -137,16 +161,21 @@ export async function groupByHour(
   return allHours
 }
 
-export const groupByYear = async (table: string, column: string): Promise<[string, number][]> => {
+export const groupByYear = async (
+  table: string,
+  column: string,
+  options: HelperOptions = {}
+): Promise<[string, number][]> => {
   const dbType = getDbType()
   const yearSql = dbType === 'pg' ? `EXTRACT(YEAR FROM ${column})` : `YEAR(${column})`
 
-  const results = await db
-    .from(table)
-    .select(db.raw(`${yearSql} as year`))
-    .count('* as count')
-    .groupBy('year')
-    .orderBy('year', 'asc')
+  const query = db.from(table).select(db.raw(`${yearSql} as year`))
+
+  if (options.queryBuilderCallback) {
+    options.queryBuilderCallback(query)
+  }
+
+  const results = await query.count('* as count').groupBy('year').orderBy('year', 'asc')
 
   return results.map((row) => [row.year, Number(row.count)] as [string, number])
 }
@@ -166,16 +195,21 @@ const MONTH_LABELS = [
   'Déc',
 ]
 
-export const groupByMonth = async (table: string, column: string): Promise<[string, number][]> => {
+export const groupByMonth = async (
+  table: string,
+  column: string,
+  options: HelperOptions = {}
+): Promise<[string, number][]> => {
   const dbType = getDbType()
   const monthSql = dbType === 'pg' ? `EXTRACT(MONTH FROM ${column})` : `MONTH(${column})`
 
-  const results = await db
-    .from(table)
-    .select(db.raw(`${monthSql} as month`))
-    .count('* as count')
-    .groupBy('month')
-    .orderBy('month', 'asc')
+  const query = db.from(table).select(db.raw(`${monthSql} as month`))
+
+  if (options.queryBuilderCallback) {
+    options.queryBuilderCallback(query)
+  }
+
+  const results = await query.count('* as count').groupBy('month').orderBy('month', 'asc')
 
   return results.map((row) => [MONTH_LABELS[row.month - 1], Number(row.count)] as [string, number])
 }

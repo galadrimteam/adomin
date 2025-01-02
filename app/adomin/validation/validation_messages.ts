@@ -1,5 +1,4 @@
 import { ApiStatFilters } from '#adomin/api_stat_filter.types'
-import { AdominStat } from '#adomin/create_stats_view_config'
 import { LucidModel } from '@adonisjs/lucid/types/model'
 import { CustomMessages } from '@adonisjs/validator/types'
 import { getModelConfig } from '../routes/models/get_model_config.js'
@@ -47,8 +46,7 @@ export const getGenericMessages = (Model: LucidModel): CustomMessages => ({
   },
 })
 
-const getStatFilterLabel = (fieldName: string, statsConfig: AdominStat<ApiStatFilters>) => {
-  const filters = statsConfig.filters ?? {}
+const getStatFilterLabel = (fieldName: string, filters: ApiStatFilters) => {
   const keys = Object.keys(filters)
   const keyFound = keys.find((key) => key === fieldName)
   if (!keyFound) return fieldName
@@ -57,12 +55,10 @@ const getStatFilterLabel = (fieldName: string, statsConfig: AdominStat<ApiStatFi
   return fieldLabel
 }
 
-export const getGenericMessagesForStatFilters = (
-  statsConfig: AdominStat<ApiStatFilters>
-): CustomMessages => ({
+export const getGenericMessagesForStatFilters = (filters: ApiStatFilters): CustomMessages => ({
   '*': (field, rule, _ptr) => {
     const fieldName = getFieldName(field)
-    const fieldLabel = getStatFilterLabel(fieldName, statsConfig)
+    const fieldLabel = getStatFilterLabel(fieldName, filters)
 
     return getGenericMessagesBase(rule, fieldLabel)
   },

@@ -4,7 +4,7 @@ import { ApiStatFilters } from './api_stat_filter.types.js'
 import { AdominFieldConfig } from './fields.types.js'
 import type { AdominRightsCheckFunction } from './routes/adomin_routes_overrides_and_rights.js'
 
-export interface StatsViewConfig {
+export interface StatsViewConfig<GlobalFiltersType extends ApiStatFilters> {
   type: 'stats'
   /**
    * Title of the view, displayed in the sidebar
@@ -21,7 +21,11 @@ export interface StatsViewConfig {
   /**
    * Each object in the array represents a chart to display
    */
-  stats: AdominStat<ApiStatFilters>[]
+  stats: AdominStat<ApiStatFilters, GlobalFiltersType>[]
+  /**
+   * Global filters, e.g. a date range that applies to ALL stats of the view
+   */
+  globalFilters?: GlobalFiltersType
   /**
    * If true, the view will be hidden on the frontend (but still accessible if you know the path)
    *
@@ -115,7 +119,8 @@ interface ChartkickOptions {
   empty?: string
 }
 
-interface ChartkickStat<T extends ApiStatFilters> extends AdominStatBase<T> {
+interface ChartkickStat<T extends ApiStatFilters, GlobalFiltersType extends ApiStatFilters>
+  extends AdominStatBase<T> {
   /**
    * Type of the chart to display
    */
@@ -127,7 +132,9 @@ interface ChartkickStat<T extends ApiStatFilters> extends AdominStatBase<T> {
   /**
    * function to fetch the data to displayed in the chart
    */
-  dataFetcher: (filters: GetFilterValueType<T>) => Promise<ChartRowData>
+  dataFetcher: (
+    filters: GetFilterValueType<Exclude<T, undefined>> & GetFilterValueType<GlobalFiltersType>
+  ) => Promise<ChartRowData>
 }
 
 interface AdominStatBase<T extends ApiStatFilters> {
@@ -144,7 +151,7 @@ interface AdominStatBase<T extends ApiStatFilters> {
   /**
    * Form filters
    */
-  filters?: T
+  filters: T
 }
 
 export interface KpiStatOptions {
@@ -159,7 +166,8 @@ export interface KpiStatOptions {
   color?: string
 }
 
-export interface KpiStat<T extends ApiStatFilters> extends AdominStatBase<T> {
+export interface KpiStat<T extends ApiStatFilters, GlobalFiltersType extends ApiStatFilters>
+  extends AdominStatBase<T> {
   /**
    * Type of the chart to display
    */
@@ -167,29 +175,47 @@ export interface KpiStat<T extends ApiStatFilters> extends AdominStatBase<T> {
   /**
    * function to fetch the data to displayed in the chart
    */
-  dataFetcher: (filters: GetFilterValueType<T>) => Promise<string | number>
+  dataFetcher: (
+    filters: GetFilterValueType<T> & GetFilterValueType<GlobalFiltersType>
+  ) => Promise<string | number>
   /**
    * Options for the chart
    */
   options?: KpiStatOptions
 }
 
-export type AdominStat<T extends ApiStatFilters> = ChartkickStat<T> | KpiStat<T>
+export type AdominStat<T extends ApiStatFilters, GlobalFiltersType extends ApiStatFilters> =
+  | ChartkickStat<T, GlobalFiltersType>
+  | KpiStat<T, GlobalFiltersType>
 
-export type StatsViewConfigOptions = Omit<StatsViewConfig, 'type'>
+export type StatsViewConfigOptions<
+  LocalFiltersType extends ApiStatFilters[],
+  GlobalFiltersType extends ApiStatFilters,
+> = Omit<StatsViewConfig<GlobalFiltersType>, 'type' | 'stats'> & {
+  stats: {
+    [K in keyof LocalFiltersType]: AdominStat<LocalFiltersType[K], GlobalFiltersType>
+  }
+}
 
-export const createStatsViewConfig = (options: StatsViewConfigOptions): StatsViewConfig => {
-  const { name, stats, label, visibilityCheck, isHidden, icon, gridTemplateAreas } = options
+export const createStatsViewConfig = <
+  LocalFiltersType extends ApiStatFilters[],
+  GlobalFiltersType extends ApiStatFilters,
+>(
+  options: StatsViewConfigOptions<LocalFiltersType, GlobalFiltersType>
+): StatsViewConfig<ApiStatFilters> => {
+  const { name, stats, label, visibilityCheck, isHidden, icon, gridTemplateAreas, globalFilters } =
+    options
 
   return {
     type: 'stats',
     name,
-    stats,
+    stats: stats as StatsViewConfig<ApiStatFilters>['stats'],
     label,
     visibilityCheck,
     isHidden,
     icon,
     gridTemplateAreas,
+    globalFilters,
   }
 }
 
@@ -228,7 +254,3 @@ type GetIsOptionalOrNullable<
   Optional extends boolean | undefined,
   Nullable extends boolean | undefined,
 > = GetIsNullable<GetIsOptional<T, Optional>, Nullable>
-
-export const addAdominStat = <T extends ApiStatFilters>(
-  stat: AdominStat<T>
-): AdominStat<ApiStatFilters> => stat as AdominStat<ApiStatFilters>

@@ -2,7 +2,7 @@
 import { AdominViewConfig } from '#adomin/adomin_config.types'
 import { createFolderViewConfig } from '#adomin/create_folder_view_config'
 import { createModelViewConfig } from '#adomin/create_model_view_config'
-import { addAdominStat, createStatsViewConfig } from '#adomin/create_stats_view_config'
+import { createStatsViewConfig } from '#adomin/create_stats_view_config'
 import {
   groupByDate,
   groupByDayOfWeek,
@@ -14,6 +14,7 @@ import Test from '#models/test'
 import User from '#models/user'
 import app from '@adonisjs/core/services/app'
 import db from '@adonisjs/lucid/services/db'
+import { DatabaseQueryBuilderContract } from '@adonisjs/lucid/types/querybuilder'
 import { faker } from '@faker-js/faker'
 import vine from '@vinejs/vine'
 import { DateTime } from 'luxon'
@@ -296,18 +297,41 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
   ],
 })
 
+const createFilterCallback = (startDate: DateTime, endDate: DateTime) => {
+  return (q: DatabaseQueryBuilderContract) => {
+    q.where('created_at', '>=', startDate.toJSDate()).where('created_at', '<=', endDate.toJSDate())
+  }
+}
+
 export const STATS_CONFIG = createStatsViewConfig({
   name: 'kpis',
   label: 'Les super KPI',
+  globalFilters: {
+    startDate: {
+      type: 'date',
+      label: 'Date de début',
+      subType: 'datetime',
+      defaultValue: { mode: 'now', plusYears: -1 },
+    },
+    endDate: {
+      type: 'date',
+      label: 'Date de fin',
+      subType: 'datetime',
+      defaultValue: { mode: 'now' },
+    },
+  },
   stats: [
-    addAdominStat({
+    {
       type: 'column',
       label: 'Création de ressources par jour de la semaine',
       name: 'testColumnChart2',
       options: {
         download: true,
       },
-      dataFetcher: ({ tableName }) => groupByDayOfWeek(tableName.toString(), 'created_at'),
+      dataFetcher: ({ tableName, startDate, endDate }) =>
+        groupByDayOfWeek(tableName.toString(), 'created_at', {
+          queryBuilderCallback: createFilterCallback(startDate, endDate),
+        }),
       filters: {
         tableName: {
           type: 'enum',
@@ -315,8 +339,8 @@ export const STATS_CONFIG = createStatsViewConfig({
           options: TABLE_OPTIONS,
         },
       },
-    }),
-    addAdominStat({
+    },
+    {
       type: 'line',
       label: "Création d'utilisateurs vs idées par heure",
       name: 'users-vs-ideas-by-hour',
@@ -325,14 +349,16 @@ export const STATS_CONFIG = createStatsViewConfig({
         xtitle: 'Heure de la journée',
         ytitle: 'Quantité',
       },
-      dataFetcher: async ({ tableName1, tableName2 }) => {
+      dataFetcher: async ({ tableName1, tableName2, endDate, startDate }) => {
         const name1 = tableName1.toString()
         const name2 = tableName2.toString()
         const dataTable1 = await groupByHour(name1, 'created_at', {
           allHours: true,
+          queryBuilderCallback: createFilterCallback(startDate, endDate),
         })
         const dataTable2 = await groupByHour(name2, 'created_at', {
           allHours: true,
+          queryBuilderCallback: createFilterCallback(startDate, endDate),
         })
 
         return [
@@ -362,19 +388,23 @@ export const STATS_CONFIG = createStatsViewConfig({
           defaultValue: 'ideas',
         },
       },
-    }),
+    },
     {
       type: 'area',
       label: 'Profils par date de création',
       name: 'profiles-by-creation-date',
-      dataFetcher: () => groupByDate('profiles', 'created_at'),
+      dataFetcher: ({ startDate, endDate }) =>
+        groupByDate('profiles', 'created_at', {
+          queryBuilderCallback: createFilterCallback(startDate, endDate),
+        }),
       options: { thousands: ',', download: true },
+      filters: {},
     },
     {
       type: 'pie',
       label: "Utilisateurs par tranche d'âge",
       name: 'users-by-age-range',
-      dataFetcher: async () => {
+      dataFetcher: async ({ startDate, endDate }) => {
         const res = await db
           .from('profiles')
           .select(
@@ -382,6 +412,8 @@ export const STATS_CONFIG = createStatsViewConfig({
               'FLOOR(age / 10) * 10 as age_range_start, FLOOR(age / 10) * 10 + 9 as age_range_end'
             )
           )
+          .where('created_at', '>=', startDate.toJSDate())
+          .where('created_at', '<=', endDate.toJSDate())
           .count('age as count')
           .groupByRaw('FLOOR(age / 10)')
           .orderBy('age_range_start', 'asc')
@@ -395,6 +427,7 @@ export const STATS_CONFIG = createStatsViewConfig({
 
         return data
       },
+      filters: {},
     },
   ],
   icon: 'chart-bar',
@@ -456,6 +489,7 @@ const FAKE_STATS_CONFIG = createStatsViewConfig({
         ['23', 34],
         ['24', 22],
       ],
+      filters: {},
     },
   ],
   icon: 'chart-bar',
@@ -469,7 +503,13 @@ const KPI_STATS_CONFIG = createStatsViewConfig({
       type: 'kpi',
       label: 's1',
       name: 's1',
-      dataFetcher: async () => '54h',
+      dataFetcher: async ({ directNumber }) => directNumber + 'h',
+      filters: {
+        directNumber: {
+          type: 'number',
+          defaultValue: 54,
+        },
+      },
     },
     {
       type: 'kpi',
@@ -477,6 +517,7 @@ const KPI_STATS_CONFIG = createStatsViewConfig({
       name: 's2',
       dataFetcher: async () => 88,
       options: { isPercentage: true },
+      filters: {},
     },
     {
       type: 'column',
@@ -487,6 +528,7 @@ const KPI_STATS_CONFIG = createStatsViewConfig({
         ['b', 20],
         ['c', 44],
       ],
+      filters: {},
     },
   ],
   gridTemplateAreas: {

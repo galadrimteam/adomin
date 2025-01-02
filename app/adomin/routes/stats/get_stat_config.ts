@@ -1,10 +1,13 @@
+import type { ApiStatFilters } from '#adomin/api_stat_filter.types'
 import { getFlatViews } from '#adomin/get_flat_views'
 import { HttpContext } from '@adonisjs/core/http'
 import type { AdominViewConfig } from '../../adomin_config.types.js'
 import type { StatsViewConfig } from '../../create_stats_view_config.js'
 import { computeRightsCheck } from '../adomin_routes_overrides_and_rights.js'
 
-export const isStatConfig = (config: AdominViewConfig): config is StatsViewConfig => {
+export const isStatConfig = (
+  config: AdominViewConfig
+): config is StatsViewConfig<ApiStatFilters> => {
   return config.type === 'stats'
 }
 
@@ -18,7 +21,7 @@ export const getStatConfig = (viewName: string) => {
   return foundConfig
 }
 
-const getFrontendStatConfig = async (config: StatsViewConfig) => {
+const getFrontendStatConfig = async (config: StatsViewConfig<ApiStatFilters>) => {
   const promises = config.stats.map(async ({ label, name, type, options, filters }) => {
     return {
       type,
@@ -44,7 +47,8 @@ export const getStatConfigRoute = async (ctx: HttpContext) => {
     return response.notFound({ error: `View '${viewString}' not found` })
   }
 
-  const { label, name, isHidden, visibilityCheck, type, gridTemplateAreas, icon } = statConfig
+  const { label, name, isHidden, visibilityCheck, type, gridTemplateAreas, icon, globalFilters } =
+    statConfig
 
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck)
 
@@ -57,6 +61,7 @@ export const getStatConfigRoute = async (ctx: HttpContext) => {
     label,
     isHidden: isHidden ?? false,
     stats: frontendStatConfig,
+    globalFilters,
     type,
     gridTemplateAreas,
     icon,
