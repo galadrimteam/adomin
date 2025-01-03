@@ -11,6 +11,9 @@ import { computeRightsCheck } from './adomin_routes_overrides_and_rights.js'
 const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<ApiModelView> => {
   const { label, labelPluralized, name, isHidden = false, visibilityCheck, icon } = conf
   const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
+  const counter = conf.counter
+    ? { label: conf.counter.label, value: await conf.counter.dataFetcher(ctx) }
+    : undefined
 
   return {
     type: 'model',
@@ -20,6 +23,7 @@ const getModelViewConfig = async (ctx: HttpContext, conf: ModelConfig): Promise<
     isHidden,
     visibilityCheckPassed: visibilityCheckResult === 'OK',
     icon,
+    counter,
   }
 }
 

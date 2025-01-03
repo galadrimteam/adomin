@@ -37,6 +37,14 @@ const TABLE_OPTIONS_LABEL_BY_VALUE = TABLE_OPTIONS.reduce(
 
 export const USER_CONFIG = createModelViewConfig(() => User, {
   label: 'Utilisateur',
+  counter: {
+    label: "Nombre d'utilisateurs",
+    dataFetcher: async () => {
+      const res = await db.from('users').count('* as count')
+
+      return +res[0].count
+    },
+  },
   columns: {
     settings: {
       type: 'json',

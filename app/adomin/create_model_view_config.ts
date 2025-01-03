@@ -1,4 +1,5 @@
 import string from '@adonisjs/core/helpers/string'
+import { HttpContext } from '@adonisjs/core/http'
 import { LucidModel, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { BelongsTo, HasMany, HasOne, ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
@@ -90,6 +91,19 @@ export interface ModelConfigStaticOptions {
    * ````
    */
   instanceActions?: AdominActionConfig[]
+  /**
+   * Optionnal, allow to show a counter on the navigation bar for this model
+   */
+  counter?: {
+    /**
+     * Label shown on the navigation bar
+     */
+    label: string
+    /**
+     * data fetcher function to fetch the counter value
+     */
+    dataFetcher: (ctx: HttpContext) => Promise<number>
+  }
 }
 
 export interface ModelConfig extends ModelConfigStaticOptions {
@@ -275,5 +289,6 @@ export const createModelViewConfig = <T extends LucidModel>(
     icon: options.icon,
     globalActions: options.globalActions ?? [],
     instanceActions: options.instanceActions ?? [],
+    counter: options.counter,
   }
 }
