@@ -19,6 +19,9 @@ export default class Idea extends BaseModel {
   @belongsTo(() => User)
   declare author: BelongsTo<typeof User>
 
+  @column()
+  declare isChecked: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

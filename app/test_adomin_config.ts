@@ -225,6 +225,14 @@ export const TEST_CONFIG = createModelViewConfig(() => Test, {
 })
 
 export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
+  counter: {
+    label: 'Idées à vérifier',
+    dataFetcher: async () => {
+      const res = await db.from('ideas').where('is_checked', false).count('* as count')
+
+      return +res[0].count
+    },
+  },
   columns: {
     title: { type: 'string', label: 'Titre' },
     description: { type: 'string', label: 'Description', multiline: true },
@@ -235,6 +243,7 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
       labelFields: ['email'],
       nullable: true,
     },
+    isChecked: { type: 'boolean', label: 'Vérifié', creatable: false },
   },
   icon: 'bulb',
   globalActions: [
@@ -297,9 +306,26 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
           title: idea.title,
           description: idea.description,
           userId: idea.userId,
+          isChecked: idea.isChecked,
         })
 
         return { message: 'Duplication effectuée' }
+      },
+    },
+    {
+      type: 'backend-action',
+      name: 'check-idea',
+      tooltip: "Vérifier l'idée",
+      icon: 'check',
+      iconColor: 'green',
+      action: async (ctx) => {
+        const idea = await Idea.findOrFail(ctx.params.id)
+
+        idea.isChecked = true
+
+        await idea.save()
+
+        return { message: 'Vérification effectuée' }
       },
     },
   ],
