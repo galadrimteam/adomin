@@ -40,9 +40,9 @@ export const USER_CONFIG = createModelViewConfig(() => User, {
   counter: {
     label: "Nombre d'utilisateurs",
     dataFetcher: async () => {
-      const res = await db.from('users').count('* as count')
+      const [{ count }] = await db.from('users').count('* as count')
 
-      return +res[0].count
+      return count
     },
   },
   columns: {
@@ -228,9 +228,9 @@ export const IDEA_CONFIG = createModelViewConfig(() => Idea, {
   counter: {
     label: 'Idées à vérifier',
     dataFetcher: async () => {
-      const res = await db.from('ideas').where('is_checked', false).count('* as count')
+      const [{ count }] = await db.from('ideas').where('is_checked', false).count('* as count')
 
-      return +res[0].count
+      return count
     },
   },
   columns: {
