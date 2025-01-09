@@ -1,0 +1,64 @@
+---
+title: Custom views
+sidebar:
+  order: 1004
+description: Adomin custom views reference
+---
+
+With Adomin, you can also easily add your own completely custom views.
+
+## Config
+
+First, remember that your frontend is a basic react app with react-router, so if you add this at the end of your [router.tsx](https://github.com/galadrimteam/adomin-frontend/blob/main/src/router.tsx) file
+
+```tsx
+export const adominRoutes = createBrowserRouter([
+  // ... all adomin routes
+  {
+    path: '/your/custom/view',
+    element: <h1>Hello world</h1>,
+  },
+]);
+```
+
+and you visit the path `/your/custom/view` in your browser, you will see the text "Hello world"
+
+But if you do just that, you will see some problems:
+- when you are on another page, you don't have a link to your custom view
+- when you are on the custom view, you don't have the sidebar / header / footer of your backoffice
+
+To solve the first point, you can totally just hack a bit the [sidebar.tsx](https://github.com/galadrimteam/adomin-frontend/blob/main/src/pages/home/Sidebar.tsx) file to add a link to your custom view, but it's a bit tedious and not very clean.
+
+The way to go is to first add a custom view config on the backend side like this:
+
+```ts
+export const ADOMIN_CONFIG: AdominConfig = {
+  title: 'Adomin',
+  views: [
+		// ... your other views
+    createCustomViewConfig({
+      href: '/your/custom/view',
+      label: 'Custom page example',
+      name: 'custom-page-example',
+    }),
+  ],
+}
+```
+
+This will add a link to your custom view in the sidebar.
+
+Note that you can make it have an icon with the `icon` property, like for all the other type of views.
+
+Now that we fixed the first problem, let's tackle the second one.
+
+In order to have a custom view that uses the same layout as the rest of your backoffice, you will can wrap your component like this:
+
+```tsx
+<CustomPage currentView={"custom-page-example"}>
+	<YourComponent />
+</CustomPage>
+```
+
+Note that the `currentView` should be the name of the view you added on the backend side (in the sidebar this will allow to highlight the current opened view).
+
+You should take a look at the [CustomPageExample.tsx](https://github.com/galadrimteam/adomin-frontend/blob/main/src/pages/custom/CustomPageExample.tsx) file for a full custom view example.

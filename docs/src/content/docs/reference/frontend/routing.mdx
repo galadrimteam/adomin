@@ -79,7 +79,7 @@ export const adominRoutes = createBrowserRouter([
 
 You can see that it is creating dynamic paths, those paths will be determined with your backend adomin config.
 
-To be clear, if you do not change the `ADOMIN_*_PATH` variables, the following paths are created:
+To be clear, if you do not change the variables inside [adominPaths.ts](https://github.com/galadrimteam/adomin-frontend/blob/main/src/adominPaths.ts), the following paths are created:
 
 ```bash
 / # this path just redirects to /adomin, you can customize/remove this behaviour if you don't like it
@@ -132,3 +132,8 @@ export const adominRoutes = createBrowserRouter([
 ```
 
 :::
+
+:::note
+If you want to add a completely custom view, you should see the [custom views](/adomin/reference/views/custom/) reference
+:::
+
