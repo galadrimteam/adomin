@@ -1,6 +1,13 @@
 import type { AdominViewConfig } from '#adomin/adomin_config.types'
 import { ApiStatFilters } from '#adomin/api_stat_filter.types'
-import { ApiAdominView, ApiFolderView, ApiModelView, ApiStatView } from '#adomin/api_views.types'
+import {
+  ApiAdominView,
+  ApiCustomView,
+  ApiFolderView,
+  ApiModelView,
+  ApiStatView,
+} from '#adomin/api_views.types'
+import { CustomViewConfig } from '#adomin/create_custom_view_config'
 import type { FolderViewConfig } from '#adomin/create_folder_view_config'
 import type { StatsViewConfig } from '#adomin/create_stats_view_config'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -44,6 +51,24 @@ const getStatViewConfig = async (
   }
 }
 
+const getCustomViewConfig = async (
+  ctx: HttpContext,
+  conf: CustomViewConfig
+): Promise<ApiCustomView> => {
+  const { name, label, visibilityCheck, isHidden = false, icon, href } = conf
+  const visibilityCheckResult = await computeRightsCheck(ctx, visibilityCheck, false)
+
+  return {
+    type: 'custom',
+    href,
+    label,
+    name,
+    isHidden,
+    visibilityCheckPassed: visibilityCheckResult === 'OK',
+    icon,
+  }
+}
+
 const getFolderViewConfig = async (
   ctx: HttpContext,
   conf: FolderViewConfig
@@ -74,6 +99,9 @@ const getViewsConfig = async (
     }
     if (conf.type === 'folder') {
       return getFolderViewConfig(ctx, conf)
+    }
+    if (conf.type === 'custom') {
+      return getCustomViewConfig(ctx, conf)
     }
     return getModelViewConfig(ctx, conf)
   })

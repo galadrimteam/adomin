@@ -1,22 +1,23 @@
-import type { AdominViewConfig } from './adomin_config.types.js'
 import type { AdominRightsCheckFunction } from './routes/adomin_routes_overrides_and_rights.js'
 
-export interface FolderViewConfig {
-  type: 'folder'
+export interface CustomViewConfig {
+  type: 'custom'
   /**
-   * Title of the folder, displayed in the sidebar
+   * Title of the view, displayed in the sidebar
    */
   label: string
   /**
-   * Used to determine the path in the frontend
+   * Used as a react key in the frontend
    *
-   * e.g. if name = 'test', full path on the frontend will be /backoffice/folders/test
+   * Must be unique among all views
    */
   name: string
   /**
-   * Each object in the array represents a view in the folder (which can be a model, a folder or a stats view)
+   * Link href in the frontend, it can be relative or absolute
+   *
+   * e.g. if href = '/backoffice/custom/test', when clicking on the link, the user will be redirected to /backoffice/custom/test
    */
-  views: AdominViewConfig[]
+  href: string
   /** Check if logged in user can see this folder */
   visibilityCheck?: AdominRightsCheckFunction
   /**
@@ -34,19 +35,19 @@ export interface FolderViewConfig {
   icon?: string
 }
 
-export type FolderViewConfigStaticOptions = Omit<FolderViewConfig, 'type'>
+export type CustomViewConfigStaticOptions = Omit<CustomViewConfig, 'type'>
 
-export const createFolderViewConfig = (
-  options: FolderViewConfigStaticOptions
-): FolderViewConfig => {
-  const { name, label, visibilityCheck, views, isHidden, icon } = options
+export const createCustomViewConfig = (
+  options: CustomViewConfigStaticOptions
+): CustomViewConfig => {
+  const { href, label, visibilityCheck, isHidden, icon, name } = options
 
   return {
-    type: 'folder',
+    type: 'custom',
+    href,
     name,
     label,
     visibilityCheck,
-    views,
     isHidden,
     icon,
   }

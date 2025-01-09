@@ -30,4 +30,14 @@ export interface ApiFolderView extends ApiViewBase {
   views: ApiAdominView[]
 }
 
-export type ApiAdominView = ApiModelView | ApiStatView | ApiFolderView
+export interface ApiCustomView extends ApiViewBase {
+  type: 'custom'
+  /**
+   * Link href in the frontend, it can be relative or absolute
+   *
+   * e.g. if href = '/backoffice/custom/test', when clicking on the link, the user will be redirected to /backoffice/custom/test
+   */
+  href: string
+}
+
+export type ApiAdominView = ApiModelView | ApiStatView | ApiFolderView | ApiCustomView

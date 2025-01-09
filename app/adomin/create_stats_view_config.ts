@@ -13,7 +13,7 @@ export interface StatsViewConfig<GlobalFiltersType extends ApiStatFilters> {
   /**
    * Path in the frontend
    *
-   * e.g. if name = 'kpis', full path on the frontend will be /adomin/stats/kpis
+   * e.g. if name = 'kpis', full path on the frontend will be /backoffice/stats/kpis
    */
   name: string
   /** Check if logged in user can see this view */

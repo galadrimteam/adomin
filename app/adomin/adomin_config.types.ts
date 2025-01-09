@@ -1,9 +1,14 @@
 import { ApiStatFilters } from './api_stat_filter.types.js'
+import { CustomViewConfig } from './create_custom_view_config.js'
 import { FolderViewConfig } from './create_folder_view_config.js'
 import type { ModelConfig } from './create_model_view_config.js'
 import type { StatsViewConfig } from './create_stats_view_config.js'
 
-export type AdominViewConfig = ModelConfig | StatsViewConfig<ApiStatFilters> | FolderViewConfig
+export type AdominViewConfig =
+  | ModelConfig
+  | StatsViewConfig<ApiStatFilters>
+  | FolderViewConfig
+  | CustomViewConfig
 
 export type AdominPlugin = 'cms'
 
