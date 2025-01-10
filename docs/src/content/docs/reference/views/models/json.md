@@ -2,7 +2,6 @@
 title: Json field
 sidebar:
   order: 1013
-  badge: New
 description: Adomin json field reference
 ---
 
