@@ -14,7 +14,7 @@ It is composed of two main parts:
 - backend files that will be copied on your adonis backend
 - a react/vite frontend repository to clone
 
-![Adomin frontend](~/assets/images/adomin.jpg)
+![Adomin frontend](~/assets/images/adomin.png)
 
 ## What Adomin is not
 
@@ -37,23 +37,28 @@ On your adonis backend, you will create some Adomin configuration
 ```ts
 export const IDEA_VIEW = createModelViewConfig(() => Idea, {
   columns: {
-    title: { type: "string", label: "Titre" },
-    description: { type: "string", label: "Description" },
+    title: { type: 'string', label: 'Titre' },
+    description: { type: 'string', label: 'Description' },
     author: {
-      type: "belongsToRelation",
-      modelName: "User",
-      label: "Auteur",
-      labelFields: ["email"],
+      type: 'belongsToRelation',
+      modelName: 'User',
+      label: 'Auteur',
+      labelFields: ['email'],
       nullable: true,
     },
   },
-  icon: "bulb", // tabler icon name
-});
+  icon: 'bulb', // tabler icon name
+})
 
 export const ADOMIN_CONFIG: AdominConfig = {
-  title: "Your Backoffice Title",
+  title: 'Your Backoffice Title',
   views: [IDEA_VIEW],
-};
+  logo: {
+    url: 'https://galadrim.fr/img/favicon.png',
+    maxHeight: 36,
+    textPosition: 'bottom',
+  },
+}
 ```
 
 Adomin will then generate the following CRUDL routes :

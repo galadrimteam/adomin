@@ -103,6 +103,18 @@ If you want to protect things, use [visibilityCheck](#visibilitycheck)
 Icon name, by default this uses Tabler icons
 You can browse the list of available icons at: https://tabler.io/icons
 
+### globalFilters
+
+You can add a global filter configuration to your stat view, this will add a filter form on top of the page.
+
+The form filter data will be passed to all the `dataFetcher` functions of the stat view page as an object, so you can use it to filter the data you want to display.
+
+See also [AdominStat filters](#filters) and [filters example](#filters-example)
+
+:::tip
+**globalFilters** are nice to add filters that apply to all the graphs of your backoffice, for example a date range filter
+:::
+
 ### stats
 
 An array of `AdominStat` objects, each `AdominStat` represent a chart
@@ -131,6 +143,14 @@ Label of the stat, displayed in the frontend
 ### name
 
 Name of the stat must be unique on the page, it is not shown to the user but used in things like react `key` prop
+
+### filters
+
+You can add filters for this AdominStat graph or kpi, this will add a filter form just above the chart.
+
+The form filter data will be passed to the `dataFetcher` function as an object, so you can use it to filter the data you want to display.
+
+See also [AdominStat config](#globalFilters) and [filters example](#filters-example)
 
 ### dataFetcher
 
@@ -382,3 +402,43 @@ import { FileTree } from '@astrojs/starlight/components';
 
 </FileTree>
 
+## Filters example
+
+```ts
+createStatsViewConfig({
+  name: 'stat-view-example',
+  label: 'Page title',
+  globalFilters: {
+    startDate: {
+      type: 'date',
+      label: 'Start date',
+      subType: 'datetime',
+      defaultValue: { mode: 'now', plusYears: -1 },
+    },
+    endDate: {
+      type: 'date',
+      label: 'End date',
+      subType: 'datetime',
+      defaultValue: { mode: 'now' },
+    },
+  },
+  stats: [
+    {
+      type: 'column',
+      label: 'Some stats',
+      name: 'some-stats',
+      // the dataFetcher function will be called with the merge of the `globalFilters` and the local `filters` object
+      dataFetcher: ({ tableName, startDate, endDate }) => someFetcherFunction(tableName, startDate, endDate),
+      filters: {
+        tableName: {
+          type: 'enum',
+          label: 'Resource name',
+          options: TABLE_OPTIONS,
+        },
+      },
+    },
+  ]
+})
+```
+
+![filters example](~/assets/images/reference/stats/filters.png)
