@@ -139,6 +139,15 @@ export const applyColumnFilters = (
         continue
       }
 
+      if (field.adomin.type === 'boolean' && typeof search === 'string') {
+        const booleanOrNull = getBooleanFromString(search)
+
+        if (booleanOrNull !== null) {
+          builder.andWhere(sqlColumn, booleanOrNull)
+          continue
+        }
+      }
+
       if (
         field.adomin.type === 'number' &&
         field.adomin.variant?.type === 'bitset' &&
@@ -236,4 +245,15 @@ export const applyArrayFilters = (
   for (const filter of arrayFilters) {
     query.andWhere(filter.id, filter.mode, filter.value)
   }
+}
+
+const getBooleanFromString = (booleanishString: string) => {
+  if (booleanishString === '0' || booleanishString === 'false') {
+    return false
+  }
+  if (booleanishString === '1' || booleanishString === 'true') {
+    return true
+  }
+
+  return null
 }
