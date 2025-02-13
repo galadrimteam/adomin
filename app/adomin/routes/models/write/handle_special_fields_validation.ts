@@ -30,7 +30,8 @@ const validateJsonField = async (
 
   try {
     const jsonParsedValue = JSON.parse(parsedDataValue)
-    const res = await field.adomin.validation?.validate(jsonParsedValue)
+    const { validation } = field.adomin
+    const res = validation ? await validation.validate(jsonParsedValue) : jsonParsedValue
 
     parsedData[field.name] = res
   } catch (error) {
