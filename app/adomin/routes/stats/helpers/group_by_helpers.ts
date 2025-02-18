@@ -213,3 +213,38 @@ export const groupByMonth = async (
 
   return results.map((row) => [MONTH_LABELS[row.month - 1], Number(row.count)] as [string, number])
 }
+
+export const groupByMonthAndYear = async (
+  table: string,
+  column: string,
+  options: HelperOptions = {}
+): Promise<{ name: string; data: [string, number][] }[]> => {
+  const dbType = getDbType()
+  const monthSql = dbType === 'pg' ? `EXTRACT(MONTH FROM ${column})` : `MONTH(${column})`
+  const yearSql = dbType === 'pg' ? `EXTRACT(YEAR FROM ${column})` : `YEAR(${column})`
+
+  const query = db.from(table).select(db.raw(`${monthSql} as month`), db.raw(`${yearSql} as year`))
+
+  if (options.queryBuilderCallback) {
+    options.queryBuilderCallback(query)
+  }
+
+  const results = await query.count('* as count').groupBy('month', 'year').orderBy('month', 'asc')
+
+  const yearsData: { name: string; data: [string, number][] }[] = []
+
+  results.forEach((row) => {
+    const found = yearsData.find((item) => item.name === row.year.toString())
+
+    if (found) {
+      found.data.push([MONTH_LABELS[row.month - 1], Number(row.count)])
+    } else {
+      yearsData.push({
+        name: row.year.toString(),
+        data: [[MONTH_LABELS[row.month - 1], Number(row.count)]],
+      })
+    }
+  })
+
+  return yearsData
+}
