@@ -1,7 +1,10 @@
 import { ModelObject } from '@adonisjs/lucid/types/model'
 import type { ModelConfig } from '../../../create_model_view_config.js'
 import { computeColumnConfigFields, getModelFieldStrs } from '../get_model_config.js'
-import { computeVirtualFields } from './compute_virtual_columns.js'
+import {
+  computeVirtualFields,
+  computeVirtualFieldsWithoutPagination,
+} from './compute_virtual_columns.js'
 import {
   PaginationSettings,
   applyArrayFilters,
@@ -44,16 +47,20 @@ export const getModelList = async ({
 
   applyArrayFilters(query, paginationSettings.arrayFilters)
 
-  if (paginationSettings.exportType) {
-    const dataWithoutPagination = await query.exec()
-
-    return { data: dataWithoutPagination, meta: {} }
-  }
-
   loadRelations(query, fields)
 
   if (queryBuilderCallback) {
     queryBuilderCallback(query)
+  }
+
+  if (paginationSettings.exportType) {
+    const dataWithoutPagination = await query.exec()
+    const finalData = await computeVirtualFieldsWithoutPagination(dataWithoutPagination, fields)
+
+    return {
+      data: finalData,
+      meta: {},
+    }
   }
 
   const data = await query.paginate(pageIndex, pageSize)

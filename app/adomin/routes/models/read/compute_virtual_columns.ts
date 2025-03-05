@@ -41,3 +41,13 @@ export const computeVirtualFields = async (
     meta,
   }
 }
+
+export const computeVirtualFieldsWithoutPagination = async (
+  paginatedData: LucidRow[],
+  fields: ColumnConfig[]
+): Promise<PaginatedData['data']> => {
+  const promises = paginatedData.map(async (model) => computeVirtualColumns(model, fields))
+  const dataWithComputedVirtualColumns = await Promise.all(promises)
+
+  return dataWithComputedVirtualColumns
+}
