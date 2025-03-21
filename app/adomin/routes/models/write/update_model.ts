@@ -50,7 +50,7 @@ export const updateModel = async (ctx: HttpContext) => {
 
   await modelInstance.save()
 
-  await attachForeignFields(modelInstance, foreignFields, parsedData, Model)
+  await attachForeignFields(modelInstance, foreignFields, parsedData, Model, 'update')
 
   await updateVirtualColumns(modelInstance, fields, parsedData)
 

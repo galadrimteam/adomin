@@ -85,7 +85,8 @@ export const attachForeignFields = async (
   instance: LucidRow,
   foreignFields: ColumnConfig[],
   data: any,
-  Model: LucidModel
+  Model: LucidModel,
+  mode: 'create' | 'update'
 ) => {
   const foreignFieldsMap = new Map(foreignFields.map((field) => [field.name, field]))
 
@@ -98,6 +99,8 @@ export const attachForeignFields = async (
 
     const field = foreignFieldsMap.get(key)
     if (!field || value === undefined) continue
+    if (mode === 'create' && field.adomin.creatable === false) continue
+    if (mode === 'update' && field.adomin.editable === false) continue
 
     if (field.adomin.type === 'hasOneRelation') {
       await handleHasOneUpdate({

@@ -52,7 +52,7 @@ export const createModel = async (ctx: HttpContext) => {
   // @ts-expect-error
   const modelInstance = await getModelData(Model, createdInstance[Model.primaryKey])
 
-  await attachForeignFields(modelInstance, foreignFields, parsedData, Model)
+  await attachForeignFields(modelInstance, foreignFields, parsedData, Model, 'create')
 
   await updateVirtualColumns(modelInstance, fields, parsedData)
 
