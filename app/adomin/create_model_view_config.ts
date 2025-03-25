@@ -216,6 +216,7 @@ const serializePasswords = (Model: LucidModel, columnsObj: Record<string, Adomin
   )
 
   columns.forEach(([, column]) => {
+    column.serializeAs = column.columnName
     column.serialize = () => PASSWORD_SERIALIZED_FORM
   })
 }
