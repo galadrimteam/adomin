@@ -253,7 +253,7 @@ export type AdominEnumFieldConfig = AdominBaseFieldConfig & {
   /**
    * options for the select component
    */
-  options: AdominSelectOption<string | null>[]
+  options: AdominSelectOption<string | null>[] | (() => Promise<AdominSelectOption<string | number>[]>)
   /**
    * default value for this field on the form
    */
@@ -268,8 +268,8 @@ export interface AdominArrayFieldConfig extends AdominBaseFieldConfig {
    * Can be a function that returns the options
    */
   options?:
-    | AdominSelectOption<string | number>[]
-    | (() => Promise<AdominSelectOption<string | number>[]>)
+  | AdominSelectOption<string | number>[]
+  | (() => Promise<AdominSelectOption<string | number>[]>)
 }
 
 export type AdominFileFieldConfig = AdominBaseFieldConfig & {
@@ -310,31 +310,31 @@ export type AdominFileFieldConfig = AdominBaseFieldConfig & {
 
 type FileSubType =
   | {
-      /** Use this when your file is an Adonis AttachmentLite */
-      subType: 'attachment'
-    }
+    /** Use this when your file is an Adonis AttachmentLite */
+    subType: 'attachment'
+  }
   | {
-      /** Use this when your file is represented as a string in your DB */
-      subType: 'url'
-      /** This function takes a file, persists it and returns the file URL
-       *
-       * note: if there is an old file, it will be deleted using the deleteFile function you provided, so you don't have to worry about it
-       */
-      createFile: (file: MultipartFile) => Promise<string>
-      /** This function takes a file URL and destroys the file */
-      deleteFile: (fileUrl: string) => Promise<void>
-    }
+    /** Use this when your file is represented as a string in your DB */
+    subType: 'url'
+    /** This function takes a file, persists it and returns the file URL
+     *
+     * note: if there is an old file, it will be deleted using the deleteFile function you provided, so you don't have to worry about it
+     */
+    createFile: (file: MultipartFile) => Promise<string>
+    /** This function takes a file URL and destroys the file */
+    deleteFile: (fileUrl: string) => Promise<void>
+  }
   | {
-      /** Use this when your file is stored in a custom way in your DB (e.g. a json format) */
-      subType: 'custom'
-      /** This function takes a LucidRow and a file, it must persist the file and update the model file column
-       *
-       * note: if there is an old file, it will be deleted using the deleteFile function you provided, so you don't have to worry about it
-       */
-      createFile: (model: LucidRow, file: MultipartFile) => Promise<void>
-      /** This function takes a LucidRow, delete the file and update the file column */
-      deleteFile: (model: LucidRow) => Promise<void>
-    }
+    /** Use this when your file is stored in a custom way in your DB (e.g. a json format) */
+    subType: 'custom'
+    /** This function takes a LucidRow and a file, it must persist the file and update the model file column
+     *
+     * note: if there is an old file, it will be deleted using the deleteFile function you provided, so you don't have to worry about it
+     */
+    createFile: (model: LucidRow, file: MultipartFile) => Promise<void>
+    /** This function takes a LucidRow, delete the file and update the file column */
+    deleteFile: (model: LucidRow) => Promise<void>
+  }
 
 export interface AdominJsonFieldConfig extends AdominBaseFieldConfig {
   type: 'json'

@@ -1,3 +1,4 @@
+import { loadAdominOptions } from '#adomin/utils/load_adomin_options'
 import { rules, schema } from '@adonisjs/validator'
 import { ModelConfig } from '../create_model_view_config.js'
 import { AdominFieldConfig } from '../fields.types.js'
@@ -10,18 +11,22 @@ export const getValidationSchemaFromConfig = async (
 ) => {
   const foundConfig = modelConfig
   const fields = await computeColumnConfigFields(foundConfig.fields)
-  const results = fields.map(({ adomin, name: columnName }) => {
+  const resultsPromises = fields.map(async ({ adomin, name: columnName }) => {
     const notCreatable = adomin.creatable === false
     const notEditable = adomin.editable === false
 
     if (validationMode === 'create' && notCreatable) return null
     if (validationMode === 'update' && notEditable) return null
 
+    const schema = await getValidationSchemaFromFieldConfig(adomin, validationMode)
+
     return {
       columnName,
-      schema: getValidationSchemaFromFieldConfig(adomin, validationMode),
+      schema,
     }
   })
+
+  const results = await Promise.all(resultsPromises)
 
   const schemaObj: any = {}
 
@@ -52,16 +57,17 @@ const getFileSchema = (
   return schema.file[suffix]
 }
 
-export const getValidationSchemaFromFieldConfig = (
+export const getValidationSchemaFromFieldConfig = async (
   config: AdominFieldConfig,
   validationMode: AdominValidationMode
 ) => {
   const suffix = getSuffix(config)
 
   if (config.type === 'enum') {
-    const options = config.options.map((option) => option.value)
-    if (suffix) return schema.enum[suffix](options)
-    return schema.enum(options)
+    const options = await loadAdominOptions(config.options)
+    const optionsValues = options.map((option) => option.value)
+    if (suffix) return schema.enum[suffix](optionsValues)
+    return schema.enum(optionsValues)
   }
   if (config.type === 'array') {
     return schema.array.optional().members(schema.string())

@@ -3,7 +3,7 @@ import { AdominStat, StatsViewConfig } from '#adomin/create_stats_view_config'
 import { schema } from '@adonisjs/validator'
 import { getValidationSchemaFromFieldConfig } from './get_validation_schema_from_lucid_model.js'
 
-export const getFiltersValidationSchemaFromStatConfig = (
+export const getFiltersValidationSchemaFromStatConfig = async (
   config: AdominStat<ApiStatFilters, ApiStatFilters>
 ) => {
   const schemaObj: any = {}
@@ -11,13 +11,13 @@ export const getFiltersValidationSchemaFromStatConfig = (
   if (!config.filters) return null
 
   for (const [key, fieldConfig] of Object.entries(config.filters)) {
-    schemaObj[key] = getValidationSchemaFromFieldConfig(fieldConfig, 'stat-filter')
+    schemaObj[key] = await getValidationSchemaFromFieldConfig(fieldConfig, 'stat-filter')
   }
 
   return schema.create(schemaObj)
 }
 
-export const getGlobalFiltersValidationSchemaFromStatViewConfig = (
+export const getGlobalFiltersValidationSchemaFromStatViewConfig = async (
   config: StatsViewConfig<ApiStatFilters>
 ) => {
   const schemaObj: any = {}
@@ -25,7 +25,7 @@ export const getGlobalFiltersValidationSchemaFromStatViewConfig = (
   if (!config.globalFilters) return null
 
   for (const [key, fieldConfig] of Object.entries(config.globalFilters)) {
-    schemaObj[key] = getValidationSchemaFromFieldConfig(fieldConfig, 'stat-filter')
+    schemaObj[key] = await getValidationSchemaFromFieldConfig(fieldConfig, 'stat-filter')
   }
 
   return schema.create(schemaObj)

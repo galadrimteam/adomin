@@ -48,7 +48,7 @@ const getGlobalFilters = async (
   statViewConfig: StatsViewConfig<ApiStatFilters>
 ) => {
   const globalFiltersValidationSchema =
-    getGlobalFiltersValidationSchemaFromStatViewConfig(statViewConfig)
+    await getGlobalFiltersValidationSchemaFromStatViewConfig(statViewConfig)
   if (!globalFiltersValidationSchema) return {}
 
   const globalFilters = await ctx.request.validate({
@@ -63,7 +63,7 @@ const getStatFilters = async (
   ctx: HttpContext,
   statConfig: AdominStat<ApiStatFilters, ApiStatFilters>
 ) => {
-  const validationSchema = getFiltersValidationSchemaFromStatConfig(statConfig)
+  const validationSchema = await getFiltersValidationSchemaFromStatConfig(statConfig)
 
   if (!validationSchema) return {}
 

@@ -145,8 +145,8 @@ export async function computeColumnConfigFields(input: ColumnConfig[]): Promise<
       if (filterable === undefined && noCustomFilter) filterable = false
     }
 
-    // load options for array field
-    if (field.adomin.type === 'array' && typeof field.adomin.options === 'function') {
+    // load options for array/enum field
+    if ((field.adomin.type === 'array' || field.adomin.type === 'enum') && typeof field.adomin.options === 'function') {
       field.adomin.options = await field.adomin.options()
     }
 
