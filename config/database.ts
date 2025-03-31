@@ -28,7 +28,6 @@ const dbConfig = defineConfig({
       migrations: {
         naturalSort: true,
       },
-      healthCheck: false,
       debug: false,
     },
     pg: {
@@ -43,7 +42,6 @@ const dbConfig = defineConfig({
       migrations: {
         naturalSort: true,
       },
-      healthCheck: false,
       debug: false,
     },
   },

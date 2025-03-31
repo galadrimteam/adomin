@@ -1,3 +1,4 @@
+import { CmsPage } from '#adomin/cms/utils/cms.types'
 import { HttpContext } from '@adonisjs/core/http'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 import { CMS_CONFIG } from '../../../cms_config.js'
@@ -105,9 +106,18 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
 
   const validated = await validationSchema.validate(ctx.request.all(), { messagesProvider })
 
+  const validatedConfig: CmsPage['config'] = {
+    blocks: validated.config.blocks.map((b) => ({ ...b, props: b.props ?? {} })),
+    layout: {
+      name: validated.config.layout.name,
+      props: validated.config.layout.props ?? {},
+    },
+    gridLayout: validated.config.gridLayout,
+  }
+
   let blockNotFound: string | null = null
 
-  const blocksSchemas = validated.config.blocks.map((block) => {
+  const blocksSchemas = validatedConfig.blocks.map((block) => {
     const found = CMS_CONFIG.blocks.find(({ name }) => name === block.name)
 
     if (!found) {
@@ -130,12 +140,12 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
   }
 
   const layoutValidation = CMS_CONFIG.layouts.find(
-    ({ name }) => name === validated.config.layout.name
+    ({ name }) => name === validatedConfig.layout.name
   )?.propsValidation
 
   if (!layoutValidation) {
     return ctx.response.notFound({
-      error: `Le layout '${validated.config.layout.name}' n'existe pas`,
+      error: `Le layout '${validatedConfig.layout.name}' n'existe pas`,
     })
   }
 
@@ -143,9 +153,9 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
 
   await computeLastValidation(
     {
-      props: validated.config.layout.props,
+      props: validatedConfig.layout.props,
       validation: layoutValidation,
-      name: validated.config.layout.name,
+      name: validatedConfig.layout.name,
     },
     filteredSchemas
   )
@@ -153,7 +163,7 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
   if (mode === 'create') {
     const created = await createPage({
       ...validated,
-      config: validated.config,
+      config: validatedConfig,
       is_published: validated.is_published ?? false,
     })
 
@@ -165,7 +175,7 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
 
   const updated = await updatePage({
     ...validated,
-    config: validated.config,
+    config: validatedConfig,
     is_published: validated.is_published ?? false,
     id: pageId,
   })

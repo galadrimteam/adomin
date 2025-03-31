@@ -338,7 +338,7 @@ type FileSubType =
 
 export interface AdominJsonFieldConfig extends AdominBaseFieldConfig {
   type: 'json'
-  validation?: VineValidator<VineObject<any, any, any>, any>
+  validation?: VineValidator<VineObject<any, any, any, any>, any>
 }
 
 export interface AdominForeignKeyFieldConfig extends AdominBaseFieldConfig {
