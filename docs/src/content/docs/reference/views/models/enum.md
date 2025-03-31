@@ -35,6 +35,25 @@ Options for the select component
 
 :::
 
+:::tip
+`options` can also be an async function that returns the options
+e.g.
+```ts
+{
+  type: 'enum',
+  label: 'Test enum with dynamic options',
+  options: async () => {
+    const res = await db.from('some_table').select('id', 'name')
+    const options = res.map(({ id, name }) => ({
+      label: name,
+      value: id,
+    }))
+
+    return options
+  }
+}
+:::
+
 ### defaultValue
 
 Optionnal, a static default value to show on the creation form
