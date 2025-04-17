@@ -1,11 +1,11 @@
-import { createModelViewConfig } from "#adomin/create_model_view_config"
-import Idea from "#models/idea"
-import Profile from "#models/profile"
-import User from "#models/user"
-import db from "@adonisjs/lucid/services/db"
-import vine from "@vinejs/vine"
-import { DateTime } from "luxon"
-import { RIGHTS, RIGHTS_LABELS } from "../rights.js"
+import { createModelViewConfig } from '#adomin/create_model_view_config'
+import Idea from '#models/idea'
+import Profile from '#models/profile'
+import User from '#models/user'
+import db from '@adonisjs/lucid/services/db'
+import vine from '@vinejs/vine'
+import { DateTime } from 'luxon'
+import { RIGHTS, RIGHTS_LABELS } from '../rights.js'
 
 export const USER_VIEW = createModelViewConfig(() => User, {
   label: 'Utilisateur',
@@ -50,18 +50,23 @@ export const USER_VIEW = createModelViewConfig(() => User, {
         bitsetLabels: RIGHTS_LABELS,
       },
     },
-    isBeautifull: {
+    isBeautiful: {
       type: 'boolean',
       label: 'Beau',
       computed: true,
-      sqlFilter: (input) => {
-        if (input === null) return 'false'
+      sqlFilter: (input, query) => {
+        if (input === null) return
 
-        if (+input === 0) return `email != 'damien@galadrim.fr'`
+        if (Boolean(+input)) {
+          query.andWhereRaw("settings->>'isBeautiful' = 'true'")
+          return
+        }
 
-        return `email = 'damien@galadrim.fr'`
+        query.andWhere((subq) =>
+          subq.whereRaw("settings->>'isBeautiful' != 'true'").orWhereNull('settings')
+        )
       },
-      sqlSort: (ascDesc) => `email = 'damien@galadrim.fr' ${ascDesc}`,
+      sqlSort: (ascDesc) => `settings is not null and settings->>'isBeautiful' = 'true' ${ascDesc}`,
       sortable: true,
       filterable: true,
     },
@@ -125,33 +130,35 @@ export const PROFILE_CONFIG = createModelViewConfig(() => Profile, {
     age: { type: 'number' },
   },
   icon: 'id-badge-2',
-  virtualColumns: [{
-    name: 'favoriteIdea',
-    getter: async (model) => {
-      const found = LOCAL_MAP.get(model.id)
+  virtualColumns: [
+    {
+      name: 'favoriteIdea',
+      getter: async (model) => {
+        const found = LOCAL_MAP.get(model.id)
 
-      return found ?? null
-    },
-    setter: async (model, newValue) => {
-      if (!newValue) {
-        LOCAL_MAP.delete(model.id)
-      } else {
-        LOCAL_MAP.set(model.id, newValue)
-      }
-    },
-    adomin: {
-      type: 'enum',
-      label: 'Idée favorite',
-      options: async () => {
-        const ideas = await Idea.query()
-
-        return ideas.map((idea) => ({
-          label: idea.title,
-          value: idea.id.toString(),
-        }))
+        return found ?? null
       },
-    }
-  }]
+      setter: async (model, newValue) => {
+        if (!newValue) {
+          LOCAL_MAP.delete(model.id)
+        } else {
+          LOCAL_MAP.set(model.id, newValue)
+        }
+      },
+      adomin: {
+        type: 'enum',
+        label: 'Idée favorite',
+        options: async () => {
+          const ideas = await Idea.query()
+
+          return ideas.map((idea) => ({
+            label: idea.title,
+            value: idea.id.toString(),
+          }))
+        },
+      },
+    },
+  ],
 })
 
 export const LOCAL_MAP = new Map<number, string>()

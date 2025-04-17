@@ -280,19 +280,6 @@
   resolved "https://registry.yarnpkg.com/@adonisjs/tsconfig/-/tsconfig-1.4.0.tgz#a5f703cf2d5b1967e048d598088b40aa473c8306"
   integrity sha512-go5KlxE8jJaeoIRzm51PcF2YJSK5i022douVk9OjAqvDiU1t2UepcDoEsSiEOgogUDojp9kbRQmFyf0y0YqvOg==
 
-"@adonisjs/validator@^13.0.2":
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/@adonisjs/validator/-/validator-13.0.2.tgz#49aad72c1fc7431c785a3491d1155527b087f1b8"
-  integrity sha512-gec1SiJP6Y/SUbm1Co6Z0kh9euUWZnEioWHKJ/XdoX31rTI6qoET1EYX/NGuzT6axsk/zBWmgENhMv/WwNwZ7Q==
-  dependencies:
-    "@poppinss/utils" "^6.7.1"
-    "@types/luxon" "^3.4.2"
-    "@types/validator" "^13.11.8"
-    luxon "^3.4.4"
-    normalize-url "^8.0.0"
-    tmp-cache "^1.1.0"
-    validator "^13.11.0"
-
 "@antfu/install-pkg@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@antfu/install-pkg/-/install-pkg-0.4.1.tgz#d1d7f3be96ecdb41581629cafe8626d1748c0cf1"
@@ -756,7 +743,7 @@
     slugify "^1.6.6"
     truncatise "^0.0.8"
 
-"@poppinss/utils@^6.7.1", "@poppinss/utils@^6.7.3", "@poppinss/utils@^6.8.3", "@poppinss/utils@^6.9.2":
+"@poppinss/utils@^6.7.3", "@poppinss/utils@^6.8.3", "@poppinss/utils@^6.9.2":
   version "6.9.2"
   resolved "https://registry.yarnpkg.com/@poppinss/utils/-/utils-6.9.2.tgz#e1abee2ea54297f3346d916102a3e4a75ebce98f"
   integrity sha512-ypVszZxhwiehhklM5so2BI+nClQJwp7mBUSJh/R1GepeUH1vvD5GtxMz8Lp9dO9oAbKyDmq1jc4g/4E0dv8r2g==
@@ -1027,11 +1014,6 @@
     "@types/methods" "^1.1.4"
     "@types/node" "*"
     form-data "^4.0.0"
-
-"@types/validator@^13.11.8":
-  version "13.11.9"
-  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.11.9.tgz#adfe96520b437a0eaa798a475877bf2f75ee402d"
-  integrity sha512-FCTsikRozryfayPuiI46QzH3fnrOoctTjvOYZkho9BTFLCOZ2rgZJHMOVgCOfttjPJcgOx52EpkY0CMfy87MIw==
 
 "@types/validator@^13.12.2":
   version "13.12.3"
@@ -2899,11 +2881,6 @@ lru.min@^1.0.0:
   resolved "https://registry.yarnpkg.com/lru.min/-/lru.min-1.1.2.tgz#01ce1d72cc50c7faf8bd1f809ebf05d4331021eb"
   integrity sha512-Nv9KddBcQSlQopmBHXSsZVY5xsdlZkdH/Iey0BlcBYggMd4two7cZnKOK9vmy3nY0O5RGH99z1PCeTpPqszUYg==
 
-luxon@^3.4.4:
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.4.4.tgz#cf20dc27dc532ba41a169c43fdcc0063601577af"
-  integrity sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==
-
 luxon@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.6.0.tgz#e84453dbdbd716b5eac95bee702b379863059f83"
@@ -3101,11 +3078,6 @@ normalize-package-data@^2.5.0:
     resolve "^1.10.0"
     semver "2 || 3 || 4 || 5"
     validate-npm-package-license "^3.0.1"
-
-normalize-url@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-8.0.0.tgz#593dbd284f743e8dcf6a5ddf8fadff149c82701a"
-  integrity sha512-uVFpKhj5MheNBJRTiMZ9pE/7hD1QTeEvugSJW/OmLzAp78PB5O6adfMNTvmfKhXBkvCzC+rqifWcVYpGFwTjnw==
 
 normalize-url@^8.0.1:
   version "8.0.1"
@@ -4412,11 +4384,6 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
-
-validator@^13.11.0:
-  version "13.11.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-13.11.0.tgz#23ab3fd59290c61248364eabf4067f04955fbb1b"
-  integrity sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==
 
 validator@^13.12.0:
   version "13.15.0"

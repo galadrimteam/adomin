@@ -2,7 +2,6 @@ import { createStatsViewConfig } from "#adomin/create_stats_view_config"
 import { groupByDate, groupByDayOfWeek, groupByHour } from "#adomin/routes/stats/helpers/group_by_helpers"
 import db from "@adonisjs/lucid/services/db"
 import { DatabaseQueryBuilderContract } from "@adonisjs/lucid/types/querybuilder"
-import { DateTime } from "luxon"
 
 const TABLE_OPTIONS = [
   { label: 'Utilisateurs', value: 'users' },
@@ -18,9 +17,9 @@ const TABLE_OPTIONS_LABEL_BY_VALUE = TABLE_OPTIONS.reduce(
   {} as Record<string, string>
 )
 
-const createFilterCallback = (startDate: DateTime, endDate: DateTime) => {
+const createFilterCallback = (startDate: Date, endDate: Date) => {
   return (q: DatabaseQueryBuilderContract) => {
-    q.where('created_at', '>=', startDate.toJSDate()).where('created_at', '<=', endDate.toJSDate())
+    q.where('created_at', '>=', startDate).where('created_at', '<=', endDate)
   }
 }
 
@@ -133,8 +132,8 @@ export const STATS_VIEW = createStatsViewConfig({
               'FLOOR(age / 10) * 10 as age_range_start, FLOOR(age / 10) * 10 + 9 as age_range_end'
             )
           )
-          .where('created_at', '>=', startDate.toJSDate())
-          .where('created_at', '<=', endDate.toJSDate())
+          .where('created_at', '>=', startDate)
+          .where('created_at', '<=', endDate)
           .count('age as count')
           .groupByRaw('FLOOR(age / 10)')
           .orderBy('age_range_start', 'asc')

@@ -61,10 +61,9 @@ import '#adomin/routes/adomin_router'
 Adomin needs the following npm packages:
 
 - `xlsx` needed for excel export
-- `@adonisjs/validator` adomin uses the adonis v5 way of dealing with validation, I plan to use vine later but in the meantime you will need it
 
 ```bash
-yarn add xlsx @adonisjs/validator
+yarn add xlsx
 ```
 
 :::note

@@ -1,5 +1,7 @@
 import { loadAdominOptions } from '#adomin/utils/load_adomin_options'
-import { rules, schema } from '@adonisjs/validator'
+import { FileRuleValidationOptions } from '@adonisjs/core/providers/vinejs_provider'
+import vine from '@vinejs/vine'
+import { SchemaTypes } from '@vinejs/vine/types'
 import { ModelConfig } from '../create_model_view_config.js'
 import { AdominFieldConfig } from '../fields.types.js'
 import { AdominValidationMode } from '../validation/adomin_validation_helpers.js'
@@ -28,14 +30,14 @@ export const getValidationSchemaFromConfig = async (
 
   const results = await Promise.all(resultsPromises)
 
-  const schemaObj: any = {}
+  const schemaObj: Record<string, SchemaTypes> = {}
 
   for (const result of results) {
     if (!result) continue
     schemaObj[result.columnName] = result.schema
   }
 
-  return schema.create(schemaObj)
+  return vine.compile(vine.object(schemaObj))
 }
 
 const getSuffix = (config: AdominFieldConfig) => {
@@ -47,14 +49,17 @@ const getSuffix = (config: AdominFieldConfig) => {
 
 const getFileSchema = (
   validationMode: AdominValidationMode,
-  suffix: 'nullable' | 'optional' | null
+  suffix: 'nullable' | 'optional' | null,
+  config: FileRuleValidationOptions
 ) => {
+  const base = vine.file(config)
+
   // on update, null = delete file, undefined = keep file, file = update file
-  if (validationMode === 'update') return schema.file.nullableAndOptional
+  if (validationMode === 'update') return base.nullable().optional()
 
-  if (!suffix) return schema.file
+  if (suffix) return base[suffix]()
 
-  return schema.file[suffix]
+  return base
 }
 
 export const getValidationSchemaFromFieldConfig = async (
@@ -66,43 +71,49 @@ export const getValidationSchemaFromFieldConfig = async (
   if (config.type === 'enum') {
     const options = await loadAdominOptions(config.options)
     const optionsValues = options.map((option) => option.value)
-    if (suffix) return schema.enum[suffix](optionsValues)
-    return schema.enum(optionsValues)
+    const base = vine.enum(optionsValues)
+
+    if (suffix) return base[suffix]()
+
+    return base
   }
   if (config.type === 'array') {
-    return schema.array.optional().members(schema.string())
+    return vine.array(vine.string()).optional()
   }
   if (config.type === 'string' && config.isEmail) {
-    if (suffix) return schema.string[suffix]([rules.email()])
-    return schema.string([rules.email()])
+    const base = vine.string().email()
+    if (suffix) return base[suffix]()
+    return base
+  }
+
+  if (config.type === 'date') {
+    return vine.date({formats: ['iso8601']})
   }
 
   if (config.type === 'hasManyRelation') {
-    return schema.array.optional().members(schema[config.localKeyType ?? 'number']())
+    return vine.array(vine[config.localKeyType ?? 'number']()).optional()
   }
 
   if (config.type === 'manyToManyRelation') {
-    return schema.array.optional().members(schema[config.relatedKeyType ?? 'number']())
+    return vine.array(vine[config.relatedKeyType ?? 'number']()).optional()
   }
 
   if (config.type === 'json') {
-    if (suffix) return schema.string[suffix]()
+    const base = vine.string()
 
-    return schema.string()
+    if (suffix) return base[suffix]()
+
+    return base
   }
 
   if (config.type === 'file') {
-    const specialSchema = getFileSchema(validationMode, suffix)
-
-    return specialSchema({
+    return getFileSchema(validationMode, suffix, {
       size: config.maxFileSize,
       extnames: config.extnames,
     })
   }
 
-  const fieldSchema = getBaseSchema(config)
-
-  return fieldSchema([])
+  return getBaseSchema(config)
 }
 
 const getType = (config: AdominFieldConfig) => {
@@ -113,7 +124,10 @@ const getType = (config: AdominFieldConfig) => {
       return config.fkType ?? 'number'
     case 'hasManyRelation':
     case 'manyToManyRelation':
+    case 'array':
+    case 'enum':
     case 'json':
+    case 'date':
       throw new Error(`${config.type} should be handled before calling this function`)
     default:
       return config.type
@@ -123,8 +137,9 @@ const getType = (config: AdominFieldConfig) => {
 const getBaseSchema = (config: AdominFieldConfig) => {
   const suffix = getSuffix(config)
   const type = getType(config)
+  const base = vine[type]()
 
-  if (suffix) return schema[type][suffix]
+  if (suffix) return base[suffix]()
 
-  return schema[type]
+  return base
 }

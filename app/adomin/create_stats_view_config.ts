@@ -1,5 +1,4 @@
 import { MultipartFile } from '@adonisjs/core/bodyparser'
-import { DateTime } from 'luxon'
 import { ApiStatFilters } from './api_stat_filter.types.js'
 import { AdominFieldConfig } from './fields.types.js'
 import type { AdominRightsCheckFunction } from './routes/adomin_routes_overrides_and_rights.js'
@@ -230,7 +229,7 @@ type GetFilterValueType<T extends ApiStatFilters> = {
 type GetFilterValueTypeByType<T extends AdominFieldConfig['type']> = T extends 'string'
   ? string
   : T extends 'date'
-    ? DateTime
+    ? Date
     : T extends 'number'
       ? number
       : T extends 'boolean'

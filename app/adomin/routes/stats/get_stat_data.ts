@@ -1,7 +1,7 @@
 import { ApiStatFilters } from '#adomin/api_stat_filter.types'
 import { AdominStat, StatsViewConfig } from '#adomin/create_stats_view_config'
 import { getFlatViews } from '#adomin/get_flat_views'
-import { getGenericMessagesForStatFilters } from '#adomin/validation/validation_messages'
+import { getMessagesProviderForAdominFields } from '#adomin/validation/validation_messages'
 import { HttpContext } from '@adonisjs/core/http'
 import { computeRightsCheck } from '../adomin_routes_overrides_and_rights.js'
 import {
@@ -51,9 +51,8 @@ const getGlobalFilters = async (
     await getGlobalFiltersValidationSchemaFromStatViewConfig(statViewConfig)
   if (!globalFiltersValidationSchema) return {}
 
-  const globalFilters = await ctx.request.validate({
-    schema: globalFiltersValidationSchema,
-    messages: getGenericMessagesForStatFilters(statViewConfig.globalFilters ?? {}),
+  const globalFilters = await ctx.request.validateUsing(globalFiltersValidationSchema, {
+    messagesProvider: getMessagesProviderForAdominFields(statViewConfig.globalFilters ?? {})
   })
 
   return globalFilters
@@ -67,10 +66,7 @@ const getStatFilters = async (
 
   if (!validationSchema) return {}
 
-  const statFilters = await ctx.request.validate({
-    schema: validationSchema,
-    messages: getGenericMessagesForStatFilters(statConfig.filters ?? {}),
-  })
+  const statFilters = await ctx.request.validateUsing(validationSchema, {messagesProvider: getMessagesProviderForAdominFields(statConfig.filters ?? {})})
 
   return statFilters
 }

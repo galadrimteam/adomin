@@ -1,5 +1,5 @@
 import { HttpContext } from '@adonisjs/core/http'
-import { validator } from '@adonisjs/validator'
+import vine from '@vinejs/vine'
 import { computeRightsCheck } from '../../adomin_routes_overrides_and_rights.js'
 import { getValidatedModelConfig } from '../validate_model_name.js'
 import { downloadExportFile } from './download_export_file.js'
@@ -40,7 +40,7 @@ export const modelList = async (ctx: HttpContext) => {
   const sorting = prepareQsObject(qs.sorting)
   const arrayFilters = prepareQsObject(qs.arrayFilters)
 
-  const paginationSettings = await validator.validate({
+  const paginationSettings = await vine.validate({
     schema: paginationSchema,
     data: {
       ...qs,

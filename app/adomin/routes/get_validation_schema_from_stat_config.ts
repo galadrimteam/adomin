@@ -1,6 +1,6 @@
 import { ApiStatFilters } from '#adomin/api_stat_filter.types'
 import { AdominStat, StatsViewConfig } from '#adomin/create_stats_view_config'
-import { schema } from '@adonisjs/validator'
+import vine from '@vinejs/vine'
 import { getValidationSchemaFromFieldConfig } from './get_validation_schema_from_lucid_model.js'
 
 export const getFiltersValidationSchemaFromStatConfig = async (
@@ -14,7 +14,7 @@ export const getFiltersValidationSchemaFromStatConfig = async (
     schemaObj[key] = await getValidationSchemaFromFieldConfig(fieldConfig, 'stat-filter')
   }
 
-  return schema.create(schemaObj)
+  return vine.compile(vine.object(schemaObj))
 }
 
 export const getGlobalFiltersValidationSchemaFromStatViewConfig = async (
@@ -28,5 +28,5 @@ export const getGlobalFiltersValidationSchemaFromStatViewConfig = async (
     schemaObj[key] = await getValidationSchemaFromFieldConfig(fieldConfig, 'stat-filter')
   }
 
-  return schema.create(schemaObj)
+  return vine.compile(vine.object(schemaObj))
 }

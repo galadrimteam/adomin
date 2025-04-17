@@ -29,7 +29,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare rights: number
 
   @column()
-  declare settings: { color: string; isBeautifull: boolean; age?: number } | null
+  declare settings: { color: string; isBeautiful: boolean; age?: number } | null
 
   @hasMany(() => Idea)
   declare ideas: HasMany<typeof Idea>
@@ -45,8 +45,8 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare friends: ManyToMany<typeof User>
 
   @computed()
-  get isBeautifull() {
-    return this.email === 'damien@galadrim.fr'
+  get isBeautiful() {
+    return this.settings?.isBeautiful ?? false
   }
 
   @column.dateTime({ autoCreate: true })

@@ -1,5 +1,4 @@
 import { HttpContext } from '@adonisjs/core/http'
-import { ParsedTypedSchema, TypedSchema } from '@adonisjs/validator/types'
 
 export interface ValidationFunctionResult {
   valid: boolean
@@ -20,50 +19,33 @@ export interface ValidationFunctionResult {
  */
 export type AdominCustomFunctionValidation = (ctx: HttpContext) => Promise<ValidationFunctionResult>
 
-export type AdominValidationWithSchema = {
-  schema: ParsedTypedSchema<TypedSchema>
-  messages?: { [key: string]: string }
-}
-
-export type AdominValidationAtom = AdominValidationWithSchema | AdominCustomFunctionValidation
-
 const ADOMIN_VALIDATION_MODES = ['create', 'update', 'stat-filter'] as const
 
 export type AdominValidationMode = (typeof ADOMIN_VALIDATION_MODES)[number]
 
 export type AdominValidation = {
-  create?: AdominValidationAtom
-  update?: AdominValidationAtom
+  create?: AdominCustomFunctionValidation
+  update?: AdominCustomFunctionValidation
 }
 
-export const isAdonisSchema = (input: unknown): input is ParsedTypedSchema<TypedSchema> => {
-  return typeof input === 'object' && input !== null && 'props' in input && 'tree' in input
+const validateAtom = async (ctx: HttpContext, validationFn: AdominCustomFunctionValidation) => {
+  const result = await validationFn(ctx)
+
+  if (result.valid === true) return true
+  if (result.errorMessage === undefined) return false
+
+  ctx.response.badRequest({ error: result.errorMessage })
+
+  return false
 }
 
-const validateAtom = async (ctx: HttpContext, atom: AdominValidationAtom) => {
-  if (typeof atom === 'function') {
-    const result = await atom(ctx)
-
-    if (result.valid === true) return true
-    if (result.errorMessage === undefined) return false
-
-    ctx.response.badRequest({ error: result.errorMessage })
-
-    return false
-  }
-
-  await ctx.request.validate({ schema: atom.schema, messages: atom.messages })
-
-  return true
-}
-
-export const validateOrThrow = async (
+export const runCustomValidation = async (
   ctx: HttpContext,
   validationParams: AdominValidation,
   mode: AdominValidationMode
 ) => {
   const finalMode = mode === 'stat-filter' ? 'create' : mode
-  const validationAtom = validationParams[finalMode]
-  if (!validationAtom) return true
-  return validateAtom(ctx, validationAtom)
+  const validationFn = validationParams[finalMode]
+  if (!validationFn) return true
+  return validateAtom(ctx, validationFn)
 }

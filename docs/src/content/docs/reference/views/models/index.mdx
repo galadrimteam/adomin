@@ -78,31 +78,36 @@ export interface AdominBaseFieldConfig {
   /** If false, user cannot filter by this field */
   filterable?: boolean
   /**
-   * Sql filter override, usefull for computed fields
+   * Sql filter override, usefull for virtual or computed fields
    *
    * e.g.
    * ```ts
-   * const isBeautifullFilter = (input: string | null) => {
-   *   if (input === null) return 'false'
+   * sqlFilter: (input, query) => {
+   *   if (input === null) return
    *
-   *   if (+input === 0) return `email != 'damien@galadrim.fr'`
+   *   if (Boolean(+input)) {
+   *     query.andWhereRaw("settings->>'isBeautiful' = 'true'")
+   *     return
+   *   }
    *
-   *   return `email = 'damien@galadrim.fr'`
-   * }
+   *   query.andWhere((subq) =>
+   *     subq
+   *       .whereRaw("settings->>'isBeautiful' != 'true'")
+   *       .orWhereNull("settings")
+   *   )
+   * },
    * ```
    */
-  sqlFilter?: (input: string | null) => string | RawQuery
+  sqlFilter?: (search: string | null, builder: ModelQueryBuilderContract<any>) => unknown
   /**
    * Sql orderBy override, usefull for computed fields
    *
    * e.g.
    * ```ts
-   * const isBeautifullSort = (ascDesc: 'asc' | 'desc') => {
-   *   return `email = 'damien@galadrim.fr' ${ascDesc}`
-   * }
+   * const isBeautifulSort = (ascDesc) => `settings is not null and settings->>'isBeautiful' = 'true' ${ascDesc}`,
    * ```
    */
-  sqlSort?: (ascDesc: 'asc' | 'desc') => string | RawQuery
+  sqlSort?: (ascDesc: 'asc' | 'desc') => string
   /**
    * Size of the field on the frontend
    * @default 120
@@ -178,7 +183,7 @@ These two examples are equivalent
 // if you want to let the error to be sent by the framework
 const accessCheckFunctionExample = async (ctx) => {
   const user = ctx.auth.user
-  
+
   // some custom logic
   if (hasAccess(user)) return { hasAccess: true }
 
@@ -193,7 +198,7 @@ const accessCheckFunctionExample = async (ctx) => {
 // or if you want to send the error response yourself
 const accessCheckFunctionExample = async (ctx) => {
   const user = ctx.auth.user
-  
+
   // some custom logic
   if (hasAccess(user)) return { hasAccess: true }
 

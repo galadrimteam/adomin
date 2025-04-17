@@ -1,6 +1,7 @@
+import { AdominFieldConfig } from '#adomin/fields.types'
 import { HttpContext } from '@adonisjs/core/http'
-import { validateOrThrow } from '../../../validation/adomin_validation_helpers.js'
-import { getGenericMessages } from '../../../validation/validation_messages.js'
+import { runCustomValidation } from '../../../validation/adomin_validation_helpers.js'
+import { getMessagesProviderForAdominFields } from '../../../validation/validation_messages.js'
 import { computeRightsCheck } from '../../adomin_routes_overrides_and_rights.js'
 import { getValidationSchemaFromConfig } from '../../get_validation_schema_from_lucid_model.js'
 import { getModelData } from '../get_model_data.js'
@@ -32,16 +33,19 @@ export const createModel = async (ctx: HttpContext) => {
   const Model = modelConfig.model()
 
   if (modelConfig.validation) {
-    const res = await validateOrThrow(ctx, modelConfig.validation, 'create')
+    const res = await runCustomValidation(ctx, modelConfig.validation, 'create')
     if (res !== true) return
   }
 
-  const fields = modelConfig.fields
-
   const schema = await getValidationSchemaFromConfig(modelConfig, 'create')
-  const parsedData = await request.validate({ schema, messages: getGenericMessages(Model) })
+  const configFields = modelConfig.fields.reduce((acc, field) => {
+    acc[field.name] = field.adomin
+    return acc
+  }, {} as Record<string, AdominFieldConfig>)
+  const parsedData = await request.validateUsing(schema, { messagesProvider: getMessagesProviderForAdominFields(configFields) })
   const specialFieldsValidation = await handleSpecialFieldsValidation(modelConfig, parsedData)
   if (specialFieldsValidation) return response.badRequest(specialFieldsValidation)
+  const fields = modelConfig.fields
 
   const createdInstance = new Model()
 

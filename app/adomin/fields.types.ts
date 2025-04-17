@@ -39,14 +39,24 @@ export interface AdominBaseFieldConfig {
    */
   computed?: boolean
   /**
-   * Sql filter builder override, usefull for computed and virtual fields
+   * Sql filter override, usefull for virtual or computed fields
    *
    * e.g.
    * ```ts
-   * sqlFilter: (search: string | null, builder) => {
-   *   if (!search) return;
-   *   builder.whereHas("officeFloor", (q) => q.where("office_id", search));
-   * }
+   * sqlFilter: (input, query) => {
+   *   if (input === null) return
+   *
+   *   if (Boolean(+input)) {
+   *     query.andWhereRaw("settings->>'isBeautiful' = 'true'")
+   *     return
+   *   }
+   *
+   *   query.andWhere((subq) =>
+   *     subq
+   *       .whereRaw("settings->>'isBeautiful' != 'true'")
+   *       .orWhereNull("settings")
+   *   )
+   * },
    * ```
    */
   sqlFilter?: (search: string | null, builder: ModelQueryBuilderContract<any>) => unknown
@@ -55,9 +65,7 @@ export interface AdominBaseFieldConfig {
    *
    * e.g.
    * ```ts
-   * const isBeautifullSort = (ascDesc: 'asc' | 'desc') => {
-   *   return `email = 'damien@galadrim.fr' ${ascDesc}`
-   * }
+   * const isBeautifulSort = (ascDesc) => `settings is not null and settings->>'isBeautiful' = 'true' ${ascDesc}`,
    * ```
    */
   sqlSort?: (ascDesc: 'asc' | 'desc') => string
