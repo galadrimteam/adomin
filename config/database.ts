@@ -3,6 +3,7 @@ import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
 
 const dbConfig = defineConfig({
+  prettyPrintDebugQueries: true,
   connection: env.get('DB_CONNECTION'),
   connections: {
     sqlite: {
@@ -28,7 +29,6 @@ const dbConfig = defineConfig({
       migrations: {
         naturalSort: true,
       },
-      debug: false,
     },
     pg: {
       client: 'pg',
@@ -42,7 +42,6 @@ const dbConfig = defineConfig({
       migrations: {
         naturalSort: true,
       },
-      debug: false,
     },
   },
 })

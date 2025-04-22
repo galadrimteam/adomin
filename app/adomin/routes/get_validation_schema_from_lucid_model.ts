@@ -87,7 +87,11 @@ export const getValidationSchemaFromFieldConfig = async (
   }
 
   if (config.type === 'date') {
-    return vine.date({formats: ['iso8601']})
+    const base = vine.date({ formats: ['iso8601'] })
+
+    if (suffix) return base[suffix]()
+
+    return base
   }
 
   if (config.type === 'hasManyRelation') {

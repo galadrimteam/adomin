@@ -32,11 +32,14 @@ export const TEST_VIEW = createModelViewConfig(() => Test, {
     dateTest: {
       type: 'date',
       subType: 'date',
+      filterVariant: 'date',
       defaultValue: { mode: 'now', plusDays: 2 },
+      size: 350,
     },
     datetimeTest: {
       type: 'date',
       subType: 'datetime',
+      filterVariant: 'datetime',
       defaultValue: { mode: 'now', plusDays: 2 },
     },
     numberTest: { type: 'number' },

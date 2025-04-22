@@ -25,6 +25,16 @@ Can be either `date` or `datetime`
 choose `date` if your column uses `@column.date()` or `datetime` if it uses `@column.dateTime()`
 :::
 
+### filterVariant
+
+Change the filter variant to use in the table view
+
+Can be either `date`, `datetime`, `date-range` or `datetime-range`
+
+:::tip
+by default, if the subType is `date`, the filterVariant will be `date-range` and if it is `datetime`, the filterVariant will be `datetime-range`
+:::
+
 ### defaultValue
 
 Optionnal, a default value to show on the creation form, it can can be:

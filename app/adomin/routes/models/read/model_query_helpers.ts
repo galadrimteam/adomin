@@ -11,20 +11,32 @@ export const paginationSchema = vine.object({
   pageIndex: vine.number(),
   pageSize: vine.number(),
   globalFilter: vine.string().optional(),
-  filters: vine.array(vine.object({
-    id: vine.string(),
-    value: vine.string().nullable(),
-  })).optional(),
+  filters: vine
+    .array(
+      vine.object({
+        id: vine.string(),
+        value: vine.string().nullable(),
+      })
+    )
+    .optional(),
   filtersMode: vine.enum(['and', 'or'] as const).optional(),
-  arrayFilters: vine.array(vine.object({
-    id: vine.string(),
-    value: vine.array(vine.any()),
-    mode: vine.enum(['IN', 'NOT IN'] as const),
-  })).optional(),
-  sorting: vine.array(vine.object({
-    id: vine.string(),
-    desc: vine.boolean(),
-  })).optional(),
+  arrayFilters: vine
+    .array(
+      vine.object({
+        id: vine.string(),
+        value: vine.array(vine.any()),
+        mode: vine.enum(['IN', 'NOT IN'] as const),
+      })
+    )
+    .optional(),
+  sorting: vine
+    .array(
+      vine.object({
+        id: vine.string(),
+        desc: vine.boolean(),
+      })
+    )
+    .optional(),
   exportType: vine.enum(EXPORT_TYPES).optional(),
 })
 
@@ -132,6 +144,23 @@ export const applyColumnFilters = (
       if (field.adomin.sqlFilter !== undefined) {
         field.adomin.sqlFilter(search, builder)
         continue
+      }
+
+      if (field.adomin.type === 'date' && typeof search === 'string') {
+        const variant = field.adomin.filterVariant ?? `${field.adomin.subType}-range`
+        if (variant === 'date-range' || variant === 'datetime-range') {
+          const [startDate, endDate] = JSON.parse(search)
+
+          if (startDate) builder.andWhere(sqlColumn, '>=', startDate)
+          if (endDate) builder.andWhere(sqlColumn, '<=', endDate)
+
+          continue
+        }
+
+        if (variant === 'date' || variant === 'datetime') {
+          builder.andWhere(sqlColumn, '=', search)
+          continue
+        }
       }
 
       if (field.adomin.type === 'boolean' && typeof search === 'string') {

@@ -96,10 +96,18 @@ export const USER_VIEW = createModelViewConfig(() => User, {
     createdAt: {
       type: 'date',
       subType: 'datetime',
+      filterVariant: 'datetime-range',
       creatable: false,
       editable: false,
       label: 'Date de création',
       exportDataTransform: (date) => DateTime.fromISO(date).toFormat('dd/MM/yyyy'),
+    },
+    updatedAt: {
+      type: 'date',
+      subType: 'date',
+      filterVariant: 'date',
+      creatable: false,
+      editable: false,
     },
   },
   queryBuilderCallback: (q) => {

@@ -196,7 +196,9 @@ export interface AdominDateFieldConfig extends AdominBaseFieldConfig {
   /**
    * choose date for column type @column.date() or datetime for column type @column.dateTime()
    */
-  subType: 'date' | 'datetime'
+  subType: 'date' | 'datetime';
+  /** Change the filter variant to use in the table view */
+  filterVariant?: 'date' | 'datetime' | 'date-range' | 'datetime-range';
   /**
    * default value for this field on the form, two options:
    * - dynamic Date.now() + some time

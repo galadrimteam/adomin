@@ -1,4 +1,5 @@
 import { LucidModel, LucidRow } from '@adonisjs/lucid/types/model'
+import { DateTime } from 'luxon'
 import { ColumnConfig, PASSWORD_SERIALIZED_FORM } from '../../../create_model_view_config.js'
 import { getSqlColumnToUse } from '../get_model_config.js'
 import { handleFilePersist } from './handle_file_persist.js'
@@ -49,6 +50,15 @@ export const attachFieldsToModel = async (
       if (data[field.name] === PASSWORD_SERIALIZED_FORM) {
         continue
       }
+    }
+
+    if (field.adomin.type === 'date' && value instanceof DateTime === false && value) {
+      if (value instanceof Date === false) {
+        throw new Error(`Invalid date type for ${key}`)
+      }
+      // @ts-expect-error
+      instance[key] = DateTime.fromJSDate(value as Date)
+      continue
     }
 
     if (field.adomin.type === 'file') {
