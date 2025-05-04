@@ -1,9 +1,9 @@
 import { CmsPage } from '#adomin/cms/utils/cms.types'
+import { DEFAULT_MESSAGE_PROVIDER_CONFIG } from '#adomin/validation/default_validator'
 import { HttpContext } from '@adonisjs/core/http'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
 import { CMS_CONFIG } from '../../../cms_config.js'
 import { filterNullValues } from '../../../utils/array.js'
-import { DEFAULT_MESSAGE_PROVIDER_CONFIG } from '../../../utils/validation.js'
 import { createPage, findPage, updatePage } from './pages_service.js'
 
 const configObject = vine.object({

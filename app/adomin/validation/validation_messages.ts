@@ -1,6 +1,6 @@
 import { ApiStatFilters } from "#adomin/api_stat_filter.types"
-import { DEFAULT_MESSAGE_PROVIDER_CONFIG } from "#adomin/cms/utils/validation"
 import { SimpleMessagesProvider } from "@vinejs/vine"
+import { DEFAULT_MESSAGE_PROVIDER_CONFIG } from "./default_validator.js"
 
 export const getMessagesProviderForAdominFields = (filters: ApiStatFilters): SimpleMessagesProvider => {
   const labels = Object.keys(filters).reduce((acc, key) => {
