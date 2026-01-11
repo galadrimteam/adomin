@@ -1,7 +1,8 @@
-import { CmsPage } from '#adomin/cms/utils/cms.types'
+import { BlockParams, CmsPage } from '#adomin/cms/utils/cms.types'
 import { DEFAULT_MESSAGE_PROVIDER_CONFIG } from '#adomin/validation/default_validator'
 import { HttpContext } from '@adonisjs/core/http'
 import vine, { SimpleMessagesProvider } from '@vinejs/vine'
+import { Infer } from '@vinejs/vine/types'
 import { CMS_CONFIG } from '../../../cms_config.js'
 import { filterNullValues } from '../../../utils/array.js'
 import { createPage, findPage, updatePage } from './pages_service.js'
@@ -25,6 +26,8 @@ const configObject = vine.object({
     xl: vine.array(vine.array(vine.string().trim())).nullable(),
   }),
 })
+
+type PageConfig = Infer<typeof configObject>
 
 const validationSchema = vine.compile(
   vine.object({
@@ -163,7 +166,7 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
   if (mode === 'create') {
     const created = await createPage({
       ...validated,
-      config: validatedConfig,
+      config: { ...validatedConfig, blocks: filterCmsPageBlocksConfig(validatedConfig) },
       is_published: validated.is_published ?? false,
     })
 
@@ -175,7 +178,7 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
 
   const updated = await updatePage({
     ...validated,
-    config: validatedConfig,
+    config: { ...validatedConfig, blocks: filterCmsPageBlocksConfig(validatedConfig) },
     is_published: validated.is_published ?? false,
     id: pageId,
   })
@@ -184,4 +187,22 @@ export const storeOrUpdatePage = async (ctx: HttpContext) => {
     message: 'Page mise à jour',
     page: updated,
   }
+}
+
+export function filterCmsPageBlocksConfig(config: PageConfig): BlockParams[] {
+  const layouts = filterNullValues([
+    config.gridLayout.sm,
+    config.gridLayout.medium,
+    config.gridLayout.large,
+    config.gridLayout.xl,
+  ])
+  const idsInLayout = new Set(layouts.flatMap((layout) => layout.flatMap((blockId) => blockId)))
+  const blocks = config.blocks
+    .filter((block) => idsInLayout.has(block.props.gridIdentifier))
+    .map((block) => ({
+      ...block,
+      props: block.props ?? {},
+    }))
+
+  return blocks
 }
