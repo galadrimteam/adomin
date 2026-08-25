@@ -61,7 +61,7 @@
     "sqlite": "^5.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
-    "xlsx": "^0.18.5"
+    "xlsx": "npm:@stackline/xlsx@^1.0.6"
   },
   "eslintConfig": {
     "extends": "@adonisjs/eslint-config/app"
